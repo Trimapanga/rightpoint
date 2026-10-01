@@ -37,7 +37,10 @@ vercel_hosts = [
 ]
 # An explicit list is required in production; locally and under the test client
 # we accept any host so the dev server and `manage.py test` work out of the box.
-if DEBUG:
+# Vercel uses ephemeral deployment hostnames, so allow its routed host when
+# the function is running on the platform. Explicit hosts remain available for
+# non-Vercel production deployments.
+if DEBUG or os.environ.get("VERCEL") == "1":
     ALLOWED_HOSTS = ["*"]
 elif not ALLOWED_HOSTS:
     ALLOWED_HOSTS = [
