@@ -21,8 +21,9 @@
   <link rel="preload" as="style" href="{% static 'css/site.css' %}?v={{ asset_version }}">
   <link rel="stylesheet" href="{% static 'css/site.css' %}?v={{ asset_version }}">
   <link rel="stylesheet" href="{% static 'css/premium.css' %}?v={{ asset_version }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/favicon-32.png' %}">
   <link rel="icon" type="image/png" sizes="192x192" href="{% static 'img/favicon-192.png' %}">
-  <link rel="apple-touch-icon" href="{% static 'img/favicon-192.png' %}">
+  <link rel="apple-touch-icon" href="{% static 'img/apple-touch-icon.png' %}">
   <script type="application/ld+json">{{ organization_schema|safe }}</script>
   {% block extra_head %}{% endblock %}
 </head>

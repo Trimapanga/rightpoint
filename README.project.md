@@ -44,8 +44,12 @@ knocked out to transparency and trimmed. Colours are sampled from it:
 blue `#023AAA` and green `#2B990B`. The theme is light, so the artwork sits
 directly on the page and both brand colours pass WCAG AA as text
 (`--accent: #1e7a08` at 5.5:1, `--blue-bright: #0b57c2` at 6.7:1 on white).
-Palette lives in the `:root` block of `static/css/site.css`; `static/img/favicon-192.png`
-crops the circular mark for the icon.
+Palette lives in the `:root` block of `static/css/site.css`. The tab icons are derived from the
+same file by `tools/make_favicon.py`: it drops the "Right Point Solutions" wordmark (mush at 16px,
+and the tab title already spells it out), keeps the ring-and-RPS mark, and sits it on a white
+plate because iOS paints transparency black. `favicon-32.png`, `favicon-192.png` and
+`apple-touch-icon.png` are checked in rather than generated at build time, so re-run the tool
+after any change to `logo.png`.
 
 ## Page patterns
 
