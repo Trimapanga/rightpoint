@@ -1,20 +1,30 @@
-"""Turn the supplied catalogue photography into product tiles in static/img/products/.
+"""Turn product photography into tiles in static/img/products/.
 
-Run `python tools/prepare_product_photos.py` after adding photography.
+Drop a manufacturer media-kit shot into `images/` named after the product slug -
+`images/hikvision-colorvu.jpg`, `images/evolis-zenius.png` and so on - then run
+`python tools/prepare_product_photos.py`. `--check` lists the slugs still waiting
+for a photograph. A slug is recognised when a drawn plate already exists for it in
+`static/img/products/`, which is what keeps a typo'd filename from inventing a product.
 
-The catalogue import left ten manufacturer photos in `images/`, filed under the short
-slugs of the duplicate entries that no longer exist. This maps each one back onto its
-live product, normalises it to a 16:10 studio tile and writes `static/img/products/
-{slug}.webp`, which `Product.image_src` prefers over the drawn schematic plate.
+The 2026-09-30 catalogue import left ten manufacturer photos under the short slugs of
+duplicate entries that no longer exist, so those filenames are mapped by hand below.
+Each one normalises to a 16:10 studio tile at `static/img/products/{slug}.webp`, which
+`Product.image_src` prefers over the drawn schematic plate.
 
 Only plain studio shots qualify: a shot whose surround is not near-white or transparent
 (promotional artwork with a coloured frame) stays on its plate rather than putting a
-coloured block into a white card. The originals are never modified.
+coloured block into a white card. A subject narrower than 340px at source is refused
+too, because it would have to be enlarged into a blur. Screenshots and concept
+illustrations pass both gates, so they are the uploader's judgement call: this is a
+catalogue of equipment, and the tile has to show that equipment. The originals are
+never modified.
 
-Rights: this photography is third-party material with no reuse licence established -
-see the note in README.md. It is bundled for the draft, not cleared for publication.
+Rights: distributor media kits are licensed to resellers, which is why they are the
+expected source. The ten import leftovers have no reuse licence established - see the
+note in README.project.md - and are bundled for the draft, not cleared for publication.
 """
 
+import argparse
 import os
 
 from PIL import Image, ImageChops
@@ -23,13 +33,19 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SOURCE = os.path.join(ROOT, "images")
 OUT = os.path.join(ROOT, "static", "img", "products")
 
-# Catalogue file -> live product slug. Checked against catalog.json, name by name.
-PHOTOS = {
+SOURCE_EXTENSIONS = (".jpg", ".jpeg", ".png", ".webp")
+
+# Catalogue import file -> live product slug. Checked against catalog.json, name by name,
+# and then checked again against the photograph itself: two of the ten are not what the
+# filename claimed. `quantum.png` is a FAAC Quantum sliding barrier, not an Evolis
+# Quantum card printer, and `cards.jpg` is an IDStore.us promo graphic carrying the
+# reseller's logo and a fingerprint watermark. Both are dropped from the map, so those
+# two cards keep their drawn plate; the tiles they produced are parked in
+# `images/rejected/` rather than deleted, and `products.tests` pins the published set.
+LEGACY_PHOTOS = {
     "primacy.png": "evolis-primacy-2",
-    "quantum.png": "evolis-quantum",
     "zenius-2.jpg": "evolis-zenius-2",
     "ribbon.jpg": "evolis-ymcko-ribbons",
-    "cards.jpg": "blank-pvc-cards",
     "sigma.jpg": "idemia-sigma-family",
     "visionpass.jpg": "idemia-visionpass",
     "minmoe.jpg": "hikvision-minmoe",
@@ -91,14 +107,60 @@ def tile(im):
     return out, subject
 
 
-def main():
-    os.makedirs(OUT, exist_ok=True)
-    written, skipped = [], []
-    for filename, slug in sorted(PHOTOS.items()):
-        path = os.path.join(SOURCE, filename)
-        if not os.path.exists(path):
-            skipped.append((slug, "no source file"))
+def plate_slugs():
+    """The slugs that ship a drawn plate, which is the list of products that exist."""
+    return {os.path.splitext(name)[0] for name in os.listdir(OUT) if name.endswith(".svg")}
+
+
+def collect_sources(live):
+    """Return ({slug: path}, [notes]) for the photographs `images/` currently offers.
+
+    A file is used when it is named for a live product, or named in the legacy map -
+    anything else is reported rather than guessed at, because a misfiled photo is the
+    one failure mode that puts the wrong product on a card.
+    """
+    pairs, notes = {}, []
+    if not os.path.isdir(SOURCE):
+        return pairs, [f"{SOURCE} does not exist"]
+    for name in sorted(os.listdir(SOURCE)):
+        path = os.path.join(SOURCE, name)
+        stem, extension = os.path.splitext(name)
+        if not os.path.isfile(path) or extension.lower() not in SOURCE_EXTENSIONS:
             continue
+        slug = LEGACY_PHOTOS.get(name) or (stem if stem in live else None)
+        if slug is None:
+            notes.append(f"ignored    {name} (no product uses that slug)")
+        elif slug in pairs:
+            notes.append(f"ignored    {name} ({slug} already has a source)")
+        else:
+            pairs[slug] = path
+    return pairs, notes
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("--check", action="store_true", help="List the products still waiting for a photograph.")
+    options = parser.parse_args()
+
+    live = plate_slugs()
+    pairs, notes = collect_sources(live)
+    tiled = {os.path.splitext(name)[0] for name in os.listdir(OUT) if name.endswith(".webp")}
+    waiting = sorted(live - tiled)
+
+    if options.check:
+        for slug in waiting:
+            if slug in pairs:
+                print(f"  source present  {os.path.basename(pairs[slug])} -> {slug} (run the tool; the studio gate decides)")
+            else:
+                print(f"  needs a photo   images/{slug}.jpg")
+        for note in notes:
+            print(" " + note)
+        print(f"{len(live) - len(waiting)} of {len(live)} products have a photo tile; {len(waiting)} on drawn plates")
+        return
+
+    written, skipped = [], []
+    for slug in sorted(pairs):
+        path = pairs[slug]
         with Image.open(path) as im:
             if not plain_surrounds(im):
                 skipped.append((slug, "branded or coloured surround - kept the plate"))
@@ -107,14 +169,16 @@ def main():
             if subject < 340:
                 skipped.append((slug, f"subject only {subject}px across at source"))
                 continue
-            target = os.path.join(OUT, f"{slug}.webp")
-            art.save(target, "WEBP", quality=84, method=6)
-            written.append((slug, f"{TILE[0]}x{TILE[1]} from a {subject}px subject"))
+            art.save(os.path.join(OUT, f"{slug}.webp"), "WEBP", quality=84, method=6)
+            written.append((slug, f"{TILE[0]}x{TILE[1]} from a {subject}px subject in {os.path.basename(path)}"))
     for slug, note in written:
-        print(f"  tile   {slug:28} {note}")
+        print(f"  tile   {slug:34} {note}")
     for slug, note in skipped:
-        print(f"  kept plate {slug:26} ({note})")
-    print(f"wrote {len(written)} photo tiles, {len(skipped)} left on their plate")
+        print(f"  kept plate {slug:32} ({note})")
+    for note in notes:
+        print(" " + note)
+    still = [slug for slug in waiting if slug not in {written_slug for written_slug, _ in written}]
+    print(f"wrote {len(written)} tiles; {len(still)} products are still on their drawn plate")
 
 
 if __name__ == "__main__":

@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from django.contrib.sessions.backends.db import SessionStore
 from django.test import RequestFactory
 from django.urls import reverse
@@ -305,13 +307,38 @@ class ProductArtworkTests(SiteTestCase):
         """The cut catalogue photography is drawn over the schematic for the same slug,
         and the templates need to know they are looking at a real product."""
         product = self.catalogue["printer"]
-        product.slug = "evolis-quantum"
-        self.assertEqual(product.image_src, "/static/img/products/evolis-quantum.webp")
+        product.slug = "evolis-zenius-2"
+        self.assertEqual(product.image_src, "/static/img/products/evolis-zenius-2.webp")
         self.assertTrue(product.image_is_photo)
 
         plate = self.catalogue["printer"]
         plate.slug = "hikvision-nvr"
         self.assertFalse(plate.image_is_photo)
+
+    #: Every tile shipped in `static/img/products/` has been opened and checked against
+    #: the product it is filed under. Two of the import's ten photographs failed that
+    #: check - `quantum.png` is a FAAC barrier, not an Evolis Quantum card printer, and
+    #: `cards.jpg` is an IDStore.us promo graphic with the reseller's watermark still
+    #: across it - so they are parked in `images/rejected/` instead. A new tile means a
+    #: new line here, written after looking at the picture rather than the filename.
+    VERIFIED_PHOTO_TILES = {
+        "evolis-primacy-2",
+        "evolis-ymcko-ribbons",
+        "evolis-zenius-2",
+        "idemia-sigma-family",
+        "walkthrough-detectors",
+        "zkteco-zk-d1090",
+    }
+
+    def test_only_checked_photography_is_published(self):
+        from django.conf import settings
+
+        folder = Path(settings.BASE_DIR) / "static" / "img" / "products"
+        tiles = {path.stem for path in folder.glob("*.webp")}
+        self.assertEqual(tiles, self.VERIFIED_PHOTO_TILES)
+
+        published = {p.slug for p in Product.objects.published() if p.image_is_photo}
+        self.assertEqual(published - self.VERIFIED_PHOTO_TILES, set())
 
     def test_every_seeded_product_ships_a_plate(self):
         """Seed data and artwork are committed together, so neither drifts alone."""
