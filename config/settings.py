@@ -17,7 +17,9 @@ def env_flag(name, default="False"):
 SECRET_KEY = os.environ.get(
     "DJANGO_SECRET_KEY", "django-insecure-7(ei88x7oj%1_8madk7cy3*b%ojyu-+@qk3v9ki#zz_9eutj03"
 )
-DEBUG = env_flag("DJANGO_DEBUG", "True")
+# Vercel runs the app in production unless explicitly overridden. Keeping the
+# development default here can expose debug pages and make deployment checks fail.
+DEBUG = env_flag("DJANGO_DEBUG", "False")
 ALLOWED_HOSTS = [
     h.strip() for h in os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(",") if h.strip()
 ]
@@ -103,6 +105,23 @@ DATABASES = {
         "PORT": os.environ.get("DJANGO_DB_PORT", ""),
     }
 }
+
+# Vercel provides Postgres as a URL. Support it when the explicit Django
+# connection variables are not present, while retaining the local SQLite
+# fallback for development and the existing explicit configuration.
+if os.environ.get("POSTGRES_URL") and not os.environ.get("DJANGO_DB_ENGINE"):
+    from urllib.parse import unquote, urlparse
+
+    database_url = urlparse(os.environ["POSTGRES_URL"])
+    DATABASES["default"] = {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": unquote(database_url.path.lstrip("/")),
+        "USER": unquote(database_url.username or ""),
+        "PASSWORD": unquote(database_url.password or ""),
+        "HOST": database_url.hostname or "",
+        "PORT": str(database_url.port or "5432"),
+        "OPTIONS": {"sslmode": "require"},
+    }
 
 if os.environ.get("DJANGO_REDIS_URL"):
     CACHES = {
