@@ -1,8 +1,7 @@
 #!/bin/bash
 # Vercel build script for the Django app.
-# Runs before static files are uploaded.
+# Runs after Vercel's Python builder installs requirements.
 set -e
 
-pip install --break-system-packages -r requirements.txt
 python manage.py migrate --noinput
 python manage.py collectstatic --noinput
