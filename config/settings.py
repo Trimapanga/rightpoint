@@ -83,10 +83,12 @@ TEMPLATES = [
 WSGI_APPLICATION = "config.wsgi.application"
 ASGI_APPLICATION = "config.asgi.application"
 
+_on_vercel = bool(os.environ.get("VERCEL"))
+_default_db_name = "/tmp/db.sqlite3" if _on_vercel else str(BASE_DIR / "db.sqlite3")
 DATABASES = {
     "default": {
         "ENGINE": os.environ.get("DJANGO_DB_ENGINE", "django.db.backends.sqlite3"),
-        "NAME": os.environ.get("DJANGO_DB_NAME", str(BASE_DIR / "db.sqlite3")),
+        "NAME": os.environ.get("DJANGO_DB_NAME", _default_db_name),
         "USER": os.environ.get("DJANGO_DB_USER", ""),
         "PASSWORD": os.environ.get("DJANGO_DB_PASSWORD", ""),
         "HOST": os.environ.get("DJANGO_DB_HOST", ""),
