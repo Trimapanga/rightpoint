@@ -1694,13 +1694,17 @@ input[type="password"]:focus {
 }
 .ft .footer-grid > * { padding: 0; border: 0; }
 
-.ft-logo {
-  display: inline-block;
-  padding: 0.55rem 0.8rem;
-  background: #fff;
-  border-radius: 8px;
+/* The mark is navy and green on transparency, which measures 1.65:1 against this ink -
+   unreadable, and the reason a white plate used to sit behind it. Reversed to a single
+   light tone instead: 14.7:1, no card, and the shape carries the identity. */
+.ft-logo { display: inline-block; }
+.ft-logo img {
+  height: 44px;
+  width: auto;
+  filter: brightness(0) invert(0.92);
+  transition: filter 0.2s ease;
 }
-.ft-logo img { height: 44px; width: auto; }
+.ft-logo:hover img { filter: brightness(0) invert(1); }
 .ft-blurb { max-width: 38ch; margin: 1.3rem 0 1.5rem; line-height: 1.65; }
 
 .ft-reach { display: grid; gap: 0.45rem; margin: 0; padding: 0; list-style: none; }
