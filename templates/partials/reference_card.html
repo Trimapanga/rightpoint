@@ -1,0 +1,12 @@
+<article class="card ref-card">
+  <div class="ref-head{% if study.cover_photo %} has-cover{% endif %}"
+       {% if study.cover_photo %}style="--cs-cover:url('{{ study.cover_photo.url }}')"{% endif %}>
+    {% if study.cover_photo %}<img class="cs-cover-img" src="{{ study.cover_photo.url }}" alt="" loading="lazy" decoding="async">{% endif %}
+    <span class="ref-mark">{% if study.logo_src %}<img src="{{ study.logo_src }}" alt="" loading="lazy" decoding="async">{% else %}<span>{{ study.client }}</span>{% endif %}</span>
+    {% if study.country %}<span class="ref-country">{{ study.country }}</span>{% endif %}
+  </div>
+  <p class="ref-eyebrow">{{ study.sector|default:study.eyebrow }}</p>
+  <h3 class="link-card ref-title"><a href="{{ study.get_absolute_url }}">{{ study.client }}</a></h3>
+  <p class="card-body ref-body">{{ study.summary }}</p>
+  <p class="card-foot ref-foot">Read profile <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></p>
+</article>

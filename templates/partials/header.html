@@ -1,0 +1,83 @@
+{% load static %}
+<header class="site-header" data-header>
+  <div class="shell header-inner">
+    <a class="brand" href="{% url 'home' %}" aria-label="{{ site.company_name }} home">
+      <span class="brand-plate">
+        <img class="brand-logo" src="{% static 'img/logo.png' %}" alt="{{ site.company_name }}" width="326" height="200">
+      </span>
+    </a>
+
+    <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="primary-nav" aria-label="Open menu">
+      <svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg>
+    </button>
+
+    <nav id="primary-nav" class="primary-nav" aria-label="Primary">
+      <a class="nav-link{% if request.path == '/' %} is-active{% endif %}" href="{% url 'home' %}">Home</a>
+      <div class="nav-item has-submenu has-mega">
+        <button class="nav-link nav-submenu-toggle{% if '/solutions/' in request.path %} is-active{% endif %}" type="button" aria-expanded="false" aria-controls="submenu-solutions">
+          Solutions <svg class="icon caret" aria-hidden="true"><use href="#i-chevron"/></svg>
+        </button>
+        <ul class="submenu" id="submenu-solutions">
+          {% for solution in nav_solutions %}
+            <li><a href="{{ solution.get_absolute_url }}">{{ solution.title }}</a></li>
+          {% empty %}
+            <li><a href="{% url 'solutions:list' %}">All solutions</a></li>
+          {% endfor %}
+          <li class="submenu-foot"><a href="{% url 'solutions:list' %}">Browse all solutions</a></li>
+        </ul>
+        <div class="mega">
+          <div class="mega-inner">
+            <div class="mega-intro">
+              <span class="mega-eyebrow">Right Point Solutions</span>
+              <p class="mega-title">Security, designed as one system</p>
+              <p class="mega-text">Surveys, installation and aftercare for cameras, doors, perimeters and server rooms.</p>
+              <a class="mega-more" href="{% url 'solutions:list' %}">Explore all solutions <svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></a>
+            </div>
+            <ul class="mega-grid">
+              {% for solution in nav_solutions %}
+                <li><a class="mega-tile" href="{{ solution.get_absolute_url }}"><span>{{ solution.title }}</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="nav-item has-mega">
+        <a class="nav-link{% if 'products' in request.path %} is-active{% endif %}" href="{% url 'products:list' %}">Products</a>
+        {% if nav_categories %}
+        <div class="mega">
+          <div class="mega-inner">
+            <div class="mega-intro">
+              <span class="mega-eyebrow">Right Point Shop</span>
+              <p class="mega-title">Equipment we supply and install</p>
+              <p class="mega-text">Genuine hardware, configured on site and backed by after-sales support.</p>
+              <a class="mega-more" href="{% url 'products:list' %}">Shop all products <svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></a>
+            </div>
+            <ul class="mega-grid">
+              {% for category in nav_categories %}
+                <li><a class="mega-tile" href="{% url 'products:list' %}?category={{ category.slug }}"><span>{{ category.name }}</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+      <a class="nav-link{% if 'case-studies' in request.path %} is-active{% endif %}" href="{% url 'casestudies:list' %}">Case studies</a>
+      <a class="nav-link{% if request.path == '/about/' %} is-active{% endif %}" href="{% url 'about' %}">About</a>
+      <a class="nav-link{% if request.path == '/contact/' %} is-active{% endif %}" href="{% url 'contact:form' %}">Contact</a>
+      <div class="nav-actions">
+        <a class="nav-phone" href="{{ site.telephone_url }}">{{ site.phone_e164 }}</a>
+        {% if user.is_authenticated %}
+          <a class="btn btn-ghost nav-auth-link" href="{% url 'accounts:logout' %}" onclick="return confirm('Sign out?')">Sign out</a>
+        {% else %}
+          <a class="btn btn-ghost nav-auth-link" href="{% url 'accounts:login' %}">Sign in</a>
+        {% endif %}
+        <a class="btn btn-solid" href="{% url 'contact:form' %}">Secure your site</a>
+      </div>
+    </nav>
+
+    <a class="basket-btn" href="{% url 'products:basket' %}" data-basket-open aria-controls="basket-drawer" aria-expanded="false" aria-label="Your quote list">
+      <svg class="icon" aria-hidden="true"><use href="#i-cart"/></svg>
+      <span class="basket-badge" data-basket-count{% if not basket_slugs|length %} hidden{% endif %}>{{ basket_slugs|length }}</span>
+    </a>
+  </div>
+</header>

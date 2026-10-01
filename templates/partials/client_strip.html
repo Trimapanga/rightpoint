@@ -1,0 +1,18 @@
+{% if clients %}
+<section class="client-band" aria-labelledby="clients-title">
+  <div class="shell">
+    <header class="client-head">
+      <p class="kicker kicker-plain" id="clients-title">Companies we have worked for</p>
+      <p class="client-note">
+        Systems designed, installed and supported on site. Client names and marks are published with permission.
+      </p>
+    </header>
+  </div>
+  <div class="client-marquee">
+    <div class="client-track">
+      {% include "partials/client_logos.html" %}
+      {% include "partials/client_logos.html" with clone=True %}
+    </div>
+  </div>
+</section>
+{% endif %}

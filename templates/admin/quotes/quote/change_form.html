@@ -1,0 +1,39 @@
+{% extends "admin/change_form.html" %}
+
+{% block object-tools-items %}
+  {% if original.pk %}
+    <li><a href="{% url 'admin:quotes_quote_print' original.pk %}" target="_blank" rel="noopener">Preview quote</a></li>
+    <li><a href="{% url 'admin:quotes_quote_print' original.pk %}?download=1" target="_blank" rel="noopener">Download PDF</a></li>
+  {% endif %}
+  {{ block.super }}
+{% endblock %}
+
+{% block after_related_objects %}
+  {{ block.super }}
+  <div class="quote-live" data-quote-live data-info-url="{% url 'admin:quotes_product_info' 0 %}">
+    <span class="quote-live-title">Live estimate</span>
+    <dl>
+      <div><dt>Subtotal</dt><dd data-live="subtotal">-</dd></div>
+      <div><dt>Discount</dt><dd data-live="discount">-</dd></div>
+      <div><dt>VAT</dt><dd data-live="vat">-</dd></div>
+      <div class="grand"><dt>Total</dt><dd data-live="total">-</dd></div>
+    </dl>
+  </div>
+{% endblock %}
+
+{% block submit_buttons_bottom %}
+  {{ block.super }}
+  {% if original.pk and original.status == "accepted" and not original.stock_issued %}
+    <div class="issue-stock-row">
+      <button type="submit" form="issue-stock-form" class="button">Issue stock for this quote</button>
+      <span>Books every catalogue line out of inventory against {{ original.number }}.</span>
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {{ block.super }}
+  {% if original.pk and original.status == "accepted" and not original.stock_issued %}
+    <form id="issue-stock-form" method="post" action="{% url 'admin:quotes_quote_issue_stock' original.pk %}">{% csrf_token %}</form>
+  {% endif %}
+{% endblock %}

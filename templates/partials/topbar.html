@@ -1,0 +1,19 @@
+{% load static %}{% spaceless %}
+<div class="topbar">
+  <div class="shell topbar-inner">
+    <p class="topbar-item">
+      <svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg>
+      <span class="visually-hidden">Location: </span>
+      {% if site.map_url %}
+        <a href="{{ site.map_url }}" target="_blank" rel="noopener"><span class="topbar-street">{{ site.street_address }}, </span>{{ site.city }}, {{ site.country }}</a>
+      {% else %}
+        <span class="topbar-street">{{ site.street_address }}, </span>{{ site.city }}, {{ site.country }}
+      {% endif %}
+    </p>
+    <p class="topbar-item">
+      <svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg>
+      <span class="visually-hidden">Office hours: </span>{{ site.working_hours }}
+    </p>
+  </div>
+</div>
+{% endspaceless %}

@@ -1,0 +1,15 @@
+<ul class="brand-logos"{% if clone %} aria-hidden="true"{% endif %}>
+  {% for brand in partner_brands %}
+    <li>
+      <a class="brand-item" href="{% url 'products:list' %}?brand={{ brand.slug }}"{% if clone %} tabindex="-1"{% endif %}>
+        {% if brand.logo_src %}
+          <img src="{{ brand.logo_src }}" alt="" loading="lazy" decoding="async">
+        {% else %}
+          <span class="brand-mono" aria-hidden="true">{{ brand.monogram }}</span>
+        {% endif %}
+        <span class="brand-name">{{ brand.name }}</span>
+        {% if brand.speciality %}<span class="brand-role">{{ brand.speciality }}</span>{% endif %}
+      </a>
+    </li>
+  {% endfor %}
+</ul>

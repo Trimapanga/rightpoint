@@ -1,0 +1,48 @@
+<form class="pane stack" {% if form_id %}id="{{ form_id }}"{% endif %} method="post" action="{% url 'contact:form' %}{% if topic %}?topic={{ topic }}{% endif %}#enquiry" novalidate>
+  {% csrf_token %}
+  <div class="honeypot" aria-hidden="true">
+    <label for="{{ form.honeypot.id_for_label }}">{{ form.honeypot.label }}</label>
+    {{ form.honeypot }}
+  </div>
+  {% if form.non_field_errors %}
+    <div class="nonfield-errors">{{ form.non_field_errors }}</div>
+  {% endif %}
+  <div class="field">
+    <label for="{{ form.topic.id_for_label }}">{{ form.topic.label }}</label>
+    {{ form.topic }}
+    {% if form.topic.help_text %}<span class="field-hint">{{ form.topic.help_text }}</span>{% endif %}
+    {{ form.topic.errors }}
+  </div>
+  <div class="form-grid">
+    <div class="field">
+      <label for="{{ form.name.id_for_label }}">Your name</label>
+      {{ form.name }}
+      {{ form.name.errors }}
+    </div>
+    <div class="field">
+      <label for="{{ form.email.id_for_label }}">Work email</label>
+      {{ form.email }}
+      {{ form.email.errors }}
+    </div>
+    <div class="field">
+      <label for="{{ form.phone.id_for_label }}">Phone <span class="field-hint">(optional)</span></label>
+      {{ form.phone }}
+      {{ form.phone.errors }}
+    </div>
+    <div class="field">
+      <label for="{{ form.organisation.id_for_label }}">Company or site <span class="field-hint">(optional)</span></label>
+      {{ form.organisation }}
+      {{ form.organisation.errors }}
+    </div>
+  </div>
+  <div class="field form-grid-full">
+    <label for="{{ form.message.id_for_label }}">Tell us a little more</label>
+    {{ form.message }}
+    {% if form.message.help_text %}<span class="field-hint">{{ form.message.help_text }}</span>{% endif %}
+    {{ form.message.errors }}
+  </div>
+  <div class="row-actions">
+    <button class="btn btn-solid btn-lg" type="submit">{{ submit_label|default:"Send enquiry" }}</button>
+    <span class="fine">We reply within one working day. Nairobi-based delivery with practical aftercare.</span>
+  </div>
+</form>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" width="320" height="200" role="img" aria-label="ZKTeco ZK-D1090 nine-zone walk-through metal detector schematic">
+  <title>ZKTeco ZK-D1090 nine-zone walk-through metal detector schematic</title>
+  <defs>
+    <linearGradient id="b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="0.5" stop-color="#f5f9fb"/><stop offset="1" stop-color="#dde8ec"/></linearGradient>
+    <linearGradient id="h" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eff5f7"/><stop offset="1" stop-color="#d0dde3"/></linearGradient>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9f2f5"/><stop offset="1" stop-color="#c0d6de"/></linearGradient>
+    <radialGradient id="o" cx="0.42" cy="0.36" r="0.74"><stop offset="0" stop-color="#3c6879"/><stop offset="1" stop-color="#11242d"/></radialGradient>
+    <filter id="lift" x="-16%" y="-16%" width="132%" height="132%"><feDropShadow dx="0" dy="2.5" stdDeviation="3" flood-color="#0d1b20" flood-opacity=".18"/></filter>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#lift)">
+    <ellipse cx="150" cy="176" rx="120" ry="9" fill="#0d1b20" opacity="0.07"/>
+    <rect x="66" y="14" width="188" height="16" rx="8" fill="url(#h)" stroke="#0d1b20" stroke-width="2.4"/>
+    <rect x="94" y="18" width="22" height="8" rx="3" fill="#2b990b" stroke-width="2.4"/>
+    <rect x="156" y="18" width="22" height="8" rx="3" fill="#023aaa" stroke-width="2.4"/>
+    <rect x="218" y="18" width="22" height="8" rx="3" fill="#5b7480" stroke-width="2.4"/>
+    <rect x="70" y="30" width="38" height="142" rx="8" fill="url(#b)" stroke="#0d1b20" stroke-width="2.4"/>
+    <rect x="212" y="30" width="38" height="142" rx="8" fill="url(#b)" stroke="#0d1b20" stroke-width="2.4"/>
+    <rect x="98" y="40.0" width="7" height="8.9" rx="3" fill="#2b990b" stroke-width="2.4"/>
+    <rect x="215" y="40.0" width="7" height="8.9" rx="3" fill="#2b990b" stroke-width="2.4"/>
+    <line x1="80" y1="44.45" x2="92" y2="44.45" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="228" y1="44.45" x2="240" y2="44.45" stroke="#c3d2d8" stroke-width="1.8"/>
+    <rect x="98" y="53.5" width="7" height="8.9" rx="3" fill="#2b990b" stroke-width="2.4"/>
+    <rect x="215" y="53.5" width="7" height="8.9" rx="3" fill="#2b990b" stroke-width="2.4"/>
+    <line x1="80" y1="57.95" x2="92" y2="57.95" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="228" y1="57.95" x2="240" y2="57.95" stroke="#c3d2d8" stroke-width="1.8"/>
+    <rect x="98" y="67.0" width="7" height="8.9" rx="3" fill="#2b990b" stroke-width="2.4"/>
+    <rect x="215" y="67.0" width="7" height="8.9" rx="3" fill="#2b990b" stroke-width="2.4"/>
+    <line x1="80" y1="71.45" x2="92" y2="71.45" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="228" y1="71.45" x2="240" y2="71.45" stroke="#c3d2d8" stroke-width="1.8"/>
+    <rect x="98" y="80.5" width="7" height="8.9" rx="3" fill="#023aaa" stroke-width="2.4"/>
+    <rect x="215" y="80.5" width="7" height="8.9" rx="3" fill="#023aaa" stroke-width="2.4"/>
+    <line x1="80" y1="84.95" x2="92" y2="84.95" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="228" y1="84.95" x2="240" y2="84.95" stroke="#c3d2d8" stroke-width="1.8"/>
+    <rect x="98" y="94.0" width="7" height="8.9" rx="3" fill="#023aaa" stroke-width="2.4"/>
+    <rect x="215" y="94.0" width="7" height="8.9" rx="3" fill="#023aaa" stroke-width="2.4"/>
+    <line x1="80" y1="98.45" x2="92" y2="98.45" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="228" y1="98.45" x2="240" y2="98.45" stroke="#c3d2d8" stroke-width="1.8"/>
+    <rect x="98" y="107.5" width="7" height="8.9" rx="3" fill="#023aaa" stroke-width="2.4"/>
+    <rect x="215" y="107.5" width="7" height="8.9" rx="3" fill="#023aaa" stroke-width="2.4"/>
+    <line x1="80" y1="111.95" x2="92" y2="111.95" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="228" y1="111.95" x2="240" y2="111.95" stroke="#c3d2d8" stroke-width="1.8"/>
+    <rect x="98" y="121.0" width="7" height="8.9" rx="3" fill="#c3d2d8" stroke-width="2.4"/>
+    <rect x="215" y="121.0" width="7" height="8.9" rx="3" fill="#c3d2d8" stroke-width="2.4"/>
+    <line x1="80" y1="125.45" x2="92" y2="125.45" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="228" y1="125.45" x2="240" y2="125.45" stroke="#c3d2d8" stroke-width="1.8"/>
+    <rect x="98" y="134.5" width="7" height="8.9" rx="3" fill="#c3d2d8" stroke-width="2.4"/>
+    <rect x="215" y="134.5" width="7" height="8.9" rx="3" fill="#c3d2d8" stroke-width="2.4"/>
+    <line x1="80" y1="138.95" x2="92" y2="138.95" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="228" y1="138.95" x2="240" y2="138.95" stroke="#c3d2d8" stroke-width="1.8"/>
+    <rect x="98" y="148.0" width="7" height="8.9" rx="3" fill="#c3d2d8" stroke-width="2.4"/>
+    <rect x="215" y="148.0" width="7" height="8.9" rx="3" fill="#c3d2d8" stroke-width="2.4"/>
+    <line x1="80" y1="152.45" x2="92" y2="152.45" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="228" y1="152.45" x2="240" y2="152.45" stroke="#c3d2d8" stroke-width="1.8"/>
+    <path d="M108,172 L212,172" stroke="#5b7480" stroke-width="2.1" fill="none" stroke-dasharray="7 7"/>
+    <rect x="20" y="68" width="40" height="56" rx="6" fill="url(#b)" stroke="#0d1b20" stroke-width="2.4"/>
+    <rect x="26" y="74" width="28" height="18" rx="4" fill="url(#g)" stroke="#0d1b20" stroke-width="1.8"/>
+    <line x1="30" y1="80" x2="50" y2="80" stroke="#5b7480" stroke-width="1.8"/>
+    <line x1="30" y1="86" x2="44" y2="86" stroke="#c3d2d8" stroke-width="1.8"/>
+    <circle cx="31" cy="100" r="2" fill="#c3d2d8" stroke="#5b7480" stroke-width="1.2"/>
+    <circle cx="40" cy="100" r="2" fill="#c3d2d8" stroke="#5b7480" stroke-width="1.2"/>
+    <circle cx="49" cy="100" r="2" fill="#c3d2d8" stroke="#5b7480" stroke-width="1.2"/>
+    <circle cx="31" cy="108" r="2" fill="#c3d2d8" stroke="#5b7480" stroke-width="1.2"/>
+    <circle cx="40" cy="108" r="2" fill="#c3d2d8" stroke="#5b7480" stroke-width="1.2"/>
+    <circle cx="49" cy="108" r="2" fill="#c3d2d8" stroke="#5b7480" stroke-width="1.2"/>
+    <circle cx="31" cy="116" r="2" fill="#c3d2d8" stroke="#5b7480" stroke-width="1.2"/>
+    <circle cx="40" cy="116" r="2" fill="#c3d2d8" stroke="#5b7480" stroke-width="1.2"/>
+    <circle cx="49" cy="116" r="2" fill="#c3d2d8" stroke="#5b7480" stroke-width="1.2"/>
+    <path d="M60,92 L70,92" stroke="#0d1b20" stroke-width="2.7" fill="none"/>
+    <path d="M60,108 L70,108" stroke="#0d1b20" stroke-width="2.7" fill="none"/>
+    <rect x="26" y="124" width="28" height="6" rx="3" fill="url(#h)" stroke-width="2.4"/>
+  </g>
+</svg>

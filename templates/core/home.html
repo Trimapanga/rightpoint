@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="hero hero-pro">
+  <div class="shell hero-grid">
+    <div class="hero-copy">
+      {% if site.hero_kicker %}<p class="hero-eyebrow"><span class="hero-eyebrow-dot" aria-hidden="true"></span>{{ site.hero_kicker }}</p>{% endif %}
+      <h1>{{ site.hero_heading }}</h1>
+      <p class="lede">{{ site.hero_body }}</p>
+      <div class="row-actions hero-actions">
+        <a class="btn btn-solid btn-lg" href="{% url 'contact:form' %}">Secure your site
+          <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="btn btn-ghost btn-lg" href="{% url 'products:list' %}">Explore products</a>
+      </div>
+      <ul class="hero-proof">
+        {% if solutions %}<li><strong>{{ solutions|length|stringformat:"02d" }}</strong><span>Integrated capabilities</span></li>{% endif %}
+        {% if clients %}<li><strong>{{ clients|length|stringformat:"02d" }}</strong><span>Published references</span></li>{% endif %}
+        <li><strong>1</strong><span>Team, from design to support</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <figure class="hero-visual" aria-hidden="true">
+    <img src="{% static 'img/hero-crew-cut.webp' %}"
+         srcset="{% static 'img/hero-crew-cut-640.webp' %} 640w, {% static 'img/hero-crew-cut.webp' %} 1000w"
+         sizes="(max-width: 1040px) 92vw, 42vw"
+         width="1000" height="968" decoding="async" fetchpriority="high" loading="eager" alt="">
+  </figure>
+</section>
+
+{% include "partials/client_strip.html" %}
+
+
+{% if solutions %}
+<section class="section capability-band" id="capabilities">
+  <div class="shell split capability-split">
+    <div class="capability-lead">
+      <header class="section-head capability-intro">
+        <p class="kicker">What we take on</p>
+        <h2>Designed, installed and handed over as one system.</h2>
+        <p>Camera coverage, door control, the fence line, the rack they all report to, and the
+          assessment that decides where any of it is needed. Specified together, installed by the
+          team that specified it, handed over with the evidence to audit it.</p>
+      </header>
+
+      <div class="capability-block">
+      <ol class="capability-index">
+        {% for solution in solutions %}
+        <li class="capability-row">
+          <a href="{{ solution.get_absolute_url }}">
+            <span class="capability-num" aria-hidden="true">{{ forloop.counter|stringformat:"02d" }}</span>
+            <span class="capability-title">{{ solution.title }}</span>
+            <span class="capability-summary">{{ solution.tagline }}</span>
+            <svg class="icon capability-go" aria-hidden="true"><use href="#i-arrow"/></svg>
+          </a>
+        </li>
+        {% endfor %}
+      </ol>
+      <figure class="capability-visual" aria-hidden="true">
+        <img src="{% static 'img/field-engineer.webp' %}"
+             srcset="{% static 'img/field-engineer-640.webp' %} 640w, {% static 'img/field-engineer.webp' %} 908w"
+             sizes="(max-width: 760px) 100vw, 480px"
+             width="908" height="941" loading="lazy" decoding="async" alt="">
+      </figure>
+      </div>
+
+      <div class="capability-foot">
+        <p class="capability-meter">
+          <span class="capability-count">{{ solutions|length|stringformat:"02d" }}</span>
+          <span class="capability-meter-label">capability registers, each with its own scope,
+            standards and commissioning pack</span>
+        </p>
+        <a class="capability-all btn-link" href="{% url 'solutions:list' %}">Compare all solutions
+          <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      </div>
+    </div>
+
+  </div>
+
+</section>
+{% endif %}
+
+{% if shelf %}
+<section class="section shelf-band" id="equipment">
+  <div class="shell">
+    <header class="section-head shelf-head">
+      <div>
+        <p class="kicker">On the shelf</p>
+        <h2>Hardware we specify, install and keep running.</h2>
+        <p>{{ stock_count }} lines, held for the schemes we design. Add what you want quoted to
+          your list and the package comes back priced with installation, consumables and support
+          in it.</p>
+      </div>
+      <p class="shelf-tally"><span class="shelf-tally-num">{{ stock_count|stringformat:"02d" }}</span>
+        <span class="shelf-tally-label">lines published on the shop</span></p>
+    </header>
+
+    {% with feature=shelf.0 %}
+    <article class="shelf-feature card{% if feature.slug in basket_slugs %} is-on-list{% endif %}" data-basket-slug="{{ feature.slug }}">
+      <div class="shelf-feature-media">
+        <a class="pc-imglink" href="{{ feature.get_absolute_url }}" tabindex="-1" aria-hidden="true">
+          {% if feature.image_is_photo %}
+            <img class="card-media" src="{{ feature.image_src }}" alt="{{ feature.image_alt|default:feature.title }}" width="960" height="600" loading="lazy" decoding="async">
+          {% else %}
+          <div class="card-media product-visual" aria-hidden="true">
+            {% if feature.image_src %}
+              <img class="product-art" src="{{ feature.image_src }}" alt="" width="320" height="200" loading="lazy" decoding="async">
+            {% else %}
+              <span class="product-placeholder">
+                <span class="brand-mark">{{ feature.brand.monogram }}</span>
+                <span class="product-placeholder-name">{{ feature.brand.name }}</span>
+              </span>
+            {% endif %}
+          </div>
+          {% endif %}
+        </a>
+        {% if feature.is_featured %}<span class="flag flag-top">Top pick</span>{% endif %}
+        <span class="flag flag-list"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> On your list</span>
+      </div>
+      <div class="shelf-feature-copy">
+        <p class="shelf-feature-eyebrow">{{ feature.eyebrow|default:feature.category.name }}</p>
+        <h3 class="link-card shelf-feature-title"><a href="{{ feature.get_absolute_url }}">{{ feature.title }}</a></h3>
+        <p class="lede">{{ feature.summary }}</p>
+        {% with specs=feature.spec_table %}{% if specs %}
+        <ul class="shelf-feature-specs">
+          {% for label, value in specs|slice:":4" %}
+          <li><span>{{ label }}</span><strong>{{ value }}</strong></li>
+          {% endfor %}
+        </ul>
+        {% endif %}{% endwith %}
+        <div class="row-actions shelf-feature-actions">
+          <a class="btn btn-solid" href="{{ feature.get_absolute_url }}">Read the detail
+            <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <form class="add-form" method="post" action="{% url 'products:basket_add' feature.slug %}" data-basket-form>
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.path }}">
+            <input type="hidden" name="quantity" value="1">
+            <button class="btn btn-ghost" type="submit" data-basket-submit>
+              <svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>
+              <span data-basket-add-label>Add to quote list</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </article>
+    {% endwith %}
+
+    <ul class="shelf-rack">
+      {% for product in shelf|slice:"1:" %}
+      <li>{% include "partials/product_card.html" %}</li>
+      {% endfor %}
+    </ul>
+
+    <footer class="shelf-foot">
+      <nav class="shelf-depts" aria-label="Shop by department">
+        {% for category in shelf_departments %}
+        <a class="chip" href="{% url 'products:list' %}?category={{ category.slug }}">{{ category.name }}
+          <span class="shelf-dept-n">{{ category.stock }}</span></a>
+        {% endfor %}
+      </nav>
+      <a class="btn btn-ghost btn-lg" href="{% url 'products:list' %}">Browse all {{ stock_count }} lines
+        <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    </footer>
+  </div>
+</section>
+{% endif %}
+
+{% if service_regions %}
+<section class="region-band" aria-labelledby="region-title">
+  <div class="shell region-inner">
+    <p class="kicker region-kicker">Where we operate</p>
+    <h2 class="region-heading" id="region-title">Our services go beyond Kenya</h2>
+    <p class="region-sub">Delivering security technology and identity solutions across East &amp; Horn of Africa.</p>
+    <ul class="region-flags" role="list">
+      {% for region in service_regions %}
+      <li class="region-flag-item{% if region.role %} is-base{% endif %}">
+        <span class="region-flag-circle">
+          <img class="region-flag" src="{{ region.flag }}" alt="{{ region.name }} flag" width="96" height="96" loading="lazy" decoding="async">
+        </span>
+        <span class="region-flag-name">{{ region.name }}</span>
+        {% if region.role %}<span class="region-flag-role">{{ region.role }}</span>{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}

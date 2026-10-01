@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="banner page-hero about-hero">
+  <div class="shell about-hero-grid">
+    <div class="page-hero-copy">
+      <ol class="crumbs"><li><a href="{% url 'home' %}">Home</a></li><li aria-current="page">About</li></ol>
+      <h1>Security technology for the real world.</h1>
+      <p class="lede">{{ site.about_intro }}</p>
+      <div class="row-actions page-hero-actions">
+        <a class="btn btn-solid btn-lg" href="{% url 'solutions:list' %}">Our solutions</a>
+      </div>
+    </div>
+    <figure class="about-hero-visual" aria-hidden="true">
+      <img src="{% static 'img/about-hero.webp' %}" alt="" width="860" height="860" loading="eager" decoding="async">
+    </figure>
+  </div>
+</section>
+
+<section class="section about-who-section">
+  <div class="shell split">
+    <div class="prose">
+      <p class="kicker">Who we are</p>
+      {% if site.about_body %}{{ site.about_body|linebreaks }}{% else %}
+        <p>We work at the point where physical security, network infrastructure and operational reality meet. That means a camera is never just a camera: it is a recording, an alert, a storage obligation and a piece of evidence.</p>
+        <p>Right Point Solutions was built to remove the gaps that appear when a perimeter vendor, a network integrator and a data centre contractor each point at someone else's scope. One team specifies, installs, integrates and supports.</p>
+        <p>Our clients include banks, retail groups, campuses, manufacturers and facilities teams who need systems that keep working after the commissioning photograph is taken.</p>
+      {% endif %}
+    </div>
+    <aside class="about-team-photo">
+      <img src="{% static 'img/about-team.webp' %}" alt="Right Point Solutions team" loading="lazy" decoding="async">
+    </aside>
+  </div>
+</section>
+
+<section class="hww-section">
+  <div class="hww-left">
+    <p class="kicker hww-kicker">How we work</p>
+    <h2 class="hww-heading">Principles that hold up on site.</h2>
+    <p class="hww-sub">Built from real site experience — not a sales promise.</p>
+  </div>
+  <div class="hww-right">
+    <div class="hww-pillars">
+      {% for point in why_points %}
+        <div class="hww-pillar">
+          <b class="hww-pillar-title">{{ point.title }}</b>
+          <p class="hww-pillar-body">{{ point.description }}</p>
+        </div>
+      {% empty %}
+        <div class="hww-pillar"><b class="hww-pillar-title">Risk before equipment</b><p class="hww-pillar-body">We start from what could go wrong, then choose what to buy.</p></div>
+        <div class="hww-pillar"><b class="hww-pillar-title">Engineered for local conditions</b><p class="hww-pillar-body">Power instability, dust, heat and humidity are designed for, not discovered later.</p></div>
+        <div class="hww-pillar"><b class="hww-pillar-title">Documented handover</b><p class="hww-pillar-body">As-built drawings, IP plans, credentials and training records on completion.</p></div>
+        <div class="hww-pillar"><b class="hww-pillar-title">Support that continues</b><p class="hww-pillar-body">Reviews, spares and responsive aftercare keep systems ready.</p></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="shell">
+    <header class="section-head">
+      <p class="kicker">Capabilities</p>
+      <h2>Six areas, delivered as one system.</h2>
+    </header>
+    <div class="grid grid-3">
+      {% for solution in solutions %}{% include "partials/solution_card.html" %}{% endfor %}
+    </div>
+  </div>
+</section>
+
+{% if case_studies %}
+<section class="section section-alt">
+  <div class="shell">
+    <header class="section-head">
+      <p class="kicker">Selected references</p>
+      <h2>Work we can talk about.</h2>
+    </header>
+    <div class="grid grid-3">
+      {% for study in case_studies %}{% include "partials/reference_card.html" %}{% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

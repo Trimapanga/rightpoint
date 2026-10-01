@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" width="320" height="200" role="img" aria-label="Hikvision DarkFighter turret camera schematic">
+  <title>Hikvision DarkFighter turret camera schematic</title>
+  <defs>
+    <linearGradient id="b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="0.5" stop-color="#f5f9fb"/><stop offset="1" stop-color="#dde8ec"/></linearGradient>
+    <linearGradient id="h" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eff5f7"/><stop offset="1" stop-color="#d0dde3"/></linearGradient>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9f2f5"/><stop offset="1" stop-color="#c0d6de"/></linearGradient>
+    <radialGradient id="o" cx="0.42" cy="0.36" r="0.74"><stop offset="0" stop-color="#3c6879"/><stop offset="1" stop-color="#11242d"/></radialGradient>
+    <filter id="lift" x="-16%" y="-16%" width="132%" height="132%"><feDropShadow dx="0" dy="2.5" stdDeviation="3" flood-color="#0d1b20" flood-opacity=".18"/></filter>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#lift)">
+    <ellipse cx="160" cy="176" rx="76" ry="9" fill="#0d1b20" opacity="0.07"/>
+    <ellipse cx="160" cy="52" rx="62" ry="14" fill="url(#h)" stroke="#0d1b20" stroke-width="2.4"/>
+    <circle cx="118" cy="52" r="2.5" fill="#5b7480" stroke-width="2.4"/>
+    <circle cx="202" cy="52" r="2.5" fill="#5b7480" stroke-width="2.4"/>
+    <rect x="124" y="56" width="72" height="46" rx="10" fill="url(#b)" stroke="#0d1b20" stroke-width="2.4"/>
+    <line x1="132" y1="74" x2="188" y2="74" stroke="#c3d2d8" stroke-width="1.8"/>
+    <circle cx="160" cy="118" r="40" fill="url(#g)" stroke="#0d1b20" stroke-width="2.4"/>
+    <circle cx="160" cy="118" r="20" fill="url(#o)"/>
+    <circle cx="160" cy="118" r="9" stroke="#c3d2d8" stroke-width="1.8"/>
+    <circle cx="153" cy="111" r="4" fill="#023aaa" stroke-width="2.4"/>
+    <path d="M124,118 A36,36 0 0 0 196,118" stroke="#5b7480" stroke-width="1.5" fill="none" stroke-dasharray="4 6"/>
+    <circle cx="181.21320343559643" cy="139.21320343559643" r="2.2" fill="#5b7480" stroke-width="2.4"/>
+    <circle cx="138.78679656440357" cy="139.21320343559643" r="2.2" fill="#5b7480" stroke-width="2.4"/>
+    <circle cx="138.78679656440357" cy="96.78679656440357" r="2.2" fill="#5b7480" stroke-width="2.4"/>
+    <circle cx="181.21320343559643" cy="96.78679656440357" r="2.2" fill="#5b7480" stroke-width="2.4"/>
+  </g>
+</svg>

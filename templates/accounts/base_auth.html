@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_foot %}
+<script>
+(function () {
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('.pw-toggle');
+    if (!btn) return;
+    var wrap = btn.closest('.pw-wrap');
+    var input = wrap && wrap.querySelector('input');
+    if (!input) return;
+    var show = input.type === 'password';
+    input.type = show ? 'text' : 'password';
+    btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+    var eyeShow = btn.querySelector('.pw-eye-show');
+    var eyeHide = btn.querySelector('.pw-eye-hide');
+    if (eyeShow) eyeShow.hidden = show;
+    if (eyeHide) eyeHide.hidden = !show;
+  });
+})();
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="auth-shell">
+  <div class="auth-card">
+    <a class="auth-brand" href="{% url 'home' %}" aria-label="Right Point Solutions home">
+      <img src="{% static 'img/logo.png' %}" alt="Right Point Solutions" width="120" height="40">
+    </a>
+    {% block auth_content %}{% endblock %}
+  </div>
+  <p class="auth-foot">
+    {% block auth_footer %}{% endblock %}
+  </p>
+</div>
+{% endblock %}

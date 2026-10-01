@@ -1,0 +1,16 @@
+{% extends "admin/change_list.html" %}
+{% load humanize %}
+
+{% block content %}
+  {% if inventory_summary %}
+    <div class="rps-kpis rps-kpis-tight">
+      <div class="rps-kpi"><span>Stock lines</span><strong>{{ inventory_summary.items }}</strong></div>
+      <div class="rps-kpi"><span>Units on hand</span><strong>{{ inventory_summary.units|intcomma }}</strong></div>
+      <div class="rps-kpi"><span>Stock value</span><strong>KES {{ inventory_summary.value|floatformat:0|intcomma }}</strong></div>
+      <a class="rps-kpi is-warn" href="?stock=low"><span>Low stock</span><strong>{{ inventory_summary.low }}</strong></a>
+      <a class="rps-kpi is-alert" href="?stock=out"><span>Out of stock</span><strong>{{ inventory_summary.out }}</strong></a>
+    </div>
+    <p class="rps-help">Stock only moves through the ledger: open an item and add a <b>received</b>, <b>issued</b>, <b>returned</b> or <b>adjustment</b> row. Reorder levels and locations can be edited straight in this list.</p>
+  {% endif %}
+  {{ block.super }}
+{% endblock %}

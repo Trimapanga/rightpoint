@@ -1,0 +1,27 @@
+{% if clients %}
+<section class="section section-alt reference-band" id="references" aria-labelledby="references-title">
+  <div class="shell">
+    <header class="section-head reference-head">
+      <p class="kicker">Reference work</p>
+      <h2 id="references-title">Sites you can check us against.</h2>
+      <p>Customer names and marks are published with permission. Each tile opens the profile that
+        records what the risk was, what went in, and what the client was handed at completion.</p>
+    </header>
+  </div>
+
+  <!-- Full bleed: the tiles are artwork, so the rail runs to the viewport edges and the
+       mask does the fading the shell's padding used to imply. -->
+  <div class="reference-rail">
+    <div class="reference-track">
+      {% include "partials/reference_slides.html" %}
+      {% include "partials/reference_slides.html" with clone=True %}
+    </div>
+  </div>
+
+  <div class="shell reference-more">
+    <a class="btn btn-ghost" href="{% url 'casestudies:list' %}">All reference profiles</a>
+    <p class="reference-note">More profiles are shared on request where the client has not
+      published their own record.</p>
+  </div>
+</section>
+{% endif %}

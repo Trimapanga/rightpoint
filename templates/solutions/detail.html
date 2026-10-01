@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="banner page-hero">
+  <div class="shell page-hero-grid">
+    <div class="page-hero-copy">
+      <ol class="crumbs">
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="{% url 'solutions:list' %}">Solutions</a></li>
+        <li aria-current="page">{{ solution.title }}</li>
+      </ol>
+      <p class="kicker">{{ solution.kicker|default:"RPS capability" }}</p>
+      <h1>{{ solution.title }}</h1>
+      <p class="lede">{{ solution.intro|default:solution.summary }}</p>
+      <div class="row-actions" style="margin-top:1.8rem">
+        <a class="btn btn-ghost" href="{% url 'solutions:list' %}">All solutions</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section deliver">
+  {% if solution.image_src %}
+    <figure class="deliver-visual">
+      <img src="{{ solution.image_src }}" alt="{{ solution.image_caption|default:solution.title }}" loading="lazy" decoding="async">
+    </figure>
+  {% endif %}
+  <div class="shell split">
+    <div>
+      <p class="kicker">What we deliver</p>
+      <h2>Protection with purpose.</h2>
+      <p class="lede">The right system is not defined by a product list. It is defined by how clearly it answers the risks, routines and responsibilities of the people using it.</p>
+      {% if solution.deliverable_list %}
+        <ul class="tick-list" style="margin-top:1.6rem">
+          {% for item in solution.deliverable_list %}
+            <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> {{ item }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+    <div>
+      {% if solution.image_src %}
+        <figure class="frame">
+          <img src="{{ solution.image_src }}" alt="{{ solution.image_caption|default:solution.title }}" width="640" height="480" decoding="async">
+          {% if solution.image_caption %}<figcaption>{{ solution.image_caption }}</figcaption>{% endif %}
+        </figure>
+      {% else %}
+        <div class="panel">
+          <div class="panel-head"><span class="panel-title">In the field</span><span class="status-ok"><span class="dot"></span> ready</span></div>
+          <div class="panel-rows">
+            <div class="panel-row"><span>Capability</span><strong>{{ solution.title }}</strong></div>
+            {% for tag in solution.tag_list %}<div class="panel-row"><span>Focus {{ forloop.counter }}</span><strong>{{ tag }}</strong></div>{% endfor %}
+            <div class="panel-row"><span>Delivery</span><strong class="status-ok">design &middot; install &middot; support</strong></div>
+          </div>
+          <div class="meter" style="margin-top:1rem" role="presentation"><i style="width:88%"></i></div>
+        </div>
+      {% endif %}
+
+      {% if solution.outcome_list %}
+        <div class="pane stack" style="margin-top:1.2rem">
+          <p class="kicker kicker-plain">Outcomes</p>
+          <ul class="tick-list">
+            {% for item in solution.outcome_list %}<li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> {{ item }}</li>{% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+      <div class="row-actions" style="margin-top:1.4rem">
+        <a class="btn btn-solid" href="{% url 'contact:form' %}?topic={{ solution.slug }}">Talk to an engineer about this <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% if solution.process_steps.all %}
+<section class="section section-alt">
+  <div class="shell">
+    <header class="section-head">
+      <p class="kicker">RPS method</p>
+      <h2>From first question to ready system.</h2>
+    </header>
+    <div class="steps">
+      {% for step in solution.process_steps.all %}
+        <div class="step">
+          <span class="step-index"></span>
+          <div>
+            <h3>{{ step.label|default:"Step" }}</h3>
+            <p>{{ step.description }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if related_products %}
+<section class="section">
+  <div class="shell">
+    <header class="section-head">
+      <p class="kicker">Product systems</p>
+      <h2>Equipment we specify for this.</h2>
+    </header>
+    <div class="grid grid-3">
+      {% for product in related_products %}{% include "partials/product_card.html" %}{% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="section section-alt">
+  <div class="shell">
+    <header class="section-head">
+      <p class="kicker">Keep exploring</p>
+      <h2>Other capabilities.</h2>
+    </header>
+    <div class="grid grid-3">
+      {% for other in other_solutions %}{% with solution=other %}{% include "partials/solution_card.html" %}{% endwith %}{% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

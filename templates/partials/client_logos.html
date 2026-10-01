@@ -1,0 +1,13 @@
+<ul class="client-logos"{% if clone %} aria-hidden="true"{% endif %}>
+  {% for study in clients %}
+    <li>
+      <a class="client-item" href="{{ study.get_absolute_url }}"{% if clone %} tabindex="-1"{% endif %}>
+        {% if study.logo_src %}
+          <img src="{{ study.logo_src }}" alt="{{ study.client }}" loading="eager" decoding="async">
+        {% else %}
+          <span class="client-word">{{ study.client }}</span>
+        {% endif %}
+      </a>
+    </li>
+  {% endfor %}
+</ul>

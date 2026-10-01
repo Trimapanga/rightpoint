@@ -1,0 +1,52 @@
+{% extends "accounts/base_auth.html" %}
+
+{% block title %}Sign in – Right Point Solutions{% endblock %}
+
+{% block auth_content %}
+<h1 class="auth-heading">Welcome back</h1>
+<p class="auth-sub">Sign in to your Right Point Solutions account.</p>
+
+{% if form.non_field_errors %}
+  <div class="auth-alert auth-alert-error" role="alert">
+    {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+  </div>
+{% endif %}
+
+{% if messages %}
+  {% for message in messages %}
+    <div class="auth-alert auth-alert-{{ message.tags }}" role="alert"><p>{{ message }}</p></div>
+  {% endfor %}
+{% endif %}
+
+<form class="auth-form" method="post" novalidate>
+  {% csrf_token %}
+
+  <div class="field{% if form.username.errors %} field-error{% endif %}">
+    <label for="{{ form.username.id_for_label }}">Email address</label>
+    {{ form.username }}
+    {% if form.username.errors %}<span class="field-hint field-hint-error">{{ form.username.errors.0 }}</span>{% endif %}
+  </div>
+
+  <div class="field{% if form.password.errors %} field-error{% endif %}">
+    <div class="auth-label-row">
+      <label for="{{ form.password.id_for_label }}">Password</label>
+      <a class="auth-forgot" href="{% url 'accounts:password_reset' %}">Forgot password?</a>
+    </div>
+    <div class="pw-wrap">
+      {{ form.password }}
+      <button type="button" class="pw-toggle" aria-label="Show password" tabindex="-1">
+        <svg class="pw-eye pw-eye-show" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        <svg class="pw-eye pw-eye-hide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+      </button>
+    </div>
+    {% if form.password.errors %}<span class="field-hint field-hint-error">{{ form.password.errors.0 }}</span>{% endif %}
+  </div>
+
+  <input type="hidden" name="next" value="{{ next }}">
+  <button class="btn btn-solid btn-lg auth-submit" type="submit">Sign in</button>
+</form>
+{% endblock %}
+
+{% block auth_footer %}
+  Don't have an account? <a href="{% url 'accounts:signup' %}">Create one</a>
+{% endblock %}

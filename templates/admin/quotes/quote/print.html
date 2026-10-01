@@ -1,0 +1,388 @@
+{% load static humanize %}<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ quote.number }} | {{ site.company_name }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+:root {
+  --green: #1e7a09;
+  --green-dark: #155a06;
+  --navy: #0a1f2b;
+  --ink: #0a1f2b;
+  --muted: #5b7280;
+  --line: #d1dae0;
+  --bg: #eef1ee;
+  --white: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--ink); font: 13px/1.55 "Plus Jakarta Sans", "Segoe UI", Arial, sans-serif; }
+
+/* ── Toolbar ── */
+.toolbar {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; align-items: center; gap: .5rem;
+  max-width: 210mm; margin: 0 auto;
+  padding: .7rem 0;
+  background: rgba(238,241,238,.95); backdrop-filter: blur(8px);
+}
+.toolbar-title { margin-right: auto; font-weight: 700; font-size: 13px; color: var(--navy); }
+.toolbar a, .toolbar button {
+  padding: .45rem 1rem; border-radius: 999px;
+  font: 600 12px "Plus Jakarta Sans", sans-serif;
+  cursor: pointer; text-decoration: none;
+  border: 1px solid var(--line); background: var(--white); color: var(--navy);
+  transition: opacity .15s;
+}
+.toolbar button { background: var(--green); border-color: var(--green); color: #fff; }
+.toolbar button[disabled] { opacity: .6; cursor: progress; }
+.toolbar .ghost { background: var(--white); border-color: var(--line); color: var(--navy); }
+
+/* ── Sheet ── */
+.sheet {
+  width: 210mm; min-height: 297mm;
+  margin: 0 auto 2.5rem; padding: 0;
+  background: var(--white);
+  box-shadow: 0 12px 48px rgba(0,0,0,.15);
+  overflow: hidden;
+}
+
+/* ── Top accent bar ── */
+.accent-bar { height: 6px; background: linear-gradient(90deg, var(--green) 0%, #2bcc0e 55%, var(--green-dark) 100%); }
+
+/* ── Header ── */
+.doc-header {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 10mm 14mm 8mm;
+  border-bottom: 2px solid var(--green);
+}
+.doc-header img { height: 52px; }
+.doc-title-block { text-align: right; }
+.doc-title {
+  font-size: 34px; font-weight: 800; letter-spacing: -.04em;
+  color: var(--green); line-height: 1;
+}
+.doc-company-name { font-size: 11px; font-weight: 700; color: var(--navy); margin-top: 5px; }
+.doc-company-info { font-size: 10.5px; color: var(--muted); margin-top: 2px; line-height: 1.5; }
+
+/* ── Meta row ── */
+.meta-row {
+  display: flex; justify-content: flex-end;
+  padding: 0 14mm 6mm;
+}
+.meta-table { border-collapse: collapse; font-size: 11.5px; }
+.meta-table td { padding: 2px 8px 2px 0; }
+.meta-table td:first-child { color: var(--muted); white-space: nowrap; }
+.meta-table td:last-child { font-weight: 700; color: var(--navy); text-align: right; padding-left: 12px; padding-right: 0; }
+.meta-table tr:last-child td { padding-bottom: 0; }
+
+/* ── Section header (colored band) ── */
+.sec-head {
+  background: var(--navy);
+  color: var(--white);
+  font-size: 10px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+  padding: 4px 14mm;
+}
+
+/* ── Customer block ── */
+.customer-block {
+  padding: 6mm 14mm;
+  background: #f8fafc;
+  border-bottom: 1px solid var(--line);
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6mm;
+}
+.customer-block dt { font-size: 9.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+.customer-block dd { font-size: 12.5px; color: var(--navy); }
+.customer-block dd strong { font-weight: 700; font-size: 13.5px; }
+.cust-detail { font-size: 11.5px; color: #334155; margin-top: 1px; }
+
+/* ── Lines table ── */
+.lines-wrap { padding: 0 14mm; margin-top: 7mm; }
+table.lines { width: 100%; border-collapse: collapse; }
+.lines thead tr { background: var(--navy); }
+.lines th {
+  padding: 4mm 3mm; color: var(--white);
+  font-size: 9.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  text-align: left;
+}
+.lines th:first-child { border-radius: 6px 0 0 6px; padding-left: 4mm; }
+.lines th:last-child { border-radius: 0 6px 6px 0; padding-right: 4mm; }
+.lines td { padding: 3.5mm 3mm; font-size: 12px; vertical-align: top; border-bottom: 1px solid var(--line); }
+.lines td:first-child { padding-left: 4mm; color: var(--muted); font-size: 11px; }
+.lines td:last-child { padding-right: 4mm; }
+.lines tr:nth-child(even) td { background: #f8fafc; }
+.lines tr:last-child td { border-bottom: none; }
+.lines .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.lines td small { display: block; color: var(--muted); font-size: 10px; margin-top: 1px; }
+.disc-tag { display: inline-block; background: #fef3c7; color: #92400e; border-radius: 4px; font-size: 9.5px; font-weight: 700; padding: 1px 5px; margin-left: 4px; vertical-align: middle; }
+.tax-yes { color: var(--green); font-weight: 700; font-size: 13px; }
+.tax-no  { color: var(--muted); }
+
+/* ── Totals ── */
+.totals-wrap { padding: 5mm 14mm 0; display: flex; justify-content: flex-end; }
+.totals-table { width: 80mm; border-collapse: collapse; font-size: 12px; }
+.totals-table td { padding: 2.5mm 3mm; border-bottom: 1px solid var(--line); }
+.totals-table td:last-child { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+.totals-table .total-grand {
+  background: var(--navy);
+  color: var(--white);
+  border-radius: 6px;
+  font-size: 14px; font-weight: 800;
+  border-bottom: none;
+}
+.totals-table .total-grand td { border-bottom: none; padding: 3.5mm 4mm; }
+.totals-table .total-grand td:first-child { border-radius: 6px 0 0 6px; }
+.totals-table .total-grand td:last-child { border-radius: 0 6px 6px 0; color: #6fd44a; font-size: 16px; }
+.totals-table .vat-note td { border-bottom: none; font-size: 9.5px; color: var(--muted); font-weight: 400; text-align: right; padding: 1.5mm 3mm 0; }
+
+/* ── Notes + Terms ── */
+.bottom-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+  margin: 8mm 14mm 0;
+  border: 1px solid var(--line); border-radius: 8px; overflow: hidden;
+}
+.bottom-cell { padding: 5mm; }
+.bottom-cell + .bottom-cell { border-left: 1px solid var(--line); }
+.bottom-cell h3 {
+  font-size: 9px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--white); background: var(--navy);
+  margin: -5mm -5mm 4mm; padding: 3px 5mm;
+}
+.bottom-cell p { font-size: 11px; color: #334155; white-space: pre-line; line-height: 1.6; }
+.bottom-cell ol { padding-left: 1.1em; font-size: 11px; color: #334155; line-height: 1.7; }
+
+/* ── Signature ── */
+.sig-block { margin: 7mm 14mm 0; }
+.sig-block p { font-size: 11px; color: var(--muted); margin-bottom: 4mm; }
+.sig-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10mm; margin-top: 2mm; }
+.sig-line { border-top: 1px solid var(--navy); padding-top: 2mm; font-size: 10px; color: var(--muted); }
+
+/* ── Footer ── */
+.doc-footer {
+  margin: 8mm 14mm 0;
+  padding: 4mm 0 0;
+  border-top: 1px solid var(--line);
+  font-size: 10.5px; color: var(--muted);
+  text-align: center; line-height: 1.8;
+}
+.doc-footer strong { color: var(--green); }
+.sheet-end { padding-bottom: 14mm; }
+
+/* ── Print ── */
+@page { size: A4; margin: 0; }
+@media print {
+  body { background: #fff; }
+  .toolbar { display: none; }
+  .sheet { margin: 0; box-shadow: none; width: 100%; }
+  .accent-bar, .lines thead tr, .sec-head, .totals-table .total-grand, .bottom-cell h3 {
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <span class="toolbar-title">{{ quote.number }}</span>
+  <button type="button" data-download>⬇ Download PDF</button>
+  <button type="button" class="ghost" onclick="window.print()">Print</button>
+  <a class="ghost" href="{% url 'admin:quotes_quote_change' quote.pk %}">← Back to edit</a>
+</div>
+
+<div class="sheet" id="quote-sheet">
+  <div class="accent-bar"></div>
+
+  <!-- Header: logo + title -->
+  <div class="doc-header">
+    <img src="{% static 'img/logo.png' %}" alt="{{ site.company_name }}">
+    <div class="doc-title-block">
+      <div class="doc-title">QUOTATION</div>
+      <div class="doc-company-name">{{ site.company_name }}</div>
+      <div class="doc-company-info">
+        {{ site.street_address }}<br>
+        {% if site.city %}{{ site.city }}{% if site.country %}, {{ site.country }}{% endif %}{% endif %}<br>
+        {{ site.phone_e164 }}<br>
+        {{ site.email }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Meta: quote details top-right -->
+  <div class="meta-row">
+    <table class="meta-table">
+      <tr><td>Date</td><td>{{ quote.issue_date|date:"d/m/Y" }}</td></tr>
+      <tr><td>Quote&nbsp;No.</td><td>{{ quote.number }}</td></tr>
+      <tr><td>Valid&nbsp;Until</td><td>{{ quote.valid_until|date:"d/m/Y" }}</td></tr>
+      <tr><td>Currency</td><td>KES</td></tr>
+      <tr><td>Status</td><td>{{ quote.get_status_display }}</td></tr>
+    </table>
+  </div>
+
+  <!-- Customer -->
+  <div class="sec-head">Customer</div>
+  <div class="customer-block">
+    <dl>
+      <dt>Prepared for</dt>
+      <dd><strong>{{ quote.company|default:quote.customer_name }}</strong></dd>
+      {% if quote.company %}<dd class="cust-detail">Attn: {{ quote.customer_name }}</dd>{% endif %}
+      {% if quote.email %}<dd class="cust-detail">{{ quote.email }}</dd>{% endif %}
+      {% if quote.phone %}<dd class="cust-detail">{{ quote.phone }}</dd>{% endif %}
+    </dl>
+    {% if quote.site_location %}
+    <dl>
+      <dt>Site / Delivery location</dt>
+      <dd>{{ quote.site_location }}</dd>
+    </dl>
+    {% endif %}
+  </div>
+
+  <!-- Line items -->
+  <div class="sec-head" style="margin-top:6mm">Description of goods &amp; services</div>
+  <div class="lines-wrap">
+    <table class="lines">
+      <thead>
+        <tr>
+          <th style="width:4%">#</th>
+          <th>Description</th>
+          <th class="num" style="width:8%">Qty</th>
+          <th class="num" style="width:15%">Unit Price (KES)</th>
+          <th class="num" style="width:7%">Disc.</th>
+          <th class="num" style="width:7%">VAT</th>
+          <th class="num" style="width:15%">Amount (KES)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for line in lines %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>
+            {{ line.label }}
+            {% if line.product and line.product.sku %}<small>SKU: {{ line.product.sku }}</small>{% endif %}
+          </td>
+          <td class="num">{{ line.quantity|floatformat:"-2" }}</td>
+          <td class="num">{{ line.unit_price|floatformat:2|intcomma }}</td>
+          <td class="num">
+            {% if line.discount_percent %}<span class="disc-tag">{{ line.discount_percent|floatformat:"-2" }}%</span>{% else %}—{% endif %}
+          </td>
+          <td class="num">
+            {% if line.taxed %}
+              <span class="tax-yes">✓</span>
+            {% else %}
+              <span class="tax-no">—</span>
+            {% endif %}
+          </td>
+          <td class="num"><strong>{{ line.line_total|floatformat:2|intcomma }}</strong></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" style="text-align:center;color:var(--muted);padding:8mm">No line items added yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Totals -->
+  <div class="totals-wrap">
+    <table class="totals-table">
+      <tr><td>Subtotal</td><td>{{ quote.subtotal|floatformat:2|intcomma }}</td></tr>
+      {% if quote.discount_percent %}
+      <tr><td>Discount ({{ quote.discount_percent|floatformat:"-2" }}%)</td><td>− {{ quote.discount_amount|floatformat:2|intcomma }}</td></tr>
+      {% endif %}
+      <tr><td>Net</td><td>{{ quote.net_total|floatformat:2|intcomma }}</td></tr>
+      {% if quote.apply_vat %}
+      <tr><td style="color:var(--muted);font-size:11px">Taxable amount</td><td style="color:var(--muted);font-size:11px">{{ quote.taxable_subtotal|floatformat:2|intcomma }}</td></tr>
+      <tr><td>VAT @ {{ quote.vat_rate|floatformat:"-2" }}%</td><td>{{ quote.vat_amount|floatformat:2|intcomma }}</td></tr>
+      {% else %}
+      <tr><td style="color:var(--muted)">VAT</td><td style="color:var(--muted)">Not charged</td></tr>
+      {% endif %}
+      <tr class="total-grand">
+        <td>TOTAL  —  KES</td>
+        <td>{{ quote.grand_total|floatformat:2|intcomma }}</td>
+      </tr>
+      <tr class="vat-note">
+        <td colspan="2">
+          {% if quote.apply_vat %}
+            All amounts in Kenya Shillings. VAT at {{ quote.vat_rate|floatformat:"-2" }}% applied to VAT-marked lines only.
+          {% else %}
+            All amounts in Kenya Shillings. VAT not applicable to this quotation.
+          {% endif %}
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Notes + Terms side by side -->
+  {% if quote.notes or quote.terms %}
+  <div class="bottom-grid">
+    {% if quote.notes %}
+    <div class="bottom-cell">
+      <h3>Notes</h3>
+      <p>{{ quote.notes }}</p>
+    </div>
+    {% endif %}
+    {% if quote.terms %}
+    <div class="bottom-cell">
+      <h3>Terms &amp; Conditions</h3>
+      <p>{{ quote.terms }}</p>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <!-- Acceptance -->
+  <div class="sig-block">
+    <p>By signing below, the customer indicates acceptance of the prices and terms stated in this quotation.</p>
+    <div class="sig-row">
+      <div>
+        <div style="height:12mm"></div>
+        <div class="sig-line">Authorised signature</div>
+      </div>
+      <div>
+        <div style="height:12mm"></div>
+        <div class="sig-line">Print name &amp; date</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="doc-footer">
+    If you have any questions about this quotation, please contact us at<br>
+    {{ site.phone_e164 }} &nbsp;·&nbsp; {{ site.email }}<br>
+    <strong>Thank you for your business!</strong>
+  </div>
+  <div class="sheet-end"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+(function () {
+  var btn = document.querySelector("[data-download]");
+  function download() {
+    if (!window.html2pdf) { window.print(); return; }
+    btn.disabled = true;
+    btn.textContent = "Preparing…";
+    var sheet = document.getElementById("quote-sheet");
+    var shadow = sheet.style.boxShadow;
+    sheet.style.boxShadow = "none";
+    window.html2pdf().set({
+      margin: 0,
+      filename: "{{ quote.number }}.pdf",
+      image: { type: "jpeg", quality: 0.97 },
+      html2canvas: { scale: 2, useCORS: true, backgroundColor: "#ffffff" },
+      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+      pagebreak: { mode: ["css", "legacy"] }
+    }).from(sheet).save().then(function () {
+      sheet.style.boxShadow = shadow;
+      btn.disabled = false;
+      btn.textContent = "⬇ Download PDF";
+    });
+  }
+  btn.addEventListener("click", download);
+  if (new URLSearchParams(location.search).get("download") === "1") {
+    (document.fonts ? document.fonts.ready : Promise.resolve()).then(download);
+  }
+})();
+</script>
+</body>
+</html>

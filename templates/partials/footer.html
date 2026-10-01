@@ -1,0 +1,56 @@
+{% load static %}
+<footer class="site-footer ft" id="site-footer">
+  <div class="shell footer-grid">
+    <div class="ft-about">
+      <a class="ft-logo" href="{% url 'home' %}" aria-label="{{ site.company_name }} - home">
+        <img src="{% static 'img/logo.png' %}" alt="{{ site.company_name }}" width="326" height="200" loading="lazy">
+      </a>
+      <p class="ft-blurb">We design, install and maintain CCTV, access control, electric fencing and data centre infrastructure for businesses and institutions across Kenya.</p>
+      <ul class="ft-reach footer-contact">
+        <li><span class="ft-label">Call</span> <a href="{{ site.telephone_url }}">{{ site.phone_e164 }}</a></li>
+        <li><span class="ft-label">Email</span> <a href="{{ site.email_url }}">{{ site.email }}</a></li>
+        {% if site.whatsapp_url %}<li><span class="ft-label">WhatsApp</span> <a href="{{ site.whatsapp_url }}" target="_blank" rel="noopener">Send us a message</a></li>{% endif %}
+      </ul>
+    </div>
+
+    <nav class="ft-col" aria-label="Solutions">
+      <h2 class="ft-heading">Solutions</h2>
+      <ul class="ft-links">
+        {% for solution in nav_solutions %}
+          <li><a href="{{ solution.get_absolute_url }}">{{ solution.title }}</a></li>
+        {% endfor %}
+      </ul>
+    </nav>
+
+    <nav class="ft-col" aria-label="Company">
+      <h2 class="ft-heading">Company</h2>
+      <ul class="ft-links">
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="{% url 'about' %}">About</a></li>
+        <li><a href="{% url 'products:list' %}">Shop</a></li>
+        <li><a href="{% url 'casestudies:list' %}">Case studies</a></li>
+        <li><a href="{% url 'contact:form' %}">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="ft-col">
+      <h2 class="ft-heading">Office</h2>
+      <address class="ft-address">
+        {{ site.street_address }}<br>
+        {% if site.address_note %}{{ site.address_note }}<br>{% endif %}
+        {{ site.postal_address }}<br>
+        {{ site.city }}, {{ site.country }}
+      </address>
+      <p class="ft-hours">{{ site.working_hours }}</p>
+      {% if site.map_url %}<a class="ft-map" href="{{ site.map_url }}" target="_blank" rel="noopener">Get directions</a>{% endif %}
+    </div>
+  </div>
+
+  <div class="shell footer-bottom">
+    <p>&copy; {% now "Y" %} {{ site.company_name }}. All rights reserved.</p>
+    <ul class="ft-legal">
+      <li><a href="/sitemap.xml">Sitemap</a></li>
+      <li><a href="#main">Back to top</a></li>
+    </ul>
+  </div>
+</footer>

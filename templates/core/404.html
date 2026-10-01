@@ -1,0 +1,18 @@
+{% extends "core/error_base.html" %}
+
+{% load static %}
+{% block title %}Page not found{% endblock %}
+{% block error %}
+  <figure class="error-visual" aria-hidden="true">
+    <img src="{% static 'img/site/not-found.svg' %}" alt="" width="600" height="400" decoding="async">
+  </figure>
+  <p class="kicker">Error {{ status_code|default:404 }}</p>
+  <h1>This page is not on the route.</h1>
+  <p class="lede">The address may have changed, or the record may no longer be published. Everything below is still available.</p>
+  <div class="row-actions" style="margin-top:1.8rem">
+    <a class="btn btn-solid" href="/">Back to home</a>
+    <a class="btn btn-ghost" href="/solutions/">Solutions</a>
+    <a class="btn btn-ghost" href="/products/">Products</a>
+    <a class="btn btn-ghost" href="/contact/">Contact us</a>
+  </div>
+{% endblock %}

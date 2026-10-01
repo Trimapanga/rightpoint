@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block reference_band %}{% endblock %}
+
+{% block content %}
+<section class="shop-top" aria-label="Shop">
+  <div class="shell">
+    <div class="shop-topbar">
+      <div class="shop-title-wrap">
+        <ol class="crumbs"><li><a href="{% url 'home' %}">Home</a></li><li aria-current="page">Shop</li></ol>
+        <h1 class="shop-title">Shop security equipment</h1>
+      </div>
+      <form class="shop-search" method="get" action="{% url 'products:list' %}" role="search">
+        {% if active_brand %}<input type="hidden" name="brand" value="{{ active_brand.slug }}">{% endif %}
+        {% if active_category %}<input type="hidden" name="category" value="{{ active_category.slug }}">{% endif %}
+        {% if sort != 'curated' %}<input type="hidden" name="sort" value="{{ sort }}">{% endif %}
+        <div class="search-field">
+          <svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>
+          <label class="visually-hidden" for="id_q">Search products</label>
+          <input id="id_q" type="search" name="q" value="{{ query }}" placeholder="Search printers, terminals, ribbons&hellip;" autocomplete="off">
+        </div>
+        <button class="btn btn-solid" type="submit">Search</button>
+      </form>
+    </div>
+
+    <ul class="shop-perks">
+      <li><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg><span><strong>Genuine equipment</strong> with manufacturer support</span></li>
+      <li><svg class="icon" aria-hidden="true"><use href="#i-clipboard"/></svg><span><strong>Setup &amp; training</strong> on delivery</span></li>
+      <li><svg class="icon" aria-hidden="true"><use href="#i-server"/></svg><span><strong>Ribbons &amp; card stock</strong> held for continuity</span></li>
+      <li><svg class="icon" aria-hidden="true"><use href="#i-whatsapp"/></svg><span><strong>Order fast</strong> by quote or WhatsApp</span></li>
+    </ul>
+
+    <nav class="shop-depts" aria-labelledby="depts-title">
+      <h2 class="visually-hidden" id="depts-title">Departments</h2>
+      <div class="dept-grid">
+        <a class="dept-tile{% if not active_category %} is-active{% endif %}" href="{% url 'products:list' %}{% if active_brand %}?brand={{ active_brand.slug }}{% endif %}{% if query %}&amp;q={{ query|urlencode }}{% endif %}">
+          <span class="dept-name">All products</span>
+          <span class="dept-count">{{ catalogue_total }}</span>
+        </a>
+        {% for category in categories %}
+          <a class="dept-tile{% if active_category.slug == category.slug %} is-active{% endif %}" href="{% url 'products:list' %}?category={{ category.slug }}{% if active_brand %}&amp;brand={{ active_brand.slug }}{% endif %}{% if query %}&amp;q={{ query|urlencode }}{% endif %}">
+            <span class="dept-name">{{ category.name }}</span>
+            <span class="dept-count">{{ category.product_count }}</span>
+          </a>
+        {% endfor %}
+      </div>
+    </nav>
+  </div>
+</section>
+
+<section class="section shop-body">
+  <div class="shell shop-layout">
+
+    <aside class="shop-rail" aria-label="Refine products">
+      <div class="rail-block">
+        <p class="rail-title">Refine by group</p>
+        <ul class="rail-list">
+          <li><a class="rail-link{% if not active_category %} is-active{% endif %}" href="{% url 'products:list' %}{% if active_brand %}?brand={{ active_brand.slug }}{% endif %}{% if query %}&amp;q={{ query|urlencode }}{% endif %}">All groups <span class="rail-n">{{ catalogue_total }}</span></a></li>
+          {% for category in categories %}
+            <li><a class="rail-link{% if active_category.slug == category.slug %} is-active{% endif %}" href="{% url 'products:list' %}?category={{ category.slug }}{% if active_brand %}&amp;brand={{ active_brand.slug }}{% endif %}{% if query %}&amp;q={{ query|urlencode }}{% endif %}">{{ category.name }} <span class="rail-n">{{ category.product_count }}</span></a></li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="rail-block">
+        <p class="rail-title">Manufacturer</p>
+        <ul class="rail-list">
+          <li><a class="rail-link{% if not active_brand %} is-active{% endif %}" href="{% url 'products:list' %}{% if active_category %}?category={{ active_category.slug }}{% endif %}{% if query %}&amp;q={{ query|urlencode }}{% endif %}">All manufacturers <span class="rail-n">{{ catalogue_total }}</span></a></li>
+          {% for brand in brands %}
+            <li><a class="rail-link{% if active_brand.slug == brand.slug %} is-active{% endif %}" href="{% url 'products:list' %}?brand={{ brand.slug }}{% if active_category %}&amp;category={{ active_category.slug }}{% endif %}{% if query %}&amp;q={{ query|urlencode }}{% endif %}"><span class="brand-mark brand-mark-xs" aria-hidden="true">{{ brand.monogram }}</span> {{ brand.name }} <span class="rail-n">{{ brand.product_count }}</span></a></li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      {% if basket_rows %}
+        <div class="rail-block rail-list-block" data-basket-rail-block>
+          <p class="rail-title">On your list</p>
+          <ul class="rail-tally">
+            {% for row in basket_rows %}
+              <li><span>{{ row.product.title }}</span> <span class="rail-n">&times;{{ row.quantity }}</span></li>
+            {% endfor %}
+          </ul>
+          <div class="row-actions rail-actions">
+            <a class="btn btn-solid btn-sm" href="{% url 'products:basket' %}">Get quotes <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+            <form method="post" action="{% url 'products:basket_clear' %}" data-basket-form>
+              {% csrf_token %}
+              <input type="hidden" name="next" value="{{ request.get_full_path }}">
+              <button class="btn btn-ghost btn-sm" type="submit" data-basket-clear>Empty list</button>
+            </form>
+          </div>
+        </div>
+      {% endif %}
+
+      <div class="rail-block rail-note rail-howto">
+        <p class="rail-title">How ordering works</p>
+        <ol class="howto-steps">
+          <li><strong>Add to quote</strong><span>Pick models and quantities.</span></li>
+          <li><strong>Send your list</strong><span>An engineer prices it for your site.</span></li>
+          <li><strong>Delivered &amp; set up</strong><span>Configured, tested and handed over.</span></li>
+        </ol>
+      </div>
+    </aside>
+
+    <div class="shop-main">
+      <div class="shop-bar">
+        <p class="shop-count"><strong>{{ count }}</strong> product{{ count|pluralize }}{% if active_category %} in {{ active_category.name|lower }}{% endif %}{% if active_brand %} from {{ active_brand.name }}{% endif %}</p>
+        <form class="shop-sort" method="get" action="{% url 'products:list' %}">
+          {% if active_brand %}<input type="hidden" name="brand" value="{{ active_brand.slug }}">{% endif %}
+          {% if active_category %}<input type="hidden" name="category" value="{{ active_category.slug }}">{% endif %}
+          {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
+          <label class="sort-label" for="id_sort"><svg class="icon" aria-hidden="true"><use href="#i-sort"/></svg> Sort</label>
+          <select class="sort-select" id="id_sort" name="sort" data-autosubmit>
+            {% for key, label in sorts %}<option value="{{ key }}"{% if key == sort %} selected{% endif %}>{{ label }}</option>{% endfor %}
+          </select>
+          <button class="btn btn-ghost btn-sm sort-apply" type="submit">Apply</button>
+        </form>
+      </div>
+
+      {% if active_category or active_brand or query %}
+        <div class="chip-row shop-active" aria-label="Active refinements">
+          {% if query %}<a class="chip chip-link" href="{% url 'products:list' %}?{% if active_brand %}brand={{ active_brand.slug }}&amp;{% endif %}{% if active_category %}category={{ active_category.slug }}{% endif %}">&ldquo;{{ query }}&rdquo; <svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></a>{% endif %}
+          {% if active_category %}<a class="chip chip-link" href="{% url 'products:list' %}?{% if active_brand %}brand={{ active_brand.slug }}&amp;{% endif %}{% if query %}q={{ query|urlencode }}{% endif %}">{{ active_category.name }} <svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></a>{% endif %}
+          {% if active_brand %}<a class="chip chip-link" href="{% url 'products:list' %}?{% if active_category %}category={{ active_category.slug }}&amp;{% endif %}{% if query %}q={{ query|urlencode }}{% endif %}">{{ active_brand.name }} <svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></a>{% endif %}
+          <a class="chip chip-reset" href="{% url 'products:list' %}">Reset</a>
+        </div>
+      {% endif %}
+
+      {% if products %}
+        <div class="shop-grid">
+          {% for product in products %}{% include "partials/product_card.html" %}{% endfor %}
+        </div>
+
+        <nav class="pagination" aria-label="Pagination">
+          {% if is_paginated %}
+            {% if page_obj.has_previous %}
+              <a href="?{% if active_brand %}brand={{ active_brand.slug }}&amp;{% endif %}{% if active_category %}category={{ active_category.slug }}&amp;{% endif %}{% if query %}q={{ query|urlencode }}&amp;{% endif %}{% if sort != 'curated' %}sort={{ sort }}&amp;{% endif %}page={{ page_obj.previous_page_number }}">&larr; Previous</a>
+            {% endif %}
+            <span class="current">Page {{ page_obj.number }} of {{ paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+              <a href="?{% if active_brand %}brand={{ active_brand.slug }}&amp;{% endif %}{% if active_category %}category={{ active_category.slug }}&amp;{% endif %}{% if query %}q={{ query|urlencode }}&amp;{% endif %}{% if sort != 'curated' %}sort={{ sort }}&amp;{% endif %}page={{ page_obj.next_page_number }}">Next &rarr;</a>
+            {% endif %}
+          {% else %}
+            <span class="fine">Showing all {{ count }} matching product{{ count|pluralize }}.</span>
+          {% endif %}
+        </nav>
+      {% else %}
+        <p class="empty">No products match that combination yet. <a class="btn-link" href="{% url 'products:list' %}">Clear the refinements</a> or ask us to source it.</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% endblock %}

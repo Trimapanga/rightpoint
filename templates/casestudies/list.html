@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% comment %}This page *is* the reference list, so the shared band would print the same
+profiles twice on one screen. {% endcomment %}
+{% block reference_band %}{% endblock %}
+
+{% block content %}
+<section class="banner page-hero cs-banner">
+  <div class="shell page-hero-grid">
+    <div class="page-hero-copy">
+      <ol class="crumbs"><li><a href="{% url 'home' %}">Home</a></li><li aria-current="page">Case studies</li></ol>
+      <h1>Proof of a careful approach.</h1>
+      <p class="lede">Reference profiles show how Right Point Solutions brings technology, field experience and strategic thinking into one accountable delivery. Customer names and project details are published only with permission.</p>
+      {% if case_studies %}
+      <dl class="cs-stats">
+        <div><dt>Published profiles</dt><dd>{{ case_studies|length|stringformat:"02d" }}</dd></div>
+        {% if sectors %}<div><dt>Sectors</dt><dd>{{ sectors|length|stringformat:"02d" }}</dd></div>{% endif %}
+        {% if country_count %}<div><dt>Countries</dt><dd>{{ country_count|stringformat:"02d" }}</dd></div>{% endif %}
+      </dl>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<section class="section cs-section">
+  <div class="shell">
+    {% if sectors|length > 1 %}
+    <div class="cs-filter" role="group" aria-label="Filter by sector" data-cs-filter>
+      <button type="button" class="cs-chip is-active" data-sector="" aria-pressed="true">All <span>{{ case_studies|length }}</span></button>
+      {% for sector in sectors %}
+        <button type="button" class="cs-chip" data-sector="{{ sector|slugify }}" aria-pressed="false">{{ sector }}</button>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="cs-grid">
+      {% for study in case_studies %}
+        <article class="cs-card" data-sector="{{ study.sector|slugify }}">
+          <div class="cs-media{% if study.cover_photo %} has-cover{% endif %}"
+               {% if study.cover_photo %}style="--cs-cover:url('{{ study.cover_photo.url }}')"{% endif %}
+               aria-hidden="true">
+            <span class="cs-ref">Ref {{ forloop.counter|stringformat:"02d" }}</span>
+            {% if study.country %}<span class="cs-country">{{ study.country }}</span>{% endif %}
+            {% if study.cover_photo %}
+              <img class="cs-cover-img" src="{{ study.cover_photo.url }}" alt="" loading="lazy" decoding="async">
+            {% endif %}
+            <span class="cs-chipmark">
+              {% if study.logo_src %}<img src="{{ study.logo_src }}" alt="" loading="lazy" decoding="async">{% else %}<span class="cs-word">{{ study.client }}</span>{% endif %}
+            </span>
+          </div>
+          <div class="cs-body">
+            <p class="cs-eyebrow">{{ study.eyebrow|default:study.sector }}</p>
+            <h2 class="cs-title"><a href="{{ study.get_absolute_url }}">{{ study.client }}</a></h2>
+            {% if study.sector %}<p class="cs-meta">{{ study.sector }}{% if study.country %} &middot; {{ study.country }}{% endif %}</p>{% endif %}
+            <p class="cs-summary">{{ study.summary }}</p>
+            {% if study.highlight_list %}
+              <ul class="cs-points">
+                {% for item in study.highlight_list|slice:":3" %}<li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>{{ item }}</li>{% endfor %}
+              </ul>
+            {% endif %}
+            <p class="cs-foot">Read profile <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></p>
+          </div>
+        </article>
+      {% empty %}
+        <p class="empty">Reference profiles are being prepared. Ask us for the ones we can share.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var bar = document.querySelector("[data-cs-filter]");
+    if (!bar) return;
+    var cards = document.querySelectorAll(".cs-card");
+    bar.addEventListener("click", function (event) {
+      var chip = event.target.closest(".cs-chip");
+      if (!chip) return;
+      var sector = chip.getAttribute("data-sector");
+      bar.querySelectorAll(".cs-chip").forEach(function (c) {
+        var on = c === chip;
+        c.classList.toggle("is-active", on);
+        c.setAttribute("aria-pressed", on ? "true" : "false");
+      });
+      cards.forEach(function (card) {
+        card.hidden = !!sector && card.getAttribute("data-sector") !== sector;
+      });
+    });
+  })();
+</script>
+
+{% endblock %}

@@ -1,0 +1,51 @@
+{% if basket_rows %}
+  <ul class="basket-list">
+    {% for row in basket_rows %}
+      <li class="basket-row">
+        <span class="basket-thumb" aria-hidden="true">
+          {% if row.product.image %}
+            <img src="{{ row.product.image.url }}" alt="" loading="lazy" decoding="async">
+          {% else %}
+            <span class="brand-mark">{{ row.product.brand.monogram }}</span>
+          {% endif %}
+        </span>
+        <div class="basket-row-body">
+          <a class="basket-row-name" href="{{ row.product.get_absolute_url }}">{{ row.product.title }}</a>
+          <p class="basket-row-meta">{{ row.product.brand.name }} &middot; {{ row.product.category.name }}</p>
+          <div class="qty">
+            <form class="qty-step" method="post" action="{% url 'products:basket_set' %}" data-basket-form>
+              {% csrf_token %}
+              <input type="hidden" name="line" value="{{ row.product.slug }}">
+              <input type="hidden" name="quantity" value="{{ row.quantity|add:'-1' }}">
+              <input type="hidden" name="next" value="{{ request.get_full_path }}">
+              <button class="qty-btn" type="submit" aria-label="One fewer {{ row.product.title }}{% if row.quantity == 1 %} - removes the line{% endif %}">
+                <svg class="icon" aria-hidden="true"><use href="#i-minus"/></svg>
+              </button>
+            </form>
+            <p class="qty-out"><span class="visually-hidden">Units: </span>{{ row.quantity }}</p>
+            <form class="qty-step" method="post" action="{% url 'products:basket_set' %}" data-basket-form>
+              {% csrf_token %}
+              <input type="hidden" name="line" value="{{ row.product.slug }}">
+              <input type="hidden" name="quantity" value="{{ row.quantity|add:'1' }}">
+              <input type="hidden" name="next" value="{{ request.get_full_path }}">
+              <button class="qty-btn" type="submit" aria-label="One more {{ row.product.title }}" {% if row.quantity >= 99 %}disabled{% endif %}>
+                <svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>
+              </button>
+            </form>
+          </div>
+        </div>
+        <form class="basket-row-kill" method="post" action="{% url 'products:basket_remove' %}" data-basket-form>
+          {% csrf_token %}
+          <input type="hidden" name="line" value="{{ row.product.slug }}">
+          <input type="hidden" name="next" value="{{ request.get_full_path }}">
+          <button class="kill-btn" type="submit" aria-label="Remove {{ row.product.title }} from your list">
+            <svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>
+          </button>
+        </form>
+      </li>
+    {% endfor %}
+  </ul>
+  <p class="basket-note fine">Quantities are a starting point for the conversation, not an order. Consumables, encoders and spares are confirmed with the site survey.</p>
+{% else %}
+  {% include "partials/basket_empty.html" %}
+{% endif %}

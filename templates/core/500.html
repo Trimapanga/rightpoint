@@ -1,0 +1,12 @@
+{% extends "core/error_base.html" %}
+
+{% block title %}Server error{% endblock %}
+{% block error %}
+  <p class="kicker">Service status</p>
+  <h1>Something went wrong at our end.</h1>
+  <p class="lede">The request could not be completed and the team has been notified. If you were sending an enquiry, please try again or call us directly on +254 734 030 388.</p>
+  <div class="row-actions" style="margin-top:1.8rem">
+    <a class="btn btn-solid" href="/">Back to home</a>
+    <a class="btn btn-ghost" href="/contact/">Contact us</a>
+  </div>
+{% endblock %}

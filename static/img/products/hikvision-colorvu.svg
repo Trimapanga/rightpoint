@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" width="320" height="200" role="img" aria-label="Hikvision ColorVu bullet camera schematic">
+  <title>Hikvision ColorVu bullet camera schematic</title>
+  <defs>
+    <linearGradient id="b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="0.5" stop-color="#f5f9fb"/><stop offset="1" stop-color="#dde8ec"/></linearGradient>
+    <linearGradient id="h" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eff5f7"/><stop offset="1" stop-color="#d0dde3"/></linearGradient>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9f2f5"/><stop offset="1" stop-color="#c0d6de"/></linearGradient>
+    <radialGradient id="o" cx="0.42" cy="0.36" r="0.74"><stop offset="0" stop-color="#3c6879"/><stop offset="1" stop-color="#11242d"/></radialGradient>
+    <filter id="lift" x="-16%" y="-16%" width="132%" height="132%"><feDropShadow dx="0" dy="2.5" stdDeviation="3" flood-color="#0d1b20" flood-opacity=".18"/></filter>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#lift)">
+    <ellipse cx="160" cy="168" rx="88" ry="9" fill="#0d1b20" opacity="0.07"/>
+    <rect x="150" y="148" width="62" height="14" rx="5" fill="url(#h)" stroke="#0d1b20" stroke-width="2.4"/>
+    <circle cx="162" cy="155" r="2.5" fill="#5b7480" stroke-width="2.4"/>
+    <circle cx="200" cy="155" r="2.5" fill="#5b7480" stroke-width="2.4"/>
+    <rect x="172" y="122" width="16" height="28" rx="4" fill="url(#h)" stroke="#0d1b20" stroke-width="2.4"/>
+    <circle cx="180" cy="118" r="10" fill="url(#b)" stroke="#0d1b20" stroke-width="2.4"/>
+    <rect x="88" y="84" width="132" height="44" rx="22" fill="url(#b)" stroke="#0d1b20" stroke-width="2.4"/>
+    <path d="M96,84 Q92,72 108,72 L212,72" stroke="#0d1b20" stroke-width="2.4" fill="none"/>
+    <circle cx="96" cy="106" r="21" fill="url(#g)" stroke="#0d1b20" stroke-width="2.4"/>
+    <circle cx="96" cy="106" r="12" fill="url(#o)"/>
+    <circle cx="92" cy="102" r="3.8" fill="#023aaa" stroke-width="2.4"/>
+    <circle cx="96" cy="106" r="17" stroke="#2b990b" stroke-width="1.8" stroke-dasharray="3 5"/>
+    <path d="M220,106 Q244,106 250,124 Q254,136 268,138" stroke="#0d1b20" stroke-width="2.4" fill="none"/>
+  </g>
+</svg>

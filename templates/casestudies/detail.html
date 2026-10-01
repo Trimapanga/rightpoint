@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="banner page-hero">
+  <div class="shell page-hero-grid">
+    <div class="page-hero-copy">
+      <ol class="crumbs">
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="{% url 'casestudies:list' %}">Case studies</a></li>
+        <li aria-current="page">{{ case_study.client }}</li>
+      </ol>
+      <p class="kicker">{{ case_study.eyebrow|default:case_study.sector }}</p>
+      <h1>{{ case_study.title }}</h1>
+      <p class="lede">{{ case_study.summary }}</p>
+      <div class="row-actions" style="margin-top:1.6rem">
+        {% if case_study.sector %}<span class="chip">{{ case_study.sector }}</span>{% endif %}
+        {% if case_study.country %}<span class="chip">{{ case_study.country }}</span>{% endif %}
+        {% if case_study.published_on %}<span class="chip">{{ case_study.published_on|date:"M Y" }}</span>{% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="shell split">
+    <div class="prose">
+      {% if case_study.challenge %}<h2>The situation</h2>{{ case_study.challenge|linebreaks }}{% endif %}
+      {% if case_study.approach %}<h2>What we did</h2>{{ case_study.approach|linebreaks }}{% endif %}
+      {% if case_study.result %}<h2>Outcome</h2>{{ case_study.result|linebreaks }}{% endif %}
+
+      {% if case_study.public_source %}
+        <p class="fine" style="margin-top:2rem">
+          <svg class="icon" style="display:inline" aria-hidden="true"><use href="#i-check"/></svg>
+          Publicly verifiable reference:
+          <a class="btn-link" href="{{ case_study.public_source }}" target="_blank" rel="noopener nofollow">view source <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        </p>
+      {% endif %}
+    </div>
+
+    <aside>
+      {% if case_study.logo_src %}
+        <figure class="frame logo-plate"><img src="{{ case_study.logo_src }}" alt="{{ case_study.client }}" loading="lazy" decoding="async"></figure>
+      {% endif %}
+      {% if case_study.highlight_list %}
+        <div class="pane stack">
+          <p class="kicker kicker-plain">Delivery covered</p>
+          <ul class="tick-list">
+            {% for item in case_study.highlight_list %}<li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> {{ item }}</li>{% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+    </aside>
+  </div>
+</section>
+
+{% if others %}
+<section class="section section-alt">
+  <div class="shell">
+    <header class="section-head"><p class="kicker">More references</p><h2>Other profiles.</h2></header>
+    <div class="grid grid-3">
+      {% for study in others %}{% include "partials/reference_card.html" %}{% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

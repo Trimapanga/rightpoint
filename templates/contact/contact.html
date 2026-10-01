@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="banner page-hero">
+  <div class="shell page-hero-grid">
+    <div class="page-hero-copy">
+      <ol class="crumbs"><li><a href="{% url 'home' %}">Home</a></li><li aria-current="page">Contact</li></ol>
+      <h1>Let's make security certain.</h1>
+      <p class="lede">Tell us what you're protecting, what's changing, or where you see a gap. We'll help you find the right point of action.</p>
+      <div class="row-actions page-hero-actions">
+        <a class="btn btn-solid btn-lg" href="#enquiry">Send an enquiry <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="btn btn-ghost btn-lg" href="{{ site.telephone_url }}"><svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg> {{ site.phone_e164 }}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section contact-section">
+  <div class="shell split">
+    <div>
+      <p class="kicker">Direct lines</p>
+      <h2>Talk to a specialist.</h2>
+      <ul class="tick-list stack contact-lines" style="margin-top:1.4rem">
+        <li><svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg><span><a href="{{ site.telephone_url }}">{{ site.phone_e164 }}</a><br><span class="fine">{{ site.working_hours }}</span></span></li>
+        <li><svg class="icon" aria-hidden="true"><use href="#i-whatsapp"/></svg><span><a href="{{ site.whatsapp_url }}" target="_blank" rel="noopener">Chat on WhatsApp</a><br><span class="fine">Fastest for site photos and quick questions</span></span></li>
+        <li><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg><span><a href="{{ site.email_url }}">{{ site.email }}</a><br><span class="fine">For tenders, drawings and documentation</span></span></li>
+        <li><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg><span>{{ site.street_address }}<br>{{ site.address_note }}<br>{{ site.postal_address }}, {{ site.city }}, {{ site.country }}
+          {% if site.map_url %}<br><a class="btn-link" href="{{ site.map_url }}" target="_blank" rel="noopener">Open in maps <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>{% endif %}
+        </span></li>
+      </ul>
+      <div class="pane stack" style="margin-top:2rem">
+        <p class="kicker kicker-plain">Good to include</p>
+        <ul class="tick-list">
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Site location and access hours</li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Number of doors, cameras or personnel</li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Existing equipment you want to keep</li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Budget window and decision date</li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="enquiry">
+      <p class="kicker">Start a conversation</p>
+      {% if has_errors %}
+        <p class="muted" style="margin-bottom:1rem">Please correct the highlighted fields and send again.</p>
+      {% endif %}
+      {% include "partials/enquiry_form.html" %}
+      {% if products %}
+        <div class="pane" style="margin-top:1.6rem">
+          <p class="kicker kicker-plain">Popular requests</p>
+          <div class="chip-row">
+            {% for product in products %}
+              <a class="pill" href="{% url 'contact:form' %}?topic={{ product.slug }}">{{ product.title }}</a>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

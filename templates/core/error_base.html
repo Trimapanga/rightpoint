@@ -1,0 +1,26 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Error{% endblock %} | Right Point Solutions</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="stylesheet" href="{% static 'css/site.css' %}">
+  <link rel="icon" type="image/png" sizes="192x192" href="{% static 'img/favicon-192.png' %}">
+</head>
+<body>
+<main id="main">
+  <section class="banner">
+    <div class="shell shell-narrow">
+      {% block error %}{% endblock %}
+    </div>
+  </section>
+</main>
+<footer class="site-footer">
+  <div class="shell footer-bottom">
+    <p>&copy; {% now "Y" %} Right Point Solutions</p>
+    <p>Nairobi, Kenya &middot; +254 734 030 388</p>
+  </div>
+</footer>
+</body>
+</html>

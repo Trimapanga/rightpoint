@@ -1,0 +1,22 @@
+<div class="basket-scrim" data-basket-scrim aria-hidden="true"></div>
+<aside class="basket-drawer" id="basket-drawer" data-basket-drawer role="dialog" aria-modal="true" aria-labelledby="basket-drawer-title" aria-hidden="true">
+  <header class="drawer-head">
+    <div>
+      <p class="kicker kicker-plain">Right Point Solutions</p>
+      <h2 class="drawer-title" id="basket-drawer-title">Your quote list</h2>
+    </div>
+    <button class="kill-btn drawer-close" type="button" data-basket-close aria-label="Close your list">
+      <svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>
+    </button>
+  </header>
+  <div class="drawer-body" data-basket-panel>
+    {% include "partials/basket_panel.html" %}
+  </div>
+  <footer class="drawer-foot">
+    <p class="drawer-tally"><strong data-basket-count>{{ basket_slugs|length }}</strong> product{{ basket_slugs|length|pluralize }} &middot; <strong data-basket-units>{{ basket_count }}</strong> unit{{ basket_count|pluralize }} on the list</p>
+    <div class="row-actions">
+      <a class="btn btn-ghost btn-sm" href="{% url 'products:basket' %}">Open full list</a>
+      <a class="btn btn-solid btn-sm" href="{% url 'products:basket' %}#enquiry">Send to an engineer <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    </div>
+  </footer>
+</aside>

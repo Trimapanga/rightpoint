@@ -1,0 +1,24 @@
+<article class="card sol-card{% if solution.image_is_photo %} sol-art{% endif %}">
+  <span class="sol-num" aria-hidden="true">{{ forloop.counter|stringformat:"02d" }}</span>
+
+  <div class="sol-plate" aria-hidden="true">
+    {% if solution.image_is_photo %}
+      <img src="{{ solution.image_src }}" alt="" width="640" height="400" loading="lazy" decoding="async">
+    {% endif %}
+    <span class="sol-plate-icon">
+      <span class="sol-icon"><svg class="icon" aria-hidden="true"><use href="#i-{{ solution.icon|default:'shield' }}"/></svg></span>
+    </span>
+  </div>
+
+  <div class="sol-body-wrap">
+    <h3 class="link-card sol-title"><a href="{{ solution.get_absolute_url }}">{{ solution.title }}</a></h3>
+    <p class="sol-body">{{ solution.summary }}</p>
+    {% if solution.tag_list %}
+      <ul class="sol-tags">{% for tag in solution.tag_list %}<li>{{ tag }}</li>{% endfor %}</ul>
+    {% endif %}
+    <p class="sol-foot">
+      <span>Explore capability</span>
+      <span class="sol-go" aria-hidden="true"><svg class="icon"><use href="#i-arrow"/></svg></span>
+    </p>
+  </div>
+</article>

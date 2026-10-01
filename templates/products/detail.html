@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="banner">
+  <div class="shell">
+    <ol class="crumbs">
+      <li><a href="{% url 'home' %}">Home</a></li>
+      <li><a href="{% url 'products:list' %}">Products</a></li>
+      <li><a href="{% url 'products:list' %}?category={{ product.category.slug }}">{{ product.category.name }}</a></li>
+      <li aria-current="page">{{ product.title }}</li>
+    </ol>
+    <p class="kicker">{{ product.eyebrow|default:product.brand.name }}</p>
+    <h1>{{ product.title }}</h1>
+    <p class="lede">{{ product.summary }}</p>
+    <div class="row-actions" style="margin-top:1.8rem">
+      <form class="add-form" method="post" action="{% url 'products:basket_add' product.slug %}" data-basket-form>
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+        <span class="qty">
+          <button class="qty-btn" type="button" data-qty-step="-1" aria-label="Fewer units"><svg class="icon" aria-hidden="true"><use href="#i-minus"/></svg></button>
+          <input class="qty-input" type="number" name="quantity" value="{{ in_basket|default:1 }}" min="1" max="99" step="1" inputmode="numeric" aria-label="Units to add">
+          <button class="qty-btn" type="button" data-qty-step="1" aria-label="More units"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg></button>
+        </span>
+        <button class="btn btn-solid btn-lg" type="submit" data-basket-submit><svg class="icon" aria-hidden="true"><use href="#i-cart"/></svg> <span data-basket-add-label>Add to quote</span></button>
+      </form>
+      {% if in_basket %}<p class="fine detail-onthelist"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Already on your list - {{ in_basket }} unit{{ in_basket|pluralize }}.</p>{% endif %}
+      {% if product.datasheet_url %}<a class="btn btn-ghost" href="{{ product.datasheet_url }}" target="_blank" rel="noopener nofollow">Official source <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>{% endif %}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="shell split">
+    <div class="prose">
+      {% if product.body %}{{ product.body|linebreaks }}{% endif %}
+
+      {% if product.spec_table %}
+        <h2>Specification</h2>
+        <table class="spec-table">
+          <tbody>
+            {% for label, value in product.spec_table %}
+              <tr><th scope="row">{{ label }}</th><td>{{ value }}</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% elif product.feature_list %}
+        <h2>What it does</h2>
+        <ul class="tick-list">
+          {% for feature in product.feature_list %}<li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> {{ feature }}</li>{% endfor %}
+        </ul>
+      {% endif %}
+
+      <p class="fine" style="margin-top:2rem">Capabilities and compatibility vary by model, region and configuration. Confirm current datasheets before quotation.</p>
+    </div>
+
+    <aside>
+      {% if product.image_is_photo %}
+        <figure class="frame{% if not product.image %} frame-tile{% endif %}">
+          <img src="{{ product.image_src }}" alt="{{ product.image_alt|default:product.title }}" width="960" height="600" loading="eager" decoding="async">
+          <figcaption>{{ product.brand.name }} &middot; {{ product.category.name }}</figcaption>
+        </figure>
+      {% else %}
+        {% if product.image_src %}
+        <div class="card-media product-visual product-visual-lg" aria-hidden="true">
+          <img class="product-art" src="{{ product.image_src }}" alt="" width="320" height="200" loading="eager" decoding="async">
+        </div>
+        {% endif %}
+      {% endif %}
+      <div class="panel">
+        <div class="panel-head"><span class="panel-title">Product reference</span><span class="status-ok"><span class="dot"></span> available</span></div>
+        <div class="panel-rows">
+          <div class="panel-row"><span>Brand</span><strong>{{ product.brand.name }}</strong></div>
+          <div class="panel-row"><span>Group</span><strong>{{ product.category.name }}</strong></div>
+          <div class="panel-row"><span>Supplied by</span><strong class="status-ok">RPS</strong></div>
+          <div class="panel-row"><span>Status</span><strong>quote on request</strong></div>
+        </div>
+      </div>
+
+      {% if product.solutions.all %}
+        <div class="pane stack" style="margin-top:1.2rem">
+          <p class="kicker kicker-plain">Supports</p>
+          <div class="chip-row">
+            {% for solution in product.solutions.all %}<a class="pill" href="{{ solution.get_absolute_url }}">{{ solution.title }}</a>{% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    </aside>
+  </div>
+</section>
+
+{% if related or more_from_brand %}
+<section class="section section-alt">
+  <div class="shell">
+    {% if related %}
+      <header class="section-head">
+        <p class="kicker">Same group</p>
+        <h2>Other {{ product.category.name|lower }}.</h2>
+      </header>
+      <div class="grid grid-3">{% for item in related %}{% with product=item %}{% include "partials/product_card.html" %}{% endwith %}{% endfor %}</div>
+    {% endif %}
+    {% if more_from_brand %}
+      <header class="section-head" style="margin-top:3rem">
+        <p class="kicker">More from {{ product.brand.name }}</p>
+        <h2>Related equipment.</h2>
+      </header>
+      <div class="grid grid-3">{% for item in more_from_brand %}{% with product=item %}{% include "partials/product_card.html" %}{% endwith %}{% endfor %}</div>
+    {% endif %}
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_head %}
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Product","name":"{{ product.title|escapejs }}","description":"{{ product.seo_description|escapejs }}","category":"{{ product.category.name|escapejs }}","brand":{"@type":"Brand","name":"{{ product.brand.name|escapejs }}"},"manufacturer":{"@type":"Organization","name":"{{ product.brand.name|escapejs }}"},"url":"{{ request.build_absolute_uri }}"}</script>
+{% endblock %}

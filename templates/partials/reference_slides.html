@@ -1,0 +1,25 @@
+<ul class="reference-group"{% if clone %} aria-hidden="true"{% endif %}>
+  {% for study in clients %}
+  <li class="reference-slide">
+    <a class="reference-tile" href="{{ study.get_absolute_url }}"{% if clone %} tabindex="-1"{% endif %}>
+      <span class="reference-media">
+        {% if study.image %}
+          <img class="reference-img" src="{{ study.image.url }}" alt="" loading="lazy" decoding="async">
+        {% endif %}
+        <span class="reference-plate">
+          {% if study.logo_src %}
+            <img class="reference-mark" src="{{ study.logo_src }}" alt="" width="160" height="48" loading="eager" decoding="async">
+          {% else %}
+            <span class="reference-word" aria-hidden="true">{{ study.client }}</span>
+          {% endif %}
+        </span>
+      </span>
+      <span class="reference-caption">
+        <span class="reference-index">{{ forloop.counter|stringformat:"02d" }}</span>
+        <span class="reference-name">{{ study.client }}</span>
+        <span class="reference-scope">{{ study.sector|default:study.eyebrow }}{% if study.country %}{% if study.sector or study.eyebrow %} &middot; {% endif %}{{ study.country }}{% endif %}</span>
+      </span>
+    </a>
+  </li>
+  {% endfor %}
+</ul>

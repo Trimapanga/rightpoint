@@ -1,0 +1,13 @@
+{% if partner_brands %}
+<section class="brands-band" aria-labelledby="brands-title">
+  <div class="shell">
+    <p class="kicker kicker-plain" id="brands-title">Equipment we specify and integrate</p>
+  </div>
+  <div class="brand-marquee">
+    <div class="brand-track">
+      {% include "partials/brand_logos.html" %}
+      {% include "partials/brand_logos.html" with clone=True %}
+    </div>
+  </div>
+</section>
+{% endif %}

@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<!-- ── Checkout progress bar ── -->
+<div class="co-topbar">
+  <div class="shell co-topbar-inner">
+    <a class="co-logo" href="{% url 'home' %}">
+      <img src="{% static 'img/logo.png' %}" alt="Right Point Solutions" height="28">
+    </a>
+    <ol class="co-steps" aria-label="Checkout steps">
+      <li class="co-step is-done">
+        <span class="co-step-dot" aria-hidden="true">
+          <svg viewBox="0 0 16 16" fill="none"><path d="m3 8 4 4 6-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="co-step-label">Browse</span>
+      </li>
+      <li class="co-step is-active" aria-current="step">
+        <span class="co-step-dot" aria-hidden="true">2</span>
+        <span class="co-step-label">Your list</span>
+      </li>
+      <li class="co-step">
+        <span class="co-step-dot" aria-hidden="true">3</span>
+        <span class="co-step-label">Request quote</span>
+      </li>
+      <li class="co-step">
+        <span class="co-step-dot" aria-hidden="true">4</span>
+        <span class="co-step-label">Done</span>
+      </li>
+    </ol>
+    <a class="co-back-link" href="{% url 'products:list' %}">
+      <svg viewBox="0 0 16 16" fill="none" width="14" height="14"><path d="M10 3 5 8l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Continue shopping
+    </a>
+  </div>
+</div>
+
+<!-- ── Main checkout body ── -->
+<div class="co-page">
+  <div class="shell co-grid">
+
+    <!-- LEFT: items + enquiry form -->
+    <main class="co-main" id="co-main">
+
+      <!-- ── Section 1: Review your items ── -->
+      <section class="co-card" id="co-items">
+        <div class="co-card-head">
+          <h2 class="co-card-title">
+            Your list
+            {% if basket_rows %}<span class="co-badge">{{ basket_rows|length }}</span>{% endif %}
+          </h2>
+          {% if basket_rows %}
+            <form method="post" action="{% url 'products:basket_clear' %}" data-basket-form>
+              {% csrf_token %}
+              <input type="hidden" name="next" value="{{ request.get_full_path }}">
+              <button class="co-clear-btn" type="submit" data-basket-clear>Remove all</button>
+            </form>
+          {% endif %}
+        </div>
+
+        <div data-basket-panel>
+        {% if basket_rows %}
+          <ul class="co-item-list">
+            {% for row in basket_rows %}
+            <li class="co-item">
+              <div class="co-item-img">
+                {% if row.product.image %}
+                  <img src="{{ row.product.image.url }}" alt="{{ row.product.title }}" loading="lazy" decoding="async">
+                {% elif row.product.image_src %}
+                  <img src="{{ row.product.image_src }}" alt="" loading="lazy" decoding="async">
+                {% else %}
+                  <span class="co-item-mono">{{ row.product.brand.monogram }}</span>
+                {% endif %}
+              </div>
+
+              <div class="co-item-body">
+                <a class="co-item-name" href="{{ row.product.get_absolute_url }}">{{ row.product.title }}</a>
+                <p class="co-item-meta">{{ row.product.brand.name }}&ensp;·&ensp;{{ row.product.category.name }}</p>
+                <p class="co-item-price">Price on request</p>
+              </div>
+
+              <div class="co-qty-block">
+                <form class="co-qty-form" method="post" action="{% url 'products:basket_set' %}" data-basket-form>
+                  {% csrf_token %}
+                  <input type="hidden" name="line" value="{{ row.product.slug }}">
+                  <input type="hidden" name="quantity" value="{{ row.quantity|add:'-1' }}">
+                  <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                  <button class="co-qty-btn" type="submit" aria-label="Reduce quantity">−</button>
+                </form>
+                <span class="co-qty-num">{{ row.quantity }}</span>
+                <form class="co-qty-form" method="post" action="{% url 'products:basket_set' %}" data-basket-form>
+                  {% csrf_token %}
+                  <input type="hidden" name="line" value="{{ row.product.slug }}">
+                  <input type="hidden" name="quantity" value="{{ row.quantity|add:'1' }}">
+                  <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                  <button class="co-qty-btn" type="submit" aria-label="Increase quantity" {% if row.quantity >= 99 %}disabled{% endif %}>+</button>
+                </form>
+              </div>
+
+              <form class="co-remove-form" method="post" action="{% url 'products:basket_remove' %}" data-basket-form>
+                {% csrf_token %}
+                <input type="hidden" name="line" value="{{ row.product.slug }}">
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                <button class="co-remove-btn" type="submit" aria-label="Remove {{ row.product.title }}">
+                  <svg viewBox="0 0 20 20" fill="none" width="18" height="18">
+                    <path d="M6 4V3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v1M3 4h14M8 9v6M12 9v6M4 4l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+              </form>
+            </li>
+            {% endfor %}
+          </ul>
+
+          <p class="co-item-note">
+            <svg viewBox="0 0 16 16" fill="none" width="14" height="14" aria-hidden="true"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.3"/><path d="M8 7v5M8 5.5v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Quantities are a starting point. Configuration, spares and consumables are confirmed after the site survey.
+          </p>
+
+        {% else %}
+          <div class="co-empty">
+            <span class="co-empty-icon" aria-hidden="true">
+              <svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="22" stroke="currentColor" stroke-width="1.5" opacity=".18"/><path d="M14 16h1.7l2.3 10h12l2-8H18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="30" r="1.5" fill="currentColor"/><circle cx="28" cy="30" r="1.5" fill="currentColor"/></svg>
+            </span>
+            <h3 class="co-empty-title">Your list is empty</h3>
+            <p class="co-empty-sub">Add equipment as you browse. Nothing is charged — the list becomes an enquiry and an engineer quotes the configuration for your site.</p>
+            <a class="btn btn-solid" href="{% url 'products:list' %}">Browse the catalogue</a>
+          </div>
+        {% endif %}
+        </div>
+      </section>
+
+      <!-- ── Section 2: Your details (enquiry form) ── -->
+      <section class="co-card" id="co-form-section">
+        <div class="co-card-head">
+          <h2 class="co-card-title">{% if basket_rows %}Send this list to an engineer{% else %}Talk to an engineer{% endif %}</h2>
+        </div>
+        <p class="co-form-sub">Tell us who you are and where the site is. An engineer will reply with a configured quotation — hardware, lead times and the work around it.</p>
+        {% include "partials/enquiry_form.html" with submit_label="Request this quote" form_id="co-enquiry-form" %}
+      </section>
+
+    </main>
+
+    <!-- RIGHT: sticky order summary -->
+    <aside class="co-sidebar">
+      <div class="co-summary" id="co-summary">
+        <h3 class="co-summary-title">Order summary</h3>
+
+        {% if basket_rows %}
+          <ul class="co-summary-items">
+            {% for row in basket_rows %}
+            <li class="co-summary-row">
+              <span class="co-summary-qty">{{ row.quantity }}×</span>
+              <span class="co-summary-name">{{ row.product.title }}</span>
+            </li>
+            {% endfor %}
+          </ul>
+
+          <div class="co-summary-meta">
+            <div class="co-meta-row">
+              <span>Items</span>
+              <strong>{{ basket_rows|length }} product{{ basket_rows|length|pluralize }}</strong>
+            </div>
+            <div class="co-meta-row">
+              <span>Units</span>
+              <strong>{{ basket_units }} total</strong>
+            </div>
+            <div class="co-meta-row">
+              <span>Delivery</span>
+              <strong class="co-meta-green">Included in quote</strong>
+            </div>
+            <div class="co-meta-row co-meta-total">
+              <span>Total</span>
+              <strong>Price on request</strong>
+            </div>
+          </div>
+
+          <button class="btn btn-solid co-cta" type="submit" form="co-enquiry-form">
+            <svg viewBox="0 0 20 20" fill="none" width="18" height="18" aria-hidden="true"><path d="M3 10h14M10 3l7 7-7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Request this quote
+          </button>
+
+          <ul class="co-trust">
+            <li>
+              <svg viewBox="0 0 16 16" fill="none" width="14" height="14"><path d="M8 2 3 4.5V9c0 3 2.5 5.5 5 6.5 2.5-1 5-3.5 5-6.5V4.5L8 2Z" stroke="currentColor" stroke-width="1.3" fill="rgba(27,153,60,.12)"/><path d="m5.5 8 2 2 3-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Genuine equipment, installed by us
+            </li>
+            <li>
+              <svg viewBox="0 0 16 16" fill="none" width="14" height="14"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.3"/><path d="M8 5v4l2.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+              Reply within one working day
+            </li>
+            <li>
+              <svg viewBox="0 0 16 16" fill="none" width="14" height="14"><path d="M2 8a6 6 0 1 0 12 0A6 6 0 0 0 2 8Zm4 0 2 2 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              No obligation — free site consultation
+            </li>
+          </ul>
+
+        {% else %}
+          <div class="co-summary-empty">
+            <p class="co-summary-empty-text">Your list is empty. Add products from the catalogue to get a quote.</p>
+            <a class="btn btn-solid" href="{% url 'products:list' %}">Browse catalogue</a>
+          </div>
+        {% endif %}
+      </div>
+    </aside>
+
+  </div><!-- /co-grid -->
+</div><!-- /co-page -->
+
+{% endblock %}

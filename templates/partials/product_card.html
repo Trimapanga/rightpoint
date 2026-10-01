@@ -1,0 +1,45 @@
+{% with specs=product.spec_table %}
+<article class="card product-card{% if product.slug in basket_slugs %} is-on-list{% endif %}" data-basket-slug="{{ product.slug }}">
+  <div class="product-card-media">
+    <a class="pc-imglink" href="{{ product.get_absolute_url }}" tabindex="-1" aria-hidden="true">
+      {% if product.image_is_photo %}
+        <img class="card-media" src="{{ product.image_src }}" alt="{{ product.image_alt|default:product.title }}" width="960" height="600" loading="lazy" decoding="async">
+      {% else %}
+        <div class="card-media product-visual" aria-hidden="true">
+          {% if product.image_src %}
+            <img class="product-art" src="{{ product.image_src }}" alt="" width="320" height="200" loading="lazy" decoding="async">
+          {% else %}
+            <span class="product-placeholder">
+              <span class="brand-mark">{{ product.brand.monogram }}</span>
+              <span class="product-placeholder-name">{{ product.brand.name }}</span>
+            </span>
+          {% endif %}
+        </div>
+      {% endif %}
+    </a>
+    {% if product.is_featured %}<span class="flag flag-top">Top pick</span>{% endif %}
+    <span class="flag flag-list"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> On your list</span>
+
+    <form class="add-form pc-add" method="post" action="{% url 'products:basket_add' product.slug %}" data-basket-form>
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+      <input type="hidden" name="quantity" value="1">
+      <button class="pc-plus add-btn" type="submit" data-basket-submit title="Add to quote" aria-label="Add {{ product.title }} to your quote list">
+        <svg class="icon pc-plus-add" aria-hidden="true"><use href="#i-plus"/></svg>
+        <svg class="icon pc-plus-done" aria-hidden="true"><use href="#i-check"/></svg>
+        <span class="visually-hidden" data-basket-add-label>Add to quote</span>
+      </button>
+    </form>
+  </div>
+
+  <div class="pc-body">
+    <h3 class="link-card pc-title"><a href="{{ product.get_absolute_url }}">{{ product.title }}</a></h3>
+    <p class="pc-price"><strong>Price on request</strong></p>
+    <p class="pc-size">{% if specs %}{{ specs.0.1 }}{% else %}{{ product.category.name }}{% endif %}</p>
+    <p class="pc-note">
+      <svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg>
+      <span>Genuine {{ product.brand.name }} &middot; installed by us</span>
+    </p>
+  </div>
+</article>
+{% endwith %}

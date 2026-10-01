@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="banner page-hero">
+  <div class="shell page-hero-grid">
+    <div class="page-hero-copy">
+      <p class="kicker">Enquiry received</p>
+      <h1>Thank you - we have your message.</h1>
+      <p class="lede">A specialist will reply within one working day. If your matter is urgent, call <a href="{{ site.telephone_url }}">{{ site.phone_e164 }}</a> or message us on WhatsApp and mention the site name.</p>
+      <div class="row-actions" style="margin-top:2rem">
+        <a class="btn btn-solid" href="{% url 'solutions:list' %}">Explore our solutions</a>
+        <a class="btn btn-ghost" href="{% url 'products:list' %}">Browse products</a>
+        {% if site.whatsapp_url %}<a class="btn btn-ghost" href="{{ site.whatsapp_url }}" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="#i-whatsapp"/></svg> WhatsApp us</a>{% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="shell">
+    <div class="pillars grid-3">
+      <div class="pillar"><b>1 &middot; We read the brief</b><p class="muted" style="margin:0">Someone from the delivery team reviews it, not a call centre.</p></div>
+      <div class="pillar"><b>2 &middot; We come back with questions</b><p class="muted" style="margin:0">Usually within one working day, often with a suggested site visit.</p></div>
+      <div class="pillar"><b>3 &middot; You get a design, not a price list</b><p class="muted" style="margin:0">Scope, options and phasing you can take to decision-makers.</p></div>
+    </div>
+  </div>
+</section>
+{% endblock %}

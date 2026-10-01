@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="banner page-hero">
+  <div class="shell page-hero-grid">
+    <div class="page-hero-copy">
+      <ol class="crumbs"><li><a href="{% url 'home' %}">Home</a></li><li aria-current="page">Solutions</li></ol>
+      <h1>Security that works as one system.</h1>
+      <p class="lede">Six integrated capabilities - from the perimeter to the data centre - specified around the risks and routines of your site.</p>
+      <div class="row-actions page-hero-actions">
+        <a class="btn btn-solid btn-lg" href="#enquiry">Discuss your site <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="btn btn-ghost btn-lg" href="{% url 'products:list' %}">Shop equipment</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="shell">
+    <div class="grid grid-3">
+      {% for solution in solutions %}{% include "partials/solution_card.html" %}{% endfor %}
+    </div>
+  </div>
+</section>
+
+{% endblock %}

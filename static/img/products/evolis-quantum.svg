@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" width="320" height="200" role="img" aria-label="Evolis Quantum high-volume card printer schematic">
+  <title>Evolis Quantum high-volume card printer schematic</title>
+  <defs>
+    <linearGradient id="b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="0.5" stop-color="#f5f9fb"/><stop offset="1" stop-color="#dde8ec"/></linearGradient>
+    <linearGradient id="h" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eff5f7"/><stop offset="1" stop-color="#d0dde3"/></linearGradient>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9f2f5"/><stop offset="1" stop-color="#c0d6de"/></linearGradient>
+    <radialGradient id="o" cx="0.42" cy="0.36" r="0.74"><stop offset="0" stop-color="#3c6879"/><stop offset="1" stop-color="#11242d"/></radialGradient>
+    <filter id="lift" x="-16%" y="-16%" width="132%" height="132%"><feDropShadow dx="0" dy="2.5" stdDeviation="3" flood-color="#0d1b20" flood-opacity=".18"/></filter>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#lift)">
+    <ellipse cx="160" cy="172" rx="116" ry="9" fill="#0d1b20" opacity="0.07"/>
+    <rect x="82" y="44" width="66" height="42" rx="6" fill="url(#h)" stroke="#0d1b20" stroke-width="2.4"/>
+    <line x1="90" y1="54" x2="140" y2="54" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="90" y1="62" x2="140" y2="62" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="90" y1="70" x2="140" y2="70" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="90" y1="78" x2="140" y2="78" stroke="#c3d2d8" stroke-width="1.8"/>
+    <rect x="166" y="56" width="52" height="30" rx="5" fill="url(#h)" stroke="#0d1b20" stroke-width="2.4"/>
+    <line x1="174" y1="64" x2="210" y2="64" stroke="#5b7480" stroke-width="1.8"/>
+    <line x1="174" y1="72" x2="210" y2="72" stroke="#5b7480" stroke-width="1.8"/>
+    <line x1="174" y1="80" x2="210" y2="80" stroke="#5b7480" stroke-width="1.8"/>
+    <rect x="70" y="86" width="176" height="74" rx="12" fill="url(#b)" stroke="#0d1b20" stroke-width="2.4"/>
+    <line x1="70" y1="102" x2="246" y2="102" stroke="#c3d2d8" stroke-width="1.8"/>
+    <rect x="82" y="110" width="70" height="40" rx="6" fill="url(#g)" stroke="#0d1b20" stroke-width="2.1"/>
+    <line x1="90" y1="120" x2="144" y2="120" stroke="#5b7480" stroke-width="1.8"/>
+    <line x1="90" y1="128" x2="130" y2="128" stroke="#c3d2d8" stroke-width="1.8"/>
+    <rect x="90" y="136" width="20" height="6" rx="3" fill="#2b990b" stroke-width="2.4"/>
+    <rect x="116" y="136" width="20" height="6" rx="3" fill="#023aaa" stroke-width="2.4"/>
+    <g transform="rotate(-7 212 128)">
+    <rect x="186" y="112" width="52" height="32" rx="4" fill="url(#b)" stroke="#0d1b20" stroke-width="2.1"/>
+    <rect x="192" y="119" width="13" height="11" rx="2" stroke="#5b7480" stroke-width="1.5"/>
+    <line x1="210" y1="122" x2="230" y2="122" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="210" y1="128" x2="222" y2="128" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="192" y1="135" x2="232" y2="135" stroke="#023aaa" stroke-width="3.0"/>
+    </g>
+    <g transform="rotate(-7 212 128)">
+    <rect x="176" y="108" width="52" height="32" rx="4" fill="url(#b)" stroke="#0d1b20" stroke-width="1.8"/>
+    <rect x="182" y="115" width="13" height="11" rx="2" stroke="#5b7480" stroke-width="1.5"/>
+    <line x1="200" y1="118" x2="220" y2="118" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="200" y1="124" x2="212" y2="124" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="182" y1="131" x2="222" y2="131" stroke="#023aaa" stroke-width="3.0"/>
+    </g>
+    <rect x="84" y="160" width="24" height="8" rx="3" fill="url(#h)" stroke-width="2.4"/>
+    <rect x="208" y="160" width="24" height="8" rx="3" fill="url(#h)" stroke-width="2.4"/>
+  </g>
+</svg>

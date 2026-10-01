@@ -1,0 +1,33 @@
+{% extends "accounts/base_auth.html" %}
+
+{% block title %}{% if success %}Account activated{% else %}Link expired{% endif %} – Right Point Solutions{% endblock %}
+
+{% block auth_content %}
+{% if success %}
+  <div class="auth-state-icon auth-state-ok" aria-hidden="true">
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="48" height="48" rx="14" fill="url(#grad-ok)"/>
+      <path d="m14 25 7 7 13-14" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <defs><linearGradient id="grad-ok" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse"><stop stop-color="#1a7a42"/><stop offset="1" stop-color="#128c7e"/></linearGradient></defs>
+    </svg>
+  </div>
+  <h1 class="auth-heading">You're in, {{ user.first_name }}.</h1>
+  <p class="auth-sub">Your account is now active. You can sign in whenever you need to.</p>
+  <a class="btn btn-solid btn-lg auth-submit" href="{% url 'home' %}">Go to the site</a>
+{% else %}
+  <div class="auth-state-icon auth-state-warn" aria-hidden="true">
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="48" height="48" rx="14" fill="url(#grad-warn)"/>
+      <path d="M24 18v8M24 30v2" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
+      <defs><linearGradient id="grad-warn" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse"><stop stop-color="#b45309"/><stop offset="1" stop-color="#92400e"/></linearGradient></defs>
+    </svg>
+  </div>
+  <h1 class="auth-heading">Link expired or invalid</h1>
+  <p class="auth-sub">This confirmation link has already been used or it has expired. Please sign up again with the same email address.</p>
+  <a class="btn btn-solid btn-lg auth-submit" href="{% url 'accounts:signup' %}">Try again</a>
+{% endif %}
+{% endblock %}
+
+{% block auth_footer %}
+  Need help? <a href="{% url 'contact:form' %}">Contact us</a>
+{% endblock %}

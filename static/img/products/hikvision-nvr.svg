@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" width="320" height="200" role="img" aria-label="Hikvision network video recorder schematic">
+  <title>Hikvision network video recorder schematic</title>
+  <defs>
+    <linearGradient id="b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="0.5" stop-color="#f5f9fb"/><stop offset="1" stop-color="#dde8ec"/></linearGradient>
+    <linearGradient id="h" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eff5f7"/><stop offset="1" stop-color="#d0dde3"/></linearGradient>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9f2f5"/><stop offset="1" stop-color="#c0d6de"/></linearGradient>
+    <radialGradient id="o" cx="0.42" cy="0.36" r="0.74"><stop offset="0" stop-color="#3c6879"/><stop offset="1" stop-color="#11242d"/></radialGradient>
+    <filter id="lift" x="-16%" y="-16%" width="132%" height="132%"><feDropShadow dx="0" dy="2.5" stdDeviation="3" flood-color="#0d1b20" flood-opacity=".18"/></filter>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#lift)">
+    <ellipse cx="160" cy="170" rx="112" ry="9" fill="#0d1b20" opacity="0.07"/>
+    <rect x="46" y="42" width="12" height="124" rx="4" fill="url(#h)" stroke="#0d1b20" stroke-width="2.4"/>
+    <rect x="262" y="42" width="12" height="124" rx="4" fill="url(#h)" stroke="#0d1b20" stroke-width="2.4"/>
+    <rect x="58" y="44" width="204" height="54" rx="8" fill="url(#b)" stroke="#0d1b20" stroke-width="2.4"/>
+    <rect x="70" y="56" width="46" height="30" rx="4" fill="url(#g)" stroke="#5b7480" stroke-width="1.8"/>
+    <line x1="76" y1="71" x2="110" y2="71" stroke="#c3d2d8" stroke-width="1.8"/>
+    <circle cx="130" cy="64" r="3.2" fill="#2b990b" stroke-width="2.4"/>
+    <circle cx="143" cy="64" r="3.2" fill="#023aaa" stroke-width="2.4"/>
+    <circle cx="156" cy="64" r="3.2" fill="#5b7480" stroke-width="2.4"/>
+    <rect x="126" y="76" width="46" height="8" rx="4" fill="#c3d2d8" stroke-width="2.4"/>
+    <line x1="188" y1="56" x2="188" y2="84" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="194" y1="56" x2="194" y2="84" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="200" y1="56" x2="200" y2="84" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="206" y1="56" x2="206" y2="84" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="212" y1="56" x2="212" y2="84" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="218" y1="56" x2="218" y2="84" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="224" y1="56" x2="224" y2="84" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="230" y1="56" x2="230" y2="84" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="236" y1="56" x2="236" y2="84" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="242" y1="56" x2="242" y2="84" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="248" y1="56" x2="248" y2="84" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="254" y1="56" x2="254" y2="84" stroke="#c3d2d8" stroke-width="1.8"/>
+    <rect x="58" y="112" width="204" height="54" rx="8" fill="url(#b)" stroke="#0d1b20" stroke-width="2.4"/>
+    <rect x="70" y="124" width="46" height="30" rx="4" fill="url(#g)" stroke="#5b7480" stroke-width="1.8"/>
+    <line x1="76" y1="139" x2="110" y2="139" stroke="#c3d2d8" stroke-width="1.8"/>
+    <circle cx="130" cy="132" r="3.2" fill="#2b990b" stroke-width="2.4"/>
+    <circle cx="143" cy="132" r="3.2" fill="#023aaa" stroke-width="2.4"/>
+    <circle cx="156" cy="132" r="3.2" fill="#5b7480" stroke-width="2.4"/>
+    <rect x="126" y="144" width="46" height="8" rx="4" fill="#c3d2d8" stroke-width="2.4"/>
+    <line x1="188" y1="124" x2="188" y2="152" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="194" y1="124" x2="194" y2="152" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="200" y1="124" x2="200" y2="152" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="206" y1="124" x2="206" y2="152" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="212" y1="124" x2="212" y2="152" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="218" y1="124" x2="218" y2="152" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="224" y1="124" x2="224" y2="152" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="230" y1="124" x2="230" y2="152" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="236" y1="124" x2="236" y2="152" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="242" y1="124" x2="242" y2="152" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="248" y1="124" x2="248" y2="152" stroke="#c3d2d8" stroke-width="1.8"/>
+    <line x1="254" y1="124" x2="254" y2="152" stroke="#c3d2d8" stroke-width="1.8"/>
+    <circle cx="52" cy="56" r="2.4" fill="#5b7480" stroke-width="2.4"/>
+    <circle cx="52" cy="90" r="2.4" fill="#5b7480" stroke-width="2.4"/>
+    <circle cx="52" cy="120" r="2.4" fill="#5b7480" stroke-width="2.4"/>
+    <circle cx="52" cy="154" r="2.4" fill="#5b7480" stroke-width="2.4"/>
+    <circle cx="268" cy="56" r="2.4" fill="#5b7480" stroke-width="2.4"/>
+    <circle cx="268" cy="90" r="2.4" fill="#5b7480" stroke-width="2.4"/>
+    <circle cx="268" cy="120" r="2.4" fill="#5b7480" stroke-width="2.4"/>
+    <circle cx="268" cy="154" r="2.4" fill="#5b7480" stroke-width="2.4"/>
+  </g>
+</svg>

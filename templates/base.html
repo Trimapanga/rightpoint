@@ -1,0 +1,53 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if page_title %}{{ page_title }} | {% endif %}{{ site.company_name }} - CCTV, Access Control &amp; Security Technology in Kenya</title>
+  <meta name="description" content="{% firstof page_description site.tagline %}">
+  <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
+  <meta name="theme-color" content="#f5f7f5">
+  <meta name="robots" content="{% if noindex %}noindex,nofollow{% else %}index,follow{% endif %}">
+  <meta property="og:image" content="{% firstof og_image share_image %}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="{{ site.company_name }}">
+  <meta property="og:title" content="{% firstof page_title site.company_name %}">
+  <meta property="og:description" content="{% firstof page_description site.tagline %}">
+  <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap">
+  <link rel="preload" as="style" href="{% static 'css/site.css' %}?v={{ asset_version }}">
+  <link rel="stylesheet" href="{% static 'css/site.css' %}?v={{ asset_version }}">
+  <link rel="stylesheet" href="{% static 'css/premium.css' %}?v={{ asset_version }}">
+  <link rel="icon" type="image/png" sizes="192x192" href="{% static 'img/favicon-192.png' %}">
+  <link rel="apple-touch-icon" href="{% static 'img/favicon-192.png' %}">
+  <script type="application/ld+json">{{ organization_schema|safe }}</script>
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+{% include "partials/icons.html" %}
+<a class="skip-link" href="#main">Skip to content</a>
+{% include "partials/topbar.html" %}
+{% include "partials/header.html" %}
+{% include "partials/basket_drawer.html" %}
+<main id="main">
+{% if messages %}
+  <div class="flash-stack" role="status">
+    {% for message in messages %}<p class="flash flash-{{ message.tags }}">{{ message }}</p>{% endfor %}
+  </div>
+{% endif %}
+{% block content %}{% endblock %}
+</main>
+{% block reference_band %}{% include "partials/reference_band.html" %}{% endblock %}
+{% include "partials/brand_strip.html" %}
+{% include "partials/footer.html" %}
+<a class="whatsapp-float" href="{{ site.whatsapp_url }}" rel="noopener" target="_blank" aria-label="Chat with Right Point Solutions on WhatsApp">
+  <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"/></svg><span>WhatsApp us</span>
+</a>
+<script src="{% static 'js/site.js' %}?v={{ asset_version }}" defer></script>
+<script src="{% static 'js/motion.js' %}?v={{ asset_version }}" defer></script>
+{% block extra_foot %}{% endblock %}
+</body>
+</html>
