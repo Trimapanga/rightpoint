@@ -25,9 +25,18 @@ ALLOWED_HOSTS = [
 # we accept any host so the dev server and `manage.py test` work out of the box.
 if not ALLOWED_HOSTS:
     ALLOWED_HOSTS = ["*"] if DEBUG else ["localhost", "127.0.0.1"]
+# Vercel sets VERCEL_URL (deployment) and VERCEL_PROJECT_PRODUCTION_URL (custom/prod domain)
+for _vercel_host in filter(None, [os.environ.get("VERCEL_URL"), os.environ.get("VERCEL_PROJECT_PRODUCTION_URL")]):
+    if _vercel_host not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(_vercel_host)
 CSRF_TRUSTED_ORIGINS = [
     o.strip() for o in os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",") if o.strip()
 ]
+# Auto-add Vercel origins for CSRF
+for _vercel_host in filter(None, [os.environ.get("VERCEL_URL"), os.environ.get("VERCEL_PROJECT_PRODUCTION_URL")]):
+    _origin = f"https://{_vercel_host}"
+    if _origin not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(_origin)
 
 INSTALLED_APPS = [
     "django.contrib.admin",
