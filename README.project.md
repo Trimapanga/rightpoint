@@ -734,3 +734,23 @@ capable machine before the first production deploy.
 Media uploads (`/media/`, product and solution photos) live on the container's
 filesystem. Attach a persistent volume, or switch `STORAGES["default"]` to
 S3/DigitalOcean Spaces before relying on admin uploads in production.
+
+### Vercel, where the database is not a database
+
+`vercel.json` + `build_files.sh` deploy the site to Vercel, and `config/settings.py`
+points SQLite at `/tmp/db.sqlite3` when `VERCEL` is set (`BASE_DIR/db.sqlite3`
+everywhere else) because the project directory is read-only there. The consequence
+is bigger than a path: `/tmp` is not durable storage, so the catalogue only exists
+because the build recreates it. `build_files.sh` therefore runs `migrate` **and**
+`seed` - drop either one and `/products/` renders its empty state, which looks
+exactly like "the product images are missing" while every `.webp` and `.svg` is
+serving fine from the CDN. Two things follow, and neither is fixable by editing
+templates:
+
+- Content an editor adds in `/admin/` on Vercel lasts until the next deploy, then
+  is gone. Treat the deployed site as read-only until it has a real database
+  (`psycopg2-binary` is already installed, so `DJANGO_DB_ENGINE`/`DJANGO_DB_NAME`
+  pointing at Postgres is the smallest honest upgrade).
+- Enquiry mail is the only thing that writes at request time, and on Vercel it
+  cannot survive anywhere but an external inbox.
+
