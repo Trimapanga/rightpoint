@@ -23,23 +23,42 @@ DEBUG = env_flag("DJANGO_DEBUG", "False")
 ALLOWED_HOSTS = [
     h.strip() for h in os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(",") if h.strip()
 ]
+# Vercel can route requests through a unique deployment hostname that is not
+# known when the environment variables are configured. Always allow the
+# platform's deployment domains in addition to any explicit project hosts.
+vercel_hosts = [
+    host.strip()
+    for host in (
+        os.environ.get("VERCEL_URL", ""),
+        os.environ.get("VERCEL_BRANCH_URL", ""),
+        os.environ.get("VERCEL_PROJECT_PRODUCTION_URL", ""),
+    )
+    if host.strip()
+]
 # An explicit list is required in production; locally and under the test client
 # we accept any host so the dev server and `manage.py test` work out of the box.
-if not ALLOWED_HOSTS:
-    ALLOWED_HOSTS = (
-        ["*"]
-        if DEBUG
-        else [
-            "localhost",
-            "127.0.0.1",
-            ".vercel.app",
-            "rightpoint.co.ke",
-            "www.rightpoint.co.ke",
-        ]
-    )
+if DEBUG:
+    ALLOWED_HOSTS = ["*"]
+elif not ALLOWED_HOSTS:
+    ALLOWED_HOSTS = [
+        "localhost",
+        "127.0.0.1",
+        ".vercel.app",
+        "rightpoint.co.ke",
+        "www.rightpoint.co.ke",
+    ]
+else:
+    ALLOWED_HOSTS.extend([".vercel.app", "rightpoint.co.ke", "www.rightpoint.co.ke"])
+ALLOWED_HOSTS.extend(host for host in vercel_hosts if host not in ALLOWED_HOSTS)
+
 CSRF_TRUSTED_ORIGINS = [
     o.strip() for o in os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",") if o.strip()
 ]
+CSRF_TRUSTED_ORIGINS.extend(
+    origin if origin.startswith("http") else f"https://{origin}"
+    for origin in vercel_hosts
+    if origin and (origin.startswith("http") or origin not in CSRF_TRUSTED_ORIGINS)
+)
 
 INSTALLED_APPS = [
     "django.contrib.admin",
