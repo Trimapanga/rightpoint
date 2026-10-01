@@ -24,7 +24,17 @@ ALLOWED_HOSTS = [
 # An explicit list is required in production; locally and under the test client
 # we accept any host so the dev server and `manage.py test` work out of the box.
 if not ALLOWED_HOSTS:
-    ALLOWED_HOSTS = ["*"] if DEBUG else ["localhost", "127.0.0.1"]
+    ALLOWED_HOSTS = (
+        ["*"]
+        if DEBUG
+        else [
+            "localhost",
+            "127.0.0.1",
+            ".vercel.app",
+            "rightpoint.co.ke",
+            "www.rightpoint.co.ke",
+        ]
+    )
 CSRF_TRUSTED_ORIGINS = [
     o.strip() for o in os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",") if o.strip()
 ]
