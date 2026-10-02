@@ -51,6 +51,9 @@ def plate(glyph, size, radius):
 def main():
     glyph = mark()
     print(f"mark {glyph.width}x{glyph.height} from {LOGO.name}")
+    # The mark on transparency too: the admin login card is a white surface, so a
+    # plated favicon would read as a visible square sitting on top of it.
+    glyph.save(OUT / "mark.png", optimize=True)
     for size, name, radius in PLATES:
         out = OUT / name
         plate(glyph, size, radius).save(out)

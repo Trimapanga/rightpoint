@@ -639,18 +639,128 @@ a.button {
 }
 .select2-results__option--highlighted { background: var(--rps-green) !important; }
 
-/* ---------- LOGIN PAGE ---------- */
-.login { background: var(--rps-bg) !important; }
-.login #header { background: var(--rps-bg) !important; border-bottom: none !important; }
-.login #container { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-#login-form {
+/* ---------- LOGIN ----------
+   templates/admin/login.html replaces Django's markup and stops loading its login.css,
+   but responsive.css still loads *after* this file and pins body padding, a 480px
+   #container and an uppercased submit button - hence !important on those.
+   One centred column: a lit paper ground, then a card carrying the brand mark,
+   micro-caps labels, full-width fields and a gradient action. */
+.login { background: var(--rps-bg) !important; padding: 0 !important; }
+.login #container {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center;
+  justify-content: center;
+  /* with an error note the column is taller than a short window, and plain centring
+     then pushes the card top above scroll position 0 where nothing can reach it */
+  justify-content: safe center;
+  min-height: 100vh;
+  width: auto !important;
+  max-width: none !important;
+  margin: 0 auto !important;
+  padding: 32px 18px !important;
+  box-sizing: border-box;
+  background:
+    radial-gradient(680px 420px at 12% -8%, rgba(26,96,53,.13), transparent 68%),
+    radial-gradient(620px 420px at 92% 106%, rgba(15,23,42,.12), transparent 70%),
+    var(--rps-bg) !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  overflow: visible !important;
+}
+.login .main,
+.login #content,
+.login #content-main {
+  display: block; width: 100%; float: none !important;
+  padding: 0 !important; margin: 0 !important;
+  background: none !important; border: 0 !important; box-shadow: none !important;
+}
+.rps-login { width: 100%; max-width: 372px; margin: 0 auto; }
+.rps-login-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   background: var(--rps-surface) !important;
   border: 1px solid var(--rps-line) !important;
-  border-radius: 14px !important;
-  box-shadow: 0 20px 60px rgba(0,0,0,.12) !important;
-  padding: 32px 32px 24px !important;
-  width: 360px !important;
+  border-radius: 18px !important;
+  padding: 26px 26px 22px !important;
+  box-shadow: 0 1px 2px rgba(15,23,42,.05), 0 30px 56px -26px rgba(15,23,42,.34) !important;
 }
+/* brand rail along the top edge - the one place the accent colour is allowed */
+.rps-login-card::before {
+  content: ""; position: absolute; z-index: 1; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--rps-green), var(--rps-green-mid) 45%, var(--rps-accent));
+}
+/* the ring from the mark, echoed as light behind the heading. Negative z-index with
+   the card isolated: it then sits over the card's own white but under the fields. */
+.rps-login-card::after {
+  content: ""; position: absolute; z-index: -1; top: -58px; right: -54px; width: 168px; height: 168px;
+  border-radius: 50%; border: 22px solid var(--rps-green-light); pointer-events: none;
+}
+.rps-login-head {
+  position: relative;
+  display: flex; align-items: center; gap: 14px;
+  padding-bottom: 14px; margin-bottom: 15px;
+  border-bottom: 1px solid var(--rps-line);
+}
+.rps-login-mark { height: 40px; width: auto; flex: 0 0 auto; }
+.rps-login-title {
+  font-size: 19px !important; font-weight: 800 !important; letter-spacing: -.01em;
+  color: var(--rps-navy) !important; margin: 0 0 2px !important;
+}
+.rps-login-sub { font-size: 11.5px; color: var(--rps-muted); margin: 0; line-height: 1.35; }
+
+.login .form-row { padding: 0 !important; margin: 0 0 12px !important; border: 0 !important; }
+/* micro-caps field labels; login.html writes them by hand because label_tag appends
+   a colon, and "USERNAME:" is not a label you can set in small caps and keep tidy */
+.login .form-row label {
+  display: block; margin: 0 0 6px !important; line-height: 1.1 !important;
+  font-size: 10px !important; font-weight: 700 !important;
+  letter-spacing: .13em; text-transform: uppercase;
+  color: var(--rps-navy-soft) !important;
+}
+.login .form-row input[type="text"],
+.login .form-row input[type="password"] {
+  display: block; width: 100% !important; box-sizing: border-box !important;
+  padding: 11px 12px !important; font-size: 14px !important; border-radius: 9px !important;
+}
+.login .rps-pw { display: flex !important; width: 100%; }
+.login .rps-pw input { padding-right: 58px !important; }
+
+/* the generic .submit-row plate belongs to change forms; here the button is the row */
+.login .submit-row {
+  display: block !important; text-align: left !important;
+  background: none !important; border: 0 !important; box-shadow: none !important;
+  padding: 4px 0 0 !important; margin: 0 !important;
+}
+.login .submit-row input {
+  display: block; width: 100% !important; margin: 0 !important;
+  padding: 12px 16px !important;
+  font-size: 14px !important; font-weight: 700 !important;
+  letter-spacing: .01em; text-transform: none !important;
+  border-radius: 9px !important;
+  background: linear-gradient(180deg, var(--rps-green-mid), var(--rps-green)) !important;
+  box-shadow: 0 10px 22px -10px rgba(26,96,53,.6) !important;
+  transition: transform .12s, box-shadow .15s, filter .15s !important;
+}
+.login .submit-row input:hover {
+  filter: brightness(1.06) !important;
+  box-shadow: 0 14px 26px -10px rgba(26,96,53,.66) !important;
+}
+.login .submit-row input:active { transform: translateY(1px) !important; }
+.login .password-reset-link { text-align: center; margin-top: 14px; font-size: 11.5px; }
+.login .rps-login-card .errornote {
+  margin: 0 0 13px !important; padding: 8px 11px !important;
+  font-size: 11.5px !important; line-height: 1.45;
+}
+.rps-login-foot {
+  display: flex; justify-content: space-between; gap: 12px;
+  margin: 14px 4px 0 !important; padding: 0;
+  font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--rps-navy-soft) !important; opacity: .72;
+}
+.login br { display: initial; }
+
 
 /* ---------- COLLAPSIBLE FIELDSETS ---------- */
 fieldset.collapse:not(.collapsed) { display: block !important; }

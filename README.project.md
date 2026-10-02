@@ -49,7 +49,9 @@ same file by `tools/make_favicon.py`: it drops the "Right Point Solutions" wordm
 and the tab title already spells it out), keeps the ring-and-RPS mark, and sits it on a white
 plate because iOS paints transparency black. `favicon-32.png`, `favicon-192.png` and
 `apple-touch-icon.png` are checked in rather than generated at build time, so re-run the tool
-after any change to `logo.png`.
+after any change to `logo.png`. The tool also writes `mark.png`, the same ring on bare
+transparency: the admin login card is a white surface, so a plated icon would read as a visible
+square sitting on top of it.
 
 ## Page patterns
 
