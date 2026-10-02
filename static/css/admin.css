@@ -34,12 +34,14 @@ html, body {
   color: var(--rps-text) !important;
 }
 
-/* ---------- TOP HEADER ---------- */
+/* ---------- TOP HEADER ----------
+   Was a navy band, which swallowed the logo: the mark is #023AAA blue on
+   transparency, 1.6:1 against #0f172a. On white it measures 9.6:1. */
 #header {
-  background: var(--rps-navy) !important;
-  color: #e2e8f0 !important;
-  border-bottom: 1px solid rgba(255,255,255,.06) !important;
-  box-shadow: 0 2px 12px rgba(0,0,0,.4) !important;
+  background: var(--rps-white) !important;
+  color: var(--rps-navy) !important;
+  border-bottom: 1px solid var(--rps-line) !important;
+  box-shadow: 0 1px 3px rgba(15,23,42,.06) !important;
   padding: 0 20px !important;
   min-height: 56px !important;
   height: 56px !important;
@@ -88,8 +90,8 @@ html, body {
   font-weight: 700;
   letter-spacing: .16em;
   text-transform: uppercase;
-  color: var(--rps-accent);
-  border-left: 1px solid rgba(255,255,255,.15);
+  color: var(--rps-green);
+  border-left: 1px solid var(--rps-line);
   padding-left: 10px;
   margin-left: 2px;
   white-space: nowrap;
@@ -101,23 +103,23 @@ html, body {
   align-items: center !important;
   gap: 12px !important;
   font-size: 12px !important;
-  color: #94a3b8 !important;
+  color: var(--rps-muted) !important;
 }
 #user-tools a {
-  color: #94a3b8 !important;
+  color: var(--rps-muted) !important;
   text-decoration: none !important;
   transition: color .15s !important;
 }
-#user-tools a:hover { color: #fff !important; }
+#user-tools a:hover { color: var(--rps-green) !important; }
 .rps-user-name {
-  color: #e2e8f0;
+  color: var(--rps-navy);
   font-weight: 600;
   font-size: 13px;
 }
 .rps-logout {
-  background: rgba(255,255,255,.08) !important;
-  color: #94a3b8 !important;
-  border: 1px solid rgba(255,255,255,.12) !important;
+  background: var(--rps-bg) !important;
+  color: var(--rps-navy-soft) !important;
+  border: 1px solid var(--rps-line) !important;
   border-radius: 6px !important;
   padding: 4px 12px !important;
   font-size: 12px !important;
@@ -125,8 +127,8 @@ html, body {
   transition: background .15s, color .15s !important;
 }
 .rps-logout:hover {
-  background: rgba(255,255,255,.16) !important;
-  color: #fff !important;
+  background: var(--rps-green-light) !important;
+  color: var(--rps-green) !important;
 }
 
 /* ---------- SIDEBAR ---------- */
@@ -621,7 +623,7 @@ a.button {
 
 /* ---------- LOGIN PAGE ---------- */
 .login { background: var(--rps-bg) !important; }
-.login #header { background: var(--rps-navy) !important; }
+.login #header { background: var(--rps-white) !important; border-bottom: 1px solid var(--rps-line) !important; }
 .login #container { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
 #login-form {
   background: var(--rps-surface) !important;
