@@ -36,12 +36,14 @@ html, body {
 
 /* ---------- TOP HEADER ----------
    Was a navy band, which swallowed the logo: the mark is #023AAA blue on
-   transparency, 1.6:1 against #0f172a. On white it measures 9.6:1. */
+   transparency, 1.6:1 against #0f172a. It now sits on the page ground itself -
+   no plate, no shadow, just a hairline where the content scrolls under.
+   Everything here clears AA on #f1f5f9: blue 8.8:1, label green 6.9:1. */
 #header {
-  background: var(--rps-white) !important;
+  background: var(--rps-bg) !important;
   color: var(--rps-navy) !important;
   border-bottom: 1px solid var(--rps-line) !important;
-  box-shadow: 0 1px 3px rgba(15,23,42,.06) !important;
+  box-shadow: none !important;
   padding: 0 20px !important;
   min-height: 56px !important;
   height: 56px !important;
@@ -97,16 +99,17 @@ html, body {
   white-space: nowrap;
 }
 
-/* User tools */
+/* User tools - navy-soft rather than muted: #64748b is 4.3:1 on this ground,
+   under AA for 12px text. */
 #user-tools {
   display: flex !important;
   align-items: center !important;
   gap: 12px !important;
   font-size: 12px !important;
-  color: var(--rps-muted) !important;
+  color: var(--rps-navy-soft) !important;
 }
 #user-tools a {
-  color: var(--rps-muted) !important;
+  color: var(--rps-navy-soft) !important;
   text-decoration: none !important;
   transition: color .15s !important;
 }
@@ -117,7 +120,7 @@ html, body {
   font-size: 13px;
 }
 .rps-logout {
-  background: var(--rps-bg) !important;
+  background: var(--rps-surface) !important;
   color: var(--rps-navy-soft) !important;
   border: 1px solid var(--rps-line) !important;
   border-radius: 6px !important;
@@ -623,7 +626,7 @@ a.button {
 
 /* ---------- LOGIN PAGE ---------- */
 .login { background: var(--rps-bg) !important; }
-.login #header { background: var(--rps-white) !important; border-bottom: 1px solid var(--rps-line) !important; }
+.login #header { background: var(--rps-bg) !important; border-bottom: none !important; }
 .login #container { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
 #login-form {
   background: var(--rps-surface) !important;
