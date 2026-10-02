@@ -349,6 +349,21 @@ input:focus, select:focus, textarea:focus {
   box-shadow: 0 0 0 3px var(--rps-green-glow) !important;
 }
 
+/* ---------- PASSWORD SHOW/HIDE ---------- */
+/* inline-flex, not block: a block wrapper spans the whole form row, and the
+   button then sits past the right edge of the narrower input inside it. */
+.rps-pw { position: relative; display: inline-flex; align-items: center; }
+.rps-pw input { padding-right: 54px !important; }
+.rps-pw-toggle {
+  position: absolute; right: 5px; top: 50%; transform: translateY(-50%);
+  background: none; border: 0; border-radius: 5px; cursor: pointer;
+  padding: 4px 7px; font-size: 10px !important; font-weight: 700 !important;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--rps-green);
+}
+.rps-pw-toggle:hover { background: var(--rps-green-light); }
+.rps-pw-toggle:focus-visible { outline: 2px solid var(--rps-green); outline-offset: 1px; }
+
 /* ---------- BUTTONS ---------- */
 .button, input[type="submit"], input[type="button"], .submit-row input,
 a.button {
