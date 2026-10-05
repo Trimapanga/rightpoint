@@ -6,12 +6,14 @@ from django.contrib.staticfiles.storage import staticfiles_storage
 from django.urls import include, path
 from django.views.generic import RedirectView
 
+from core import admin_dashboard
 from core import views as core_views
 from core.sitemaps import CaseStudySitemap, ProductSitemap, SolutionSitemap, StaticSitemap
 
 admin.site.site_header = "Right Point Solutions administration"
 admin.site.site_title = "Right Point Solutions"
-admin.site.index_title = "Content and enquiries"
+admin.site.index_title = "Overview"
+admin_dashboard.install()
 
 sitemaps = {
     "static": StaticSitemap,

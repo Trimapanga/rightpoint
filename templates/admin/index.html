@@ -1,0 +1,25 @@
+{% extends "admin/index.html" %}
+{% load i18n %}
+
+{% block content %}
+<div id="content-main">
+  <p class="rps-welcome">Welcome back, <strong>{% firstof user.get_short_name user.get_username %}</strong>. Here is where things stand.</p>
+
+  {% if dashboard_stats %}
+  <ul class="rps-stats">
+    {% for card in dashboard_stats %}
+    <li class="rps-stat {{ card.tone }}">
+      <a href="{{ card.url }}">
+        <span class="rps-stat-label">{{ card.label }}</span>
+        <span class="rps-stat-value">{{ card.value }}</span>
+        <span class="rps-stat-note">{{ card.note }}</span>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  <h2 class="rps-section-title">Manage</h2>
+  {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}
+</div>
+{% endblock %}
