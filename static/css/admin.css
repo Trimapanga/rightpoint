@@ -887,3 +887,48 @@ a:link, a:visited { color: var(--rps-green); }
 #nav-sidebar .module td a.addlink { opacity: .55 !important; transition: opacity .15s; }
 #nav-sidebar .module tr:hover td a.addlink { opacity: 1 !important; }
 #nav-filter { margin-bottom: 4px !important; }
+
+/* ---------- SIDEBAR: white theme ---------- */
+#nav-sidebar {
+  background: #fff !important;
+  border-right: 1px solid var(--rps-line) !important;
+  box-shadow: 2px 0 12px rgba(15,23,42,.05) !important;
+}
+#nav-filter {
+  background: #f8fafc !important;
+  border: 1px solid var(--rps-line) !important;
+  color: var(--rps-text) !important;
+}
+#nav-filter::placeholder { color: #94a3b8 !important; }
+#nav-filter:focus { background: #fff !important; box-shadow: 0 0 0 3px var(--rps-green-glow) !important; }
+#nav-sidebar .module caption,
+#nav-sidebar .module caption a { color: #64748b !important; }
+#nav-sidebar .module caption::after { background: linear-gradient(90deg, var(--rps-line), transparent); }
+#nav-sidebar .module th a,
+#nav-sidebar .module td a { color: var(--rps-text) !important; }
+#nav-sidebar .module tr:hover th a,
+#nav-sidebar .module tr:hover td a {
+  background: #f1f5f9 !important;
+  color: var(--rps-green) !important;
+}
+#nav-sidebar .module tr:hover th a { border-left-color: var(--rps-green-mid) !important; }
+#nav-sidebar .module tr.current-model th a,
+#nav-sidebar .module tr[class*="current"] th a {
+  background: var(--rps-green-light) !important;
+  color: var(--rps-green) !important;
+  border-left: 3px solid var(--rps-green) !important;
+  padding-left: 18px !important;
+  font-weight: 600 !important;
+}
+#nav-sidebar .module div.current-app caption a { color: var(--rps-green) !important; }
+#nav-sidebar .module td a.addlink {
+  background: var(--rps-green-light) !important;
+  color: var(--rps-green) !important;
+}
+#nav-sidebar .module td a.addlink:hover { background: #cfe9da !important; }
+.toggle-nav-sidebar {
+  background: #fff !important;
+  border-right: 1px solid var(--rps-line) !important;
+  color: #94a3b8 !important;
+}
+.toggle-nav-sidebar:hover { color: var(--rps-green) !important; background: #f8fafc !important; }
