@@ -86,6 +86,9 @@
   #nav-sidebar { background: #fff; }
   #nav-sidebar .module caption a { color: #fff; }
 
+  /* No filter column on list pages; search and column sorting remain. */
+  #changelist-filter, #changelist-filter-extra-actions, .filter-toggle, #changelist .changelist-filter-toggle { display: none !important; }
+  #changelist .changelist-form-container { margin-right: 0 !important; width: 100% !important; }
   /* Dashboard */
   .dashboard #content { width: auto; max-width: 1280px; margin-inline: auto; padding-top: 22px; }
   .dashboard #content > h1 { display: none; }
