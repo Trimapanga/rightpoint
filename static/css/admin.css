@@ -868,3 +868,22 @@ a:link, a:visited { color: var(--rps-green); }
   #changelist .changelist-form-container { min-width: 0; }
   #changelist .results { overflow-x: auto; }
 }
+
+/* ---------- SIDEBAR: clearer groups ---------- */
+#nav-sidebar { padding-bottom: 24px !important; }
+#nav-sidebar .module caption {
+  color: #94a3b8 !important;
+  font-size: 11px !important;
+  letter-spacing: .1em !important;
+  padding: 18px 16px 6px !important;
+  position: relative;
+}
+#nav-sidebar .module caption::after {
+  content: ""; display: block; height: 1px; margin-top: 8px;
+  background: linear-gradient(90deg, rgba(255,255,255,.12), transparent);
+}
+#nav-sidebar .module th a { padding: 8px 16px 8px 18px !important; border-left: 3px solid transparent !important; }
+#nav-sidebar .module tr:hover th a { border-left-color: rgba(74,222,128,.5) !important; }
+#nav-sidebar .module td a.addlink { opacity: .55 !important; transition: opacity .15s; }
+#nav-sidebar .module tr:hover td a.addlink { opacity: 1 !important; }
+#nav-filter { margin-bottom: 4px !important; }
