@@ -820,3 +820,51 @@ a:link, a:visited { color: var(--rps-green); }
 }
 .related-widget-wrapper-link:hover { opacity: .8; }
 .vDateField, .vTimeField { font-family: inherit !important; }
+
+/* ---------- SIDEBAR POLISH ----------
+   Django paints each model row white, which left the pale link text unreadable.
+   Rows stay on the navy plate; the Add shortcut becomes a clear pill. */
+#nav-sidebar .module,
+#nav-sidebar .module table,
+#nav-sidebar .module tr,
+#nav-sidebar .module tr.model-group,
+#nav-sidebar .module th,
+#nav-sidebar .module td {
+  background: transparent !important;
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+#nav-sidebar .module { margin-bottom: 6px !important; overflow: visible !important; }
+#nav-sidebar .module caption { letter-spacing: .08em !important; padding-top: 14px !important; }
+#nav-sidebar .module tr:hover th a,
+#nav-sidebar .module tr:hover td a { background: rgba(255,255,255,.07) !important; color: #fff !important; }
+#nav-sidebar .module td { width: 1%; white-space: nowrap; padding-right: 10px !important; }
+#nav-sidebar .module td a.addlink {
+  display: inline-block !important;
+  padding: 2px 9px !important;
+  border-radius: 999px !important;
+  background: rgba(74,222,128,.14) !important;
+  color: var(--rps-accent) !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+}
+#nav-sidebar .module td a.addlink:hover { background: rgba(74,222,128,.28) !important; }
+#nav-sidebar .module td a.addlink::before { content: "+ "; }
+#nav-sidebar .module td a.addlink { background-image: none !important; padding-left: 9px !important; }
+
+/* ---------- CHANGELIST ---------- */
+#changelist table thead th { background: #f8fafc !important; border-bottom: 1px solid var(--rps-line) !important; }
+#changelist table thead th a { color: var(--rps-muted) !important; text-transform: uppercase; font-size: 10.5px; letter-spacing: .08em; }
+#changelist table tbody tr:hover td, #changelist table tbody tr:hover th { background: #f1f5f9 !important; }
+#changelist .actions { background: transparent !important; }
+#changelist-filter { border-radius: var(--rps-radius) !important; overflow: hidden; }
+
+/* Leave the table more room: a slimmer filter column, and the results scroll
+   inside their own box rather than pushing the page. */
+@media (min-width: 1025px) {
+  #changelist-filter { flex: 0 0 210px !important; width: 210px !important; }
+  #changelist .changelist-form-container { min-width: 0; }
+  #changelist .results { overflow-x: auto; }
+}
