@@ -2,7 +2,9 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
+from django.contrib.staticfiles.storage import staticfiles_storage
 from django.urls import include, path
+from django.views.generic import RedirectView
 
 from core import views as core_views
 from core.sitemaps import CaseStudySitemap, ProductSitemap, SolutionSitemap, StaticSitemap
@@ -19,6 +21,8 @@ sitemaps = {
 }
 
 urlpatterns = [
+    # Browsers (and new-tab/bookmark UIs) request /favicon.ico directly.
+    path("favicon.ico", RedirectView.as_view(url=staticfiles_storage.url("img/favicon-32.png"), permanent=True)),
     path("admin/", admin.site.urls),
     path("", core_views.HomeView.as_view(), name="home"),
     path("about/", core_views.AboutView.as_view(), name="about"),

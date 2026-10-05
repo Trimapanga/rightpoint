@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>{% if page_title %}{{ page_title }} | {% endif %}{{ site.company_name }} - CCTV, Access Control &amp; Security Technology in Kenya</title>
   <meta name="description" content="{% firstof page_description site.tagline %}">
   <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
@@ -47,6 +47,7 @@
 <a class="whatsapp-float" href="{{ site.whatsapp_url }}" rel="noopener" target="_blank" aria-label="Chat with Right Point Solutions on WhatsApp">
   <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"/></svg><span>WhatsApp us</span>
 </a>
+{% block mobile_bar %}{% include "partials/mobile_nav.html" %}{% endblock %}
 <script src="{% static 'js/site.js' %}?v={{ asset_version }}" defer></script>
 <script src="{% static 'js/motion.js' %}?v={{ asset_version }}" defer></script>
 {% block extra_foot %}{% endblock %}

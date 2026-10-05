@@ -6,6 +6,8 @@
   "use strict";
 
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  // Phones get the page as-is: no scroll-triggered reveals, nothing half-faded mid-scroll.
+  if (window.matchMedia("(max-width: 768px)").matches) return;
 
   var root = document.documentElement;
   root.classList.add("motion-on");

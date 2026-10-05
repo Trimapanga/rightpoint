@@ -111,6 +111,19 @@
 
 {% endblock %}
 
+{% block mobile_bar %}
+<div class="m-buy" role="group" aria-label="Contact and order">
+  <a class="m-buy-btn m-buy-call" href="{{ site.telephone_url }}"><svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg><span>Call</span></a>
+  <a class="m-buy-btn m-buy-chat" href="{{ site.whatsapp_url }}" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="#i-whatsapp"/></svg><span>Chat</span></a>
+  <form class="m-buy-form add-form" method="post" action="{% url 'products:basket_add' product.slug %}" data-basket-form>
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+    <input type="hidden" name="quantity" value="1">
+    <button class="m-buy-btn m-buy-add" type="submit" data-basket-submit><svg class="icon" aria-hidden="true"><use href="#i-cart"/></svg> <span data-basket-add-label>Add to quote</span></button>
+  </form>
+</div>
+{% endblock %}
+
 {% block extra_head %}
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Product","name":"{{ product.title|escapejs }}","description":"{{ product.seo_description|escapejs }}","category":"{{ product.category.name|escapejs }}","brand":{"@type":"Brand","name":"{{ product.brand.name|escapejs }}"},"manufacturer":{"@type":"Organization","name":"{{ product.brand.name|escapejs }}"},"url":"{{ request.build_absolute_uri }}"}</script>
 {% endblock %}

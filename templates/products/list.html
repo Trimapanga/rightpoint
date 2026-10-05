@@ -51,7 +51,9 @@
 <section class="section shop-body">
   <div class="shell shop-layout">
 
-    <aside class="shop-rail" aria-label="Refine products">
+    <div class="m-sheet-scrim" data-filter-close hidden></div>
+    <aside class="shop-rail" id="shop-filters" aria-label="Refine products" data-filter-sheet>
+      <div class="m-sheet-head"><strong>Filters</strong><button class="m-sheet-close" type="button" data-filter-close aria-label="Close filters"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div>
       <div class="rail-block">
         <p class="rail-title">Refine by group</p>
         <ul class="rail-list">
@@ -103,6 +105,7 @@
 
     <div class="shop-main">
       <div class="shop-bar">
+        <button class="m-filter-btn" type="button" data-filter-open aria-controls="shop-filters" aria-label="Open filters"><svg class="icon" aria-hidden="true"><use href="#i-sort"/></svg><span>Filters</span>{% if active_category or active_brand %}<i class="m-filter-dot" aria-hidden="true"></i>{% endif %}</button>
         <p class="shop-count"><strong>{{ count }}</strong> product{{ count|pluralize }}{% if active_category %} in {{ active_category.name|lower }}{% endif %}{% if active_brand %} from {{ active_brand.name }}{% endif %}</p>
         <form class="shop-sort" method="get" action="{% url 'products:list' %}">
           {% if active_brand %}<input type="hidden" name="brand" value="{{ active_brand.slug }}">{% endif %}

@@ -18,19 +18,78 @@
   </div>
 </section>
 
-<section class="section about-who-section">
-  <div class="shell split">
-    <div class="prose">
-      <p class="kicker">Who we are</p>
-      {% if site.about_body %}{{ site.about_body|linebreaks }}{% else %}
-        <p>We work at the point where physical security, network infrastructure and operational reality meet. That means a camera is never just a camera: it is a recording, an alert, a storage obligation and a piece of evidence.</p>
-        <p>Right Point Solutions was built to remove the gaps that appear when a perimeter vendor, a network integrator and a data centre contractor each point at someone else's scope. One team specifies, installs, integrates and supports.</p>
-        <p>Our clients include banks, retail groups, campuses, manufacturers and facilities teams who need systems that keep working after the commissioning photograph is taken.</p>
-      {% endif %}
+<section class="section about-who-section" id="who-we-are">
+  <div class="shell about-who-container">
+    <div class="about-who-copy">
+      <div class="who-eyebrow-wrap">
+        <span class="who-status-dot" aria-hidden="true"></span>
+        <span class="kicker who-kicker">Who we are &middot; Integration Philosophy</span>
+      </div>
+      <h2 class="who-heading">Where physical security meets operational reality.</h2>
+      <p class="who-lead">We work at the point where physical security, network infrastructure, and real-world operations converge. A camera is never just a camera: it is a continuous recording, an active threat alert, a secure storage obligation, and court-admissible evidence.</p>
+
+      <div class="who-features-grid">
+        <div class="who-feature-card">
+          <div class="who-feature-icon-box">
+            <svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg>
+          </div>
+          <div class="who-feature-text">
+            <h3>Zero Scope Finger-Pointing</h3>
+            <p>Right Point Solutions was built to remove the costly gaps that appear when a perimeter vendor, network integrator, and data centre contractor each point at someone else's scope.</p>
+          </div>
+        </div>
+
+        <div class="who-feature-card">
+          <div class="who-feature-icon-box">
+            <svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>
+          </div>
+          <div class="who-feature-text">
+            <h3>One Unified Engineering Team</h3>
+            <p>One accountable team specifies, trenches, installs, integrates, and supports your entire physical &amp; electronic security ecosystem end-to-end.</p>
+          </div>
+        </div>
+
+        <div class="who-feature-card">
+          <div class="who-feature-icon-box">
+            <svg class="icon" aria-hidden="true"><use href="#i-server"/></svg>
+          </div>
+          <div class="who-feature-text">
+            <h3>Engineered Beyond the Photograph</h3>
+            <p>Our clients include commercial banks, retail groups, campuses, and critical infrastructure that need systems that keep performing reliably long after the handover photograph is taken.</p>
+          </div>
+        </div>
+      </div>
     </div>
-    <aside class="about-team-photo">
-      <img src="{% static 'img/about-team-fit.webp' %}" alt="" width="1122" height="931" loading="lazy" decoding="async">
-    </aside>
+
+    <div class="about-who-stage">
+      <div class="who-studio-card">
+        <div class="who-ambient-glow" aria-hidden="true"></div>
+        <figure class="about-team-photo">
+          <img src="{% static 'img/about-team-fit.webp' %}" alt="Right Point Solutions engineering specialist" width="1122" height="931" loading="lazy" decoding="async">
+        </figure>
+
+        <!-- Apple-style floating frosted badges -->
+        <div class="who-badge who-badge-top" aria-hidden="true">
+          <div class="who-badge-icon">
+            <svg class="icon"><use href="#i-shield"/></svg>
+          </div>
+          <div class="who-badge-copy">
+            <strong>Single Accountability</strong>
+            <small>No subcontractor runarounds</small>
+          </div>
+        </div>
+
+        <div class="who-badge who-badge-bottom" aria-hidden="true">
+          <div class="who-badge-icon who-badge-icon-green">
+            <svg class="icon"><use href="#i-check"/></svg>
+          </div>
+          <div class="who-badge-copy">
+            <strong>Turnkey Integration</strong>
+            <small>Specified &middot; Installed &middot; Maintained</small>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 

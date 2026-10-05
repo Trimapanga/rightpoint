@@ -54,7 +54,7 @@
 *::before,
 *::after { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; overflow-x: clip; }
 
 body {
   margin: 0;
@@ -64,7 +64,9 @@ body {
   font-size: 16.5px;
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  overflow-x: clip;
+  width: 100%;
+  min-height: 100%;
 }
 
 img, svg, video { max-width: 100%; height: auto; display: block; }
@@ -3287,7 +3289,8 @@ textarea { resize: vertical; min-height: 130px; }
   .submenu { position: static; display: none; min-width: 0; box-shadow: none; background: var(--surface); border-color: var(--line); margin-bottom: 0.4rem; }
   .submenu.is-open { display: block; }
   .has-submenu:hover .submenu { display: none; }
-  .submenu.is-open:hover { display: block; }
+  .submenu.is-open:hover,
+  .has-submenu:hover .submenu.is-open { display: block; }
   .nav-actions { flex-direction: column; align-items: stretch; margin: 0.8rem 0 0; gap: 0.7rem; }
   .nav-actions .btn { justify-content: center; }
   .nav-phone { font-size: 1rem; }

@@ -221,26 +221,34 @@ h3 { letter-spacing: -0.02em; }
 .btn-ghost:hover { border-color: rgba(10, 31, 43, 0.3); color: var(--text); background: #fff; box-shadow: var(--shadow-soft); transform: translateY(-2px); }
 .btn-lg { padding: 1rem 1.7rem; font-size: 0.98rem; }
 
-/* ---------- home hero ---------- */
+/* ---------- home hero (Apple.com Background Theme) ---------- */
 
 .hero.hero-pro {
   min-height: calc(100svh - var(--topbar-h) - var(--header-h));
-  padding-block: clamp(3rem, 7vw, 5.5rem) clamp(3rem, 6vw, 5rem);
+  padding-block: clamp(3.5rem, 8vw, 6rem) clamp(3.5rem, 7vw, 5.5rem);
   background:
-    radial-gradient(900px 520px at 88% 30%, rgba(43, 153, 11, 0.12), transparent 62%),
-    radial-gradient(900px 600px at 0% -10%, rgba(2, 58, 170, 0.11), transparent 60%),
-    linear-gradient(180deg, #fbfcfb, var(--bg));
+    radial-gradient(1200px 650px at 75% 25%, rgba(14, 102, 221, 0.05), transparent 70%),
+    radial-gradient(900px 500px at 20% 15%, rgba(43, 153, 11, 0.04), transparent 65%),
+    linear-gradient(180deg, #ffffff 0%, #fbfbfd 45%, #f5f5f7 100%);
+  position: relative;
+  overflow: hidden;
 }
-/* Faint engineering grid behind the copy, masked away before the portrait. */
+
+/* Apple-style ultra-soft specular lighting halo without noisy grids */
 .hero.hero-pro::before {
   content: "";
-  position: absolute; inset: 0;
-  background-image:
-    linear-gradient(to right, rgba(10, 31, 43, 0.06) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(10, 31, 43, 0.06) 1px, transparent 1px);
-  background-size: 64px 64px;
-  mask-image: radial-gradient(ellipse 60% 70% at 20% 40%, #000 10%, transparent 70%);
-  -webkit-mask-image: radial-gradient(ellipse 60% 70% at 20% 40%, #000 10%, transparent 70%);
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 90% 60% at 50% -10%, rgba(255, 255, 255, 0.85), transparent 75%);
+  pointer-events: none;
+}
+
+.hero.hero-pro::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.06) 20%, rgba(0, 0, 0, 0.06) 80%, transparent);
   pointer-events: none;
 }
 
@@ -905,6 +913,16 @@ input[type="search"]:focus, input[type="number"]:focus, select:focus, textarea:f
   .hero-stage { width: min(78vw, 380px); margin-top: 1rem; }
   .hero-float-a { left: -8%; }
   .hero-float-b { right: -8%; }
+  /* Phones/tablets: the picture leads, the copy follows. */
+  .hero.hero-pro { display: flex; flex-direction: column; padding-top: 1.5rem; }
+  .hero.hero-pro .hero-visual {
+    order: -1;
+    width: min(72vw, 340px);
+    margin: 0 auto 1.25rem;
+    z-index: 1;
+  }
+  .hero.hero-pro .hero-visual img { display: block; width: 100%; height: auto; }
+  .hero.hero-pro .hero-grid { position: relative; z-index: 1; width: 100%; }
 }
 
 @media (max-width: 560px) {
@@ -2712,105 +2730,294 @@ input[type="password"]:focus {
 }
 .section-wave-divider svg { width: 100%; height: clamp(40px, 5vw, 72px); display: block; }
 
-/* ---------- about page — who we are ----------
-   One ink band on a paper page. The team cut-out is matted: 471 of its 1402 rows are
-   transparent air above her hands, so `contain` inside a 480px box made her a small
-   figure in a large empty square. `about-team-fit.webp` is the same artwork cropped to
-   its own alpha box, and the plate below matches that ratio, so she fills the column
-   and nothing of her is lost either way. */
+/* ---------- about page — who we are (Apple-grade editorial feature) ---------- */
 .about-who-section {
-  background:
-    radial-gradient(80% 110% at 86% 4%, rgba(43, 153, 11, 0.26), transparent 58%),
-    radial-gradient(70% 100% at 4% 96%, rgba(2, 58, 170, 0.34), transparent 62%),
-    linear-gradient(168deg, #0c1c2b, #071320 68%);
-  color: rgba(255, 255, 255, 0.76);
-  padding-block: clamp(3.5rem, 7vw, 6.5rem);
   position: relative;
+  padding-block: clamp(4rem, 8vw, 7.5rem);
+  background:
+    radial-gradient(1100px 520px at 15% -10%, rgba(14, 102, 221, 0.22), transparent 68%),
+    radial-gradient(900px 480px at 85% -5%, rgba(43, 153, 11, 0.18), transparent 65%),
+    radial-gradient(900px 600px at 5% 105%, rgba(2, 58, 170, 0.28), transparent 70%),
+    linear-gradient(180deg, #07152b 0%, #051020 45%, #020712 100%);
+  color: rgba(255, 255, 255, 0.82);
   overflow: clip;
 }
-/* lit dot grid, brightest behind the copy and gone behind the figure */
+
+/* Subtle ambient hairline highlight at the top of the section */
 .about-who-section::before {
-  content: '';
+  content: "";
   position: absolute;
-  inset: 0;
-  background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='20' cy='20' r='1' fill='%23ffffff' fill-opacity='.10'/%3E%3C/svg%3E") repeat;
-  -webkit-mask-image: radial-gradient(60% 80% at 18% 40%, #000, transparent 72%);
-  mask-image: radial-gradient(60% 80% at 18% 40%, #000, transparent 72%);
-  pointer-events: none;
-}
-.about-who-section .shell.split {
-  gap: clamp(2.5rem, 5vw, 5rem);
-  align-items: center;
-  position: relative;
-}
-/* `.prose .kicker` rather than `.kicker`: `.about-who-section .prose p` has the same
-   specificity and would otherwise win the colour and size of the label. */
-.about-who-section .prose .kicker {
-  color: var(--brand-green-lift);
-  font-weight: 700;
-  letter-spacing: 0.13em;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  margin-bottom: 1.2rem;
-}
-.about-who-section .prose p {
-  margin-block: 0.8em;
-  font-size: 1.05rem;
-  line-height: 1.75;
-  color: rgba(255, 255, 255, 0.76);
-}
-.about-who-section .prose .kicker + p {
-  font-size: 1.24rem;
-  font-weight: 500;
-  line-height: 1.55;
-  color: #f2f6f3;
+  inset: 0 0 auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(56, 139, 253, 0.7) 20%, rgba(111, 212, 74, 0.8) 50%, rgba(56, 139, 253, 0.7) 80%, transparent);
+  box-shadow: 0 1px 16px rgba(56, 139, 253, 0.35);
 }
 
-.about-team-photo {
+.about-who-container {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(2.5rem, 5vw, 4.5rem);
+  align-items: center;
   position: relative;
-  isolation: isolate;
+  z-index: 1;
+}
+
+.who-eyebrow-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 1.25rem;
+  padding: 0.3rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.who-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #38a169;
+  box-shadow: 0 0 10px #38a169;
+}
+
+.who-kicker {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brand-green-lift);
+}
+
+.who-heading {
+  margin: 0 0 1.2rem;
+  font-size: clamp(2rem, 4.2vw, 3.2rem);
+  line-height: 1.12;
+  letter-spacing: -0.04em;
+  font-weight: 800;
+  color: #ffffff;
+  text-wrap: balance;
+}
+
+.who-lead {
+  font-size: clamp(1.02rem, 1.4vw, 1.15rem);
+  line-height: 1.68;
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 2rem;
+  max-width: 58ch;
+}
+
+/* 3 Apple-Style Feature Cards */
+.who-features-grid {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.who-feature-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.1rem 1.3rem;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.015) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 12px 28px -10px rgba(0, 0, 0, 0.4);
+  transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.who-feature-card:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+  border-color: rgba(111, 212, 74, 0.3);
+  box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.55);
+}
+
+.who-feature-icon-box {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(14, 102, 221, 0.16);
+  border: 1px solid rgba(56, 139, 253, 0.28);
+  color: var(--blue-lift);
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+}
+
+.who-feature-card:nth-child(2) .who-feature-icon-box {
+  background: rgba(43, 153, 11, 0.18);
+  border-color: rgba(111, 212, 74, 0.32);
+  color: var(--brand-green-lift);
+}
+
+.who-feature-icon-box .icon {
+  width: 1.15em;
+  height: 1.15em;
+}
+
+.who-feature-text h3 {
+  margin: 0 0 0.28rem;
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.015em;
+}
+
+.who-feature-text p {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* Studio Stage for Portrait */
+.about-who-stage {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.who-studio-card {
+  position: relative;
+  width: 100%;
+  max-width: 490px;
+  border-radius: 28px;
+  background:
+    radial-gradient(ellipse 90% 70% at 50% 30%, rgba(14, 102, 221, 0.16), transparent 72%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.015) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid rgba(255, 255, 255, 0.24);
+  box-shadow: 0 36px 80px -20px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  padding: 1.5rem 1.5rem 0;
+  overflow: visible;
+}
+
+.who-ambient-glow {
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(111, 212, 74, 0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.about-who-stage .about-team-photo {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1122 / 931;
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  width: 100%;
-  /* the trimmed figure's own ratio, so the plate can never crop her hands or her head */
-  aspect-ratio: 1122 / 931;
+  margin: 0;
 }
-/* the services flyer artwork, which had no markup anywhere, becomes her backdrop:
-   masked to a soft window and dropped far enough to read as light, not a poster */
-.about-team-photo::before {
-  content: '';
-  position: absolute;
-  inset: -10% -14% -6% -26%;
-  z-index: -2;
-  background: url("../img/services-flyer-cut.webp") right 38% / auto 108% no-repeat;
-  opacity: 0.26;
-  filter: saturate(1.2) contrast(1.06);
-  -webkit-mask-image: radial-gradient(58% 66% at 66% 44%, #000 24%, transparent 76%);
-  mask-image: radial-gradient(58% 66% at 66% 44%, #000 24%, transparent 76%);
-}
-/* the floor she stands on, and the ring the flyer artwork is built around */
-.about-team-photo::after {
-  content: '';
-  position: absolute;
-  inset: auto 0 0;
-  z-index: -1;
-  height: 30%;
-  background:
-    radial-gradient(46% 100% at 50% 100%, rgba(111, 212, 74, 0.20), transparent 72%),
-    radial-gradient(38% 76% at 50% 104%, rgba(4, 12, 20, 0.62), transparent 70%);
-}
-.about-team-photo img {
+
+.about-who-stage .about-team-photo img {
   width: 100%;
   height: auto;
   display: block;
   object-fit: contain;
-  filter: drop-shadow(0 24px 30px rgba(3, 10, 16, 0.55));
+  filter: drop-shadow(0 20px 28px rgba(0, 0, 0, 0.6));
 }
-@media (max-width: 860px) {
-  .about-who-section .shell.split { grid-template-columns: 1fr; }
-  .about-team-photo { max-width: 620px; margin-inline: auto; }
-  .about-team-photo::before { inset: -6% -10% 0 -10%; opacity: 0.2; }
+
+/* Floating Apple-Style Badges */
+.who-badge {
+  position: absolute;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 1rem 0.7rem 0.8rem;
+  border-radius: 14px;
+  background: rgba(7, 21, 43, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-top: 1px solid rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 18px 40px -10px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.who-badge-top {
+  top: 8%;
+  left: -8%;
+  animation: who-float-top 5s ease-in-out infinite;
+}
+
+.who-badge-bottom {
+  bottom: 8%;
+  right: -6%;
+  animation: who-float-bottom 5.5s ease-in-out infinite;
+  animation-delay: -2.5s;
+}
+
+@keyframes who-float-top {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+
+@keyframes who-float-bottom {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+.who-badge-icon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(14, 102, 221, 0.24);
+  border: 1px solid rgba(56, 139, 253, 0.35);
+  color: var(--blue-lift);
+  flex-shrink: 0;
+}
+
+.who-badge-icon-green {
+  background: rgba(43, 153, 11, 0.25);
+  border-color: rgba(111, 212, 74, 0.4);
+  color: var(--brand-green-lift);
+}
+
+.who-badge-icon .icon {
+  width: 1.05em;
+  height: 1.05em;
+}
+
+.who-badge-copy strong {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.who-badge-copy small {
+  display: block;
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+@media (max-width: 960px) {
+  .about-who-container {
+    grid-template-columns: 1fr;
+    gap: 3.5rem;
+  }
+  .about-who-stage {
+    max-width: 520px;
+    margin-inline: auto;
+    width: 100%;
+  }
+  .who-badge-top { left: 2%; top: 4%; }
+  .who-badge-bottom { right: 2%; bottom: 4%; }
 }
 
 /* ---------- case study card cover photo ---------- */
@@ -2946,4 +3153,469 @@ input[type="password"]:focus {
   .region-flags { gap: 1rem; }
   .region-flag-circle { width: 50px; height: 50px; }
   .region-flag-item.is-base .region-flag-circle { width: 58px; height: 58px; }
+}
+
+/* ---------- Apple.com Background Theme: Home Page ---------- */
+
+/* Client marquee on Apple light gray */
+.client-band {
+  background: #f5f5f7;
+  border-top: 1px solid rgba(0, 0, 0, 0.04);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* Capability Band: Apple Pro Cinematic Stage */
+.capability-band {
+  position: relative;
+  background:
+    radial-gradient(1100px 520px at 80% 12%, rgba(14, 102, 221, 0.2), transparent 66%),
+    radial-gradient(850px 480px at 12% 94%, rgba(43, 153, 11, 0.16), transparent 65%),
+    linear-gradient(180deg, #000000 0%, #060b14 48%, #000000 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+.capability-band::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(56, 139, 253, 0.6) 25%, rgba(111, 212, 74, 0.65) 75%, transparent);
+}
+
+/* Shelf Band: Apple Store Showroom Theme */
+.shelf-band {
+  background: #f5f5f7;
+  position: relative;
+  padding-block: clamp(4.5rem, 8vw, 7.5rem);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+.shelf-band::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(255, 255, 255, 0.8), transparent 70%);
+  pointer-events: none;
+}
+.shelf-band .card {
+  background: #ffffff;
+  border-radius: 22px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease, border-color 0.2s ease;
+}
+.shelf-band .card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
+  border-color: rgba(14, 102, 221, 0.18);
+}
+.shelf-feature {
+  background: #ffffff;
+  border-radius: 24px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.05);
+}
+
+/* Region Band: Apple Global Operations */
+.region-band {
+  background: #ffffff;
+  position: relative;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Reference Band: Apple Customer Stories Showcase */
+.reference-band,
+#references {
+  background: #f5f5f7;
+  position: relative;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+.reference-band .ref-card,
+#references .ref-card {
+  background: #ffffff;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 18px -2px rgba(0, 0, 0, 0.04);
+  transition: transform 0.26s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.26s ease;
+}
+.reference-band .ref-card:hover,
+#references .ref-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.08);
+}
+
+/* Brand Marquee Band */
+.brands-band {
+  background: #ffffff;
+  border-top: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+/* ---------- mobile app-style shell (marketplace pattern) ---------- */
+
+.m-tabs, .m-buy { display: none; }
+
+/* Hamburger icon state */
+.nav-toggle .nav-icon-close { display: none; }
+.nav-toggle[aria-expanded="true"] .nav-icon-menu { display: none; }
+.nav-toggle[aria-expanded="true"] .nav-icon-close { display: block; }
+
+@media (max-width: 720px) {
+  :root { --m-bar-h: 58px; }
+  html, body {
+    overflow-x: clip;
+    width: 100%;
+  }
+  body { padding-bottom: calc(var(--m-bar-h) + env(safe-area-inset-bottom, 0px)); }
+
+  /* chrome that crowds a phone screen */
+  .topbar, .whatsapp-float, .shop-perks, .shop-top .crumbs, .shop-title,
+  .brand-strip, .shop-sort .sort-apply { display: none !important; }
+
+  /* bottom tab bar */
+  .m-tabs, .m-buy {
+    display: grid;
+    position: fixed; inset: auto 0 0 0; z-index: 60;
+    height: calc(var(--m-bar-h) + env(safe-area-inset-bottom, 0px));
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: #fff;
+    border-top: 1px solid rgba(11, 26, 32, 0.12);
+    box-shadow: 0 -6px 18px -10px rgba(11, 26, 32, 0.25);
+  }
+  .m-tabs { grid-template-columns: repeat(5, 1fr); }
+  .m-tab {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+    font-size: 0.68rem; font-weight: 600; color: #5b6b72; text-decoration: none;
+  }
+  .m-tab .icon { width: 1.35rem; height: 1.35rem; }
+  .m-tab.is-active { color: var(--accent, #0a7d3c); }
+  .m-tab-ico { position: relative; display: inline-flex; }
+  .m-tab-ico .basket-badge { position: absolute; top: -6px; right: -10px; }
+
+  /* product page: call / chat / add bar */
+  .m-buy { grid-template-columns: 1fr 1fr 2fr; gap: 8px; padding: 8px 10px calc(8px + env(safe-area-inset-bottom, 0px)); align-items: stretch; }
+  .m-buy-form { display: contents; }
+  .m-buy-btn {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    border: 0; border-radius: 10px; font: inherit; font-weight: 700; font-size: 0.9rem;
+    text-decoration: none; cursor: pointer;
+  }
+  .m-buy-call { background: #fff; color: var(--text); box-shadow: inset 0 0 0 1.5px var(--text); }
+  .m-buy-chat { background: #1faa59; color: #fff; }
+  .m-buy-add { background: var(--text); color: #fff; }
+  .m-buy-btn .icon { width: 1.15rem; height: 1.15rem; }
+
+  /* compact header with search-first shop */
+  .shop-top { position: sticky; top: var(--header-h); z-index: 40; background: #fff; border-bottom: 1px solid rgba(11, 26, 32, 0.08); }
+  .shop-topbar { padding-block: 0.6rem 0.2rem; }
+  .shop-top .shop-search { flex-basis: 100%; }
+  .shop-top .shop-search .btn { display: none; }
+  .shop-top .search-field input { border-radius: 999px; background: #f1f4f3; }
+  .shop-top .shop-depts { padding-block: 0.4rem 0.7rem; }
+  .shop-top .dept-grid { margin-inline: calc(var(--shell-pad, 1rem) * -1); padding-inline: var(--shell-pad, 1rem); }
+
+  /* two-up listing grid for product catalogue, single column for solutions and case studies */
+  .shop-grid,
+  .shelf-rack,
+  .grid-3:has(.product-card) {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+  .grid-3:has(.sol-card),
+  .grid-3:has(.ref-card),
+  .grid-3:has(.pillar),
+  .grid-2 {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  .sol-card, .ref-card { width: 100%; }
+
+  .product-card { gap: 0.4rem; padding: 0; border-radius: 10px; }
+  .product-card .pc-body { padding: 0.5rem 0.6rem 0.7rem; }
+  .product-card .pc-title { font-size: 0.82rem; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .product-card .pc-price { font-size: 0.85rem; margin: 0.15rem 0; }
+  .product-card .pc-size, .product-card .pc-note { display: none; }
+  .shop-bar { flex-wrap: wrap; gap: 0.4rem; padding-block: 0.4rem; }
+
+  /* detail page: image first, clean specs and clear CTA */
+  .row-actions .add-form, .banner .row-actions { display: none; }
+  .banner .row-actions .btn-ghost { display: inline-flex; }
+  .split:has(aside) { display: flex; flex-direction: column; }
+  .split > aside { order: -1; margin-bottom: 1.2rem; }
+  .split > .prose { order: 1; }
+}
+
+/* ---------- mobile usability pass: tap targets, menu, forms ---------- */
+
+@media (max-width: 720px) {
+  /* 44px minimum touch targets */
+  .nav-toggle, .basket-btn { min-width: 44px; min-height: 44px; }
+  .nav-toggle .icon, .basket-btn .icon { width: 1.5rem; height: 1.5rem; }
+  .pc-plus, .product-card .add-btn { width: 42px; height: 42px; }
+  .btn, .btn-sm { min-height: 44px; }
+  .chip, .pill, .dept-tile { min-height: 40px; }
+  .breadcrumb a, .crumbs a, .btn-link, .pc-title a { padding-block: 0.25rem; }
+  .qty-btn { min-width: 44px; min-height: 44px; }
+  .drawer-close, .kill-btn { min-width: 44px; min-height: 44px; }
+
+  /* slide-down menu: roomy rows, never hidden behind the tab bar */
+  .primary-nav {
+    max-height: calc(100dvh - var(--header-h) - var(--m-bar-h) - env(safe-area-inset-bottom, 0px));
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  .nav-link { min-height: 52px; font-size: 1.05rem; padding-block: 0.9rem; border-bottom: 1px solid rgba(11, 26, 32, 0.06); }
+  .nav-submenu-toggle .caret { width: 1.2rem; height: 1.2rem; }
+  .submenu a { display: block; padding: 0.85rem 0.8rem; }
+  .nav-phone { display: flex; align-items: center; min-height: 48px; font-weight: 700; }
+
+  /* forms: 16px stops iOS zoom-on-focus, tall fields are easy to hit */
+  input:not([type="checkbox"]):not([type="radio"]), select, textarea { font-size: 16px !important; min-height: 48px; }
+  textarea { min-height: 120px; }
+  .m-tab { min-height: 48px; }
+
+  /* body copy and spacing a touch tighter so pages are less long */
+  .section { padding-block: 2.2rem; }
+  h1 { font-size: clamp(1.85rem, 7.5vw, 2.35rem); overflow-wrap: break-word; }
+  h2 { font-size: clamp(1.45rem, 5.5vw, 2rem); overflow-wrap: break-word; }
+}
+
+/* ---------- mobile: marketplace storefront in brand colours ---------- */
+
+.m-search, .m-cats { display: none; }
+
+@media (max-width: 720px) {
+  :root { --jm-orange: var(--brand-blue, #023aaa); --jm-orange-dk: var(--brand-blue, #023aaa); --jm-tint: rgba(2, 58, 170, 0.08); --header-h: 112px; }
+
+  /* two-row header: logo + icons, then a full-width search with blue button */
+  .header-inner { flex-wrap: wrap; row-gap: 0; gap: 0.4rem; min-height: 0; padding-block: 6px 10px; }
+  .brand { margin-right: auto; }
+  .brand-logo { height: 38px; }
+  .m-search { display: flex; order: 9; flex: 1 1 100%; height: 44px; border: 1.5px solid var(--jm-orange); border-radius: 6px; overflow: hidden; background: #fff; margin-top: 2px; }
+  .m-search input { flex: 1; min-width: 0; border: 0 !important; border-radius: 0 !important; background: transparent !important; padding: 0 0.8rem; min-height: 0 !important; height: 100%; outline: none; font-size: 16px !important; }
+  .m-search button { flex: none; border: 0; background: var(--jm-orange); color: #fff; font: inherit; font-weight: 700; font-size: 0.85rem; padding: 0 1rem; text-transform: uppercase; letter-spacing: 0.02em; cursor: pointer; }
+  .primary-nav { inset: var(--header-h) 0 auto; }
+  .shop-top { top: var(--header-h); }
+  .shop-top .shop-topbar { display: none; }  /* header search replaces the shop one */
+
+  /* checkout topbar on mobile stays relative so it does not block viewport */
+  .co-topbar { position: static; box-shadow: none; padding: 0.6rem 0; top: auto; }
+  .co-page { padding: 1rem 0 calc(var(--m-bar-h) + 2.5rem); }
+
+  /* brand accents */
+  .m-tab.is-active { color: var(--jm-orange-dk); }
+  .basket-badge { background: var(--jm-orange) !important; color: #fff !important; }
+  .m-buy-add { background: var(--jm-orange); }
+  .m-buy-call { box-shadow: inset 0 0 0 1.5px var(--jm-orange); color: var(--jm-orange-dk); }
+  .shop-top .dept-tile.is-active { background: var(--jm-orange); border-color: var(--jm-orange); }
+  .shop-top .dept-tile.is-active .dept-count { background: rgba(255, 255, 255, 0.25); }
+  .shop-top .dept-tile { background: #fff; }
+  .flag-top { background: var(--jm-orange) !important; color: #fff !important; }
+  .nav-link.is-active { color: var(--jm-orange-dk); }
+  .nav-actions .btn-solid { background: var(--jm-orange); border-color: var(--jm-orange); }
+
+  /* product cards: image, 2-line title, bold price, orange add button */
+  .product-card { background: #fff; border: 1px solid rgba(11, 26, 32, 0.08); box-shadow: 0 1px 3px rgba(11, 26, 32, 0.06); }
+  .product-card .pc-price strong { font-size: 0.95rem; font-weight: 800; color: var(--text); }
+  .product-card .pc-add .pc-plus { width: 40px; height: 40px; background: var(--jm-orange); border-radius: 50%; }
+  .product-card .pc-add .pc-plus .icon { width: 20px; height: 20px; }
+  .product-card.is-on-list .pc-add .pc-plus { background: #2b990b; }
+
+  /* category icon grid on the home page */
+  .m-cats { display: block; background: #fff; padding: 0.9rem 0 1rem; border-bottom: 8px solid #f1f4f3; }
+  .m-cats-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.7rem; }
+  .m-cats-head h2 { font-size: 1.05rem; margin: 0; }
+  .m-cats-head a { color: var(--jm-orange-dk); font-weight: 700; font-size: 0.85rem; padding: 0.5rem 0; }
+  .m-cats-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.9rem 0.4rem; }
+  .m-cats-grid a { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; text-decoration: none; color: var(--text); min-height: 44px; }
+  .m-cat-ico { width: 50px; height: 50px; border-radius: 50%; background: var(--jm-tint); color: var(--jm-orange-dk); display: grid; place-items: center; }
+  .m-cat-ico .icon { width: 24px; height: 24px; }
+  .m-cat-name { font-size: 0.68rem; font-weight: 600; text-align: center; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+  /* hero: tighter, with a brand-blue primary action */
+  .hero .btn-solid, .hero-actions .btn-solid { background: var(--jm-orange); border-color: var(--jm-orange); color: #fff; box-shadow: none; }
+
+  /* checkout bar: keep the steps from forcing sideways scroll */
+  .co-topbar-inner { gap: 0.6rem; }
+  .co-step + .co-step::before { width: 0.9rem; margin: 0 0.3rem; }
+  .co-back-link { font-size: 0.75rem; }
+  .co-logo { display: none; }
+
+  /* checkout item cards for narrow screens */
+  .co-item {
+    display: grid;
+    grid-template-columns: 54px 1fr auto;
+    grid-template-rows: auto auto;
+    gap: 0.5rem 0.8rem;
+    align-items: center;
+    padding: 0.85rem 1rem;
+  }
+  .co-item-img {
+    width: 54px;
+    height: 54px;
+    grid-row: 1 / span 2;
+  }
+  .co-item-body {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .co-remove-form {
+    grid-column: 3;
+    grid-row: 1;
+    align-self: start;
+  }
+  .co-qty-block {
+    grid-column: 2 / span 2;
+    grid-row: 2;
+    justify-self: start;
+    margin-top: 2px;
+  }
+  .co-card-head { padding: 0.9rem 1rem; }
+  .co-item-note { padding: 0.7rem 1rem; }
+  .co-summary { padding: 1.2rem 1.1rem; }
+
+  /* specifications table */
+  .spec-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .spec-table th, .spec-table td { padding: 0.65rem 0.75rem; font-size: 0.86rem; word-break: break-word; }
+  .spec-table th { width: 36%; font-size: 0.7rem; }
+
+  /* footer links and breadcrumbs: bigger hit areas */
+  .site-footer a, footer a { display: inline-block; padding-block: 0.4rem; }
+  .crumbs a { display: inline-block; padding-block: 0.5rem; }
+}
+
+@media (max-width: 480px) {
+  .who-badge {
+    padding: 0.5rem 0.7rem;
+    gap: 0.5rem;
+    max-width: 88%;
+  }
+  .who-badge-copy strong { font-size: 0.75rem; }
+  .who-badge-copy small { font-size: 0.62rem; }
+  .who-studio-card { padding: 1rem 1rem 0; border-radius: 20px; }
+  .hero-proof { gap: 0.35rem; }
+  .hero-proof strong { font-size: 1.25rem; }
+  .hero-proof span { font-size: 0.68rem; line-height: 1.2; }
+}
+
+/* Mobile smooth scrolling & gesture passthrough */
+.why-rail,
+.shop-top .dept-grid,
+.cs-filter,
+.shelf-depts,
+.spec-table,
+.primary-nav,
+.drawer-body {
+  -webkit-overflow-scrolling: touch;
+}
+
+.why-rail,
+.shop-top .dept-grid,
+.cs-filter,
+.shelf-depts,
+.spec-table {
+  touch-action: pan-x pan-y;
+}
+
+
+
+/* ---------- mobile: filters behind an icon, bottom sheet ---------- */
+
+.m-filter-btn, .m-sheet-head, .m-sheet-scrim { display: none; }
+
+@media (max-width: 720px) {
+  /* the category chip row is replaced by the filter sheet */
+  .shop-top { position: static; border-bottom: 0; }
+  .shop-top .shop-depts { display: none; }
+  .shop-body { padding-top: 0.6rem; }
+
+  .m-filter-btn {
+    display: inline-flex; align-items: center; gap: 0.4rem; position: relative;
+    min-height: 44px; padding: 0 0.9rem; border-radius: 999px;
+    border: 1.5px solid var(--jm-orange); background: #fff; color: var(--jm-orange-dk);
+    font: inherit; font-weight: 700; font-size: 0.88rem; cursor: pointer;
+  }
+  .m-filter-btn .icon { width: 1.15rem; height: 1.15rem; }
+  .m-filter-dot { position: absolute; top: 6px; right: 8px; width: 8px; height: 8px; border-radius: 50%; background: #2b990b; }
+  .shop-bar { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+  .shop-count { flex: 1 1 100%; order: 3; margin: 0; }
+  .shop-sort { margin-left: auto; }
+  .shop-sort .sort-label { display: none; }
+
+  .shop-rail {
+    display: none; position: fixed; inset: auto 0 0 0; z-index: 90;
+    max-height: 82dvh; overflow-y: auto; overscroll-behavior: contain;
+    background: #fff; border-radius: 16px 16px 0 0; padding: 0 1rem 1.2rem;
+    box-shadow: 0 -12px 40px rgba(11, 26, 32, 0.3);
+  }
+  .shop-rail.is-open { display: block; }
+  .m-sheet-head {
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; background: #fff; padding: 0.9rem 0 0.6rem; z-index: 1;
+    border-bottom: 1px solid rgba(11, 26, 32, 0.08); font-size: 1.05rem;
+  }
+  .m-sheet-close { min-width: 44px; min-height: 44px; border: 0; background: transparent; cursor: pointer; display: grid; place-items: center; }
+  .m-sheet-scrim { position: fixed; inset: 0; z-index: 85; background: rgba(11, 26, 32, 0.5); }
+  .m-sheet-scrim:not([hidden]) { display: block; }
+  .shop-rail .rail-link { min-height: 44px; display: flex; align-items: center; }
+  .m-sheet-lock { overflow: hidden; }
+}
+
+/* ---------- phones: simple and steady ----------
+   No scroll-triggered fades or slides (content is always visible), no blur layers,
+   and larger tap targets. */
+@media (max-width: 768px) {
+  .reveal, .reveal:not(.is-visible),
+  .capability-band .capability-row.reveal:not(.is-visible),
+  .capability-orbit.reveal:not(.is-visible) {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+  .reveal.is-visible, .hero-pro .hero-copy > *, .hero-pro .hero-stage { animation: none !important; }
+  .hero-visual::before, .hero-visual::after { display: none; }
+  .btn { min-height: 44px; }
+  .footer a, .site-footer a { display: inline-block; padding-block: 0.3rem; }
+  input, select, textarea { font-size: 16px; } /* stops iOS zooming on focus */
+}
+
+/* Phones: trim the long home page down to what drives a visit. */
+@media (max-width: 768px) {
+  .hero-proof, .shelf-tally, .ft-blurb, .client-band .client-note,
+  .shelf-rack > li:nth-child(n+7) { display: none; }
+  .hero.hero-pro { padding-bottom: 2rem; }
+  .shelf-feature { display: none; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 1.5rem 1rem; }
+  .footer-grid .ft-about, .footer-grid .ft-col:last-child { grid-column: 1 / -1; }
+  .ft-links li { margin: 0; }
+  .ft-links a { display: block; padding-block: 0.4rem; }
+}
+
+/* Phones: the bottom bar and menu already cover site navigation, so the footer
+   keeps only contact details, the office and the legal line. */
+@media (max-width: 768px) {
+  .site-footer .footer-grid { display: grid !important; grid-template-columns: 1fr !important; gap: 1.5rem !important; }
+  .site-footer .ft-col[aria-label="Solutions"],
+  .site-footer .ft-col[aria-label="Company"] { display: none !important; }
+}
+
+/* Phones: product detail leads with the picture, and the title band stays compact. */
+@media (max-width: 768px) {
+  .banner { padding-block: 1.2rem 1rem !important; }
+  .banner .crumbs, .banner .breadcrumb, .banner nav[aria-label="Breadcrumb"] { display: none; }
+  .split:has(> aside) { display: flex; flex-direction: column; gap: 1.25rem; }
+  .split:has(> aside) > aside { order: -1; position: static; }
+}
+@media (max-width: 768px) {
+  .split > aside .frame { width: 100%; max-width: none; margin-inline: 0; }
+}
+@media (max-width: 768px) {
+  .nav-auth-link { display: none !important; } /* visitors never need an account to browse or enquire */
+}
+
+/* Phones: the enquiry form comes first on the contact page; the extras drop away. */
+@media (max-width: 768px) {
+  .contact-section .split { display: flex; flex-direction: column; gap: 1.5rem; }
+  .contact-section #enquiry { order: -1; }
+  .contact-section .contact-lines + .pane,
+  .contact-section #enquiry > div.pane { display: none; }
 }

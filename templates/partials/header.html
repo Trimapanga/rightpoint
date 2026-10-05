@@ -8,7 +8,8 @@
     </a>
 
     <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="primary-nav" aria-label="Open menu">
-      <svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg>
+      <svg class="icon nav-icon-menu" aria-hidden="true"><use href="#i-menu"/></svg>
+      <svg class="icon nav-icon-close" aria-hidden="true"><use href="#i-close"/></svg>
     </button>
 
     <nav id="primary-nav" class="primary-nav" aria-label="Primary">
@@ -79,5 +80,11 @@
       <svg class="icon" aria-hidden="true"><use href="#i-cart"/></svg>
       <span class="basket-badge" data-basket-count{% if not basket_slugs|length %} hidden{% endif %}>{{ basket_slugs|length }}</span>
     </a>
+
+    <form class="m-search" method="get" action="{% url 'products:list' %}" role="search">
+      <label class="visually-hidden" for="m_q">Search products</label>
+      <input id="m_q" type="search" name="q" placeholder="Search products" autocomplete="off">
+      <button type="submit">Search</button>
+    </form>
   </div>
 </header>

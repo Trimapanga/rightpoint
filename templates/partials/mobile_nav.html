@@ -1,0 +1,9 @@
+<nav class="m-tabs" aria-label="Quick navigation">
+  <a class="m-tab{% if request.path == '/' %} is-active{% endif %}" href="{% url 'home' %}"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg><span>Home</span></a>
+  <a class="m-tab{% if '/products' in request.path and 'basket' not in request.path %} is-active{% endif %}" href="{% url 'products:list' %}"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><span>Shop</span></a>
+  <a class="m-tab{% if 'basket' in request.path %} is-active{% endif %}" href="{% url 'products:basket' %}" data-basket-open aria-controls="basket-drawer" aria-expanded="false">
+    <span class="m-tab-ico"><svg class="icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="basket-badge" data-basket-count{% if not basket_slugs|length %} hidden{% endif %}>{{ basket_slugs|length }}</span></span><span>Quote</span>
+  </a>
+  <a class="m-tab" href="{{ site.whatsapp_url }}" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="#i-whatsapp"/></svg><span>Chat</span></a>
+  <a class="m-tab{% if request.path == '/contact/' %} is-active{% endif %}" href="{% url 'contact:form' %}"><svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg><span>Contact</span></a>
+</nav>

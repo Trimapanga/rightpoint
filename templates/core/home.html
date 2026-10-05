@@ -2,10 +2,21 @@
 {% load static %}
 
 {% block content %}
+{% if nav_categories %}
+<section class="m-cats" aria-label="Shop by category">
+  <div class="shell">
+    <div class="m-cats-head"><h2>Categories</h2><a href="{% url 'products:list' %}">See all</a></div>
+    <ul class="m-cats-grid">
+      {% for category in nav_categories|slice:":8" %}
+        <li><a href="{% url 'products:list' %}?category={{ category.slug }}"><span class="m-cat-ico"><svg class="icon" aria-hidden="true"><use href="#i-camera"/></svg></span><span class="m-cat-name">{{ category.name }}</span></a></li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+{% endif %}
 <section class="hero hero-pro">
   <div class="shell hero-grid">
     <div class="hero-copy">
-      {% if site.hero_kicker %}<p class="hero-eyebrow"><span class="hero-eyebrow-dot" aria-hidden="true"></span>{{ site.hero_kicker }}</p>{% endif %}
       <h1>{{ site.hero_heading }}</h1>
       <p class="lede">{{ site.hero_body }}</p>
       <div class="row-actions hero-actions">

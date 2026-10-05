@@ -11,13 +11,48 @@
       toggle.setAttribute("aria-expanded", open ? "true" : "false");
       toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
     });
+    // Tap outside the open menu (page body, tab bar) to close it.
+    document.addEventListener("click", function (event) {
+      if (!nav.classList.contains("is-open")) return;
+      if (nav.contains(event.target) || toggle.contains(event.target)) return;
+      nav.classList.remove("is-open");
+      toggle.setAttribute("aria-expanded", "false");
+    });
     document.addEventListener("keydown", function (event) {
       if (event.key === "Escape" && nav.classList.contains("is-open")) {
         nav.classList.remove("is-open");
         toggle.setAttribute("aria-expanded", "false");
+        toggle.setAttribute("aria-label", "Open menu");
         toggle.focus();
       }
     });
+    nav.querySelectorAll("a").forEach(function (link) {
+      link.addEventListener("click", function () {
+        if (nav.classList.contains("is-open")) {
+          nav.classList.remove("is-open");
+          toggle.setAttribute("aria-expanded", "false");
+          toggle.setAttribute("aria-label", "Open menu");
+        }
+      });
+    });
+  }
+
+  // Mobile filter sheet: the shop rail slides up from the bottom behind a filter icon.
+  var sheet = document.querySelector("[data-filter-sheet]");
+  if (sheet) {
+    var filterScrim = document.querySelector(".m-sheet-scrim");
+    var setSheet = function (open) {
+      sheet.classList.toggle("is-open", open);
+      if (filterScrim) filterScrim.hidden = !open;
+      document.body.classList.toggle("m-sheet-lock", open);
+    };
+    document.querySelectorAll("[data-filter-open]").forEach(function (b) {
+      b.addEventListener("click", function () { setSheet(true); });
+    });
+    document.querySelectorAll("[data-filter-close]").forEach(function (b) {
+      b.addEventListener("click", function () { setSheet(false); });
+    });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") setSheet(false); });
   }
 
   // Solutions submenu: click/keyboard driven, hover handled in CSS on desktop.
@@ -316,14 +351,22 @@
   // Keep the sticky header from covering anchor targets when navigating by hash.
   if (header) {
     document.querySelectorAll('a[href*="#"]').forEach(function (link) {
-      link.addEventListener("click", function () {
-        var id = link.getAttribute("href").split("#")[1];
-        var target = id && document.getElementById(id);
+      link.addEventListener("click", function (event) {
+        var href = link.getAttribute("href");
+        if (!href || href === "#") return;
+        var parts = href.split("#");
+        var id = parts[1];
+        if (!id) return;
+        // If the link points to a hash on another page, let normal navigation happen
+        if (parts[0] && parts[0] !== window.location.pathname && parts[0] !== "") return;
+        var target = document.getElementById(id);
         if (target) {
-          window.setTimeout(function () {
-            var offset = target.getBoundingClientRect().top + window.scrollY - header.offsetHeight - 16;
-            window.scrollTo({ top: offset, behavior: "smooth" });
-          }, 0);
+          event.preventDefault();
+          var offset = target.getBoundingClientRect().top + window.scrollY - header.offsetHeight - 16;
+          window.scrollTo({ top: Math.max(0, offset), behavior: "smooth" });
+          if (history.pushState) {
+            history.pushState(null, null, "#" + id);
+          }
         }
       });
     });
