@@ -117,6 +117,43 @@
   .dashboard #content-related { width: auto; float: none; margin: 28px 0 0; }
   .dashboard #content-related .module { max-width: 520px; background: #fff; }
   .dashboard #content-related h2 { background: var(--primary); color: #fff; padding: 10px 14px; margin: 0; font-size: .74rem; letter-spacing: .09em; }
+
+  /* Manage: app cards */
+  .dashboard .app-list, .dashboard #content-main .module { border: 1px solid var(--hairline-color); border-radius: 12px; background: #fff; box-shadow: 0 1px 3px rgba(11,44,62,.06); overflow: hidden; transition: box-shadow .15s; }
+  .dashboard #content-main .module:hover { box-shadow: 0 6px 18px rgba(11,44,62,.10); }
+  .dashboard .module caption { display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-align: left; background: #fff; color: #0b2c3e; border-bottom: 1px solid var(--hairline-color); font-size: .8rem; letter-spacing: .06em; }
+  .dashboard .module caption a, .dashboard .module caption a:link, .dashboard .module caption a:visited { color: #0b2c3e; }
+  .dashboard .module caption::before { content: ''; flex: 0 0 34px; height: 34px; border-radius: 9px; background: #0b3aa8 center / 18px no-repeat; }
+  .dashboard .app-auth caption::before { background-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22white%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2212%22 cy=%228%22 r=%224%22/%3E%3Cpath d=%22M4 21c0-4 4-6 8-6s8 2 8 6%22/%3E%3C/svg%3E"); }
+  .dashboard .app-casestudies caption::before { background-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22white%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Crect x=%223%22 y=%224%22 width=%2218%22 height=%2216%22 rx=%222%22/%3E%3Cpath d=%22M7 9h10M7 13h10M7 17h6%22/%3E%3C/svg%3E"); }
+  .dashboard .app-contact caption::before { background-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22white%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M4 5h16v12H8l-4 4z%22/%3E%3C/svg%3E"); }
+  .dashboard .app-invoices caption::before { background-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22white%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M6 3h12v18l-3-2-3 2-3-2-3 2z%22/%3E%3Cpath d=%22M9 8h6M9 12h6%22/%3E%3C/svg%3E"); }
+  .dashboard .app-products caption::before { background-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22white%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M21 8l-9-5-9 5 9 5 9-5z%22/%3E%3Cpath d=%22M3 8v8l9 5 9-5V8%22/%3E%3C/svg%3E"); }
+  .dashboard .app-quotes caption::before { background-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22white%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M14 3H6v18h12V7z%22/%3E%3Cpath d=%22M14 3v4h4M9 13h6M9 17h6%22/%3E%3C/svg%3E"); }
+  .dashboard .app-core caption::before { background-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22white%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%223%22/%3E%3Cpath d=%22M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2%22/%3E%3C/svg%3E"); }
+  .dashboard .app-sites caption::before { background-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22white%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%2212%22 cy=%2212%22 r=%229%22/%3E%3Cpath d=%22M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18%22/%3E%3C/svg%3E"); }
+  .dashboard .app-solutions caption::before { background-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22white%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z%22/%3E%3Cpath d=%22M9 12l2 2 4-4%22/%3E%3C/svg%3E"); }
+  .dashboard .app-auth caption::before, .dashboard .app-core caption::before { background-color: #475569; }
+  .dashboard .app-invoices caption::before, .dashboard .app-products caption::before { background-color: #1a6035; }
+  .dashboard .app-contact caption::before, .dashboard .app-quotes caption::before { background-color: #0b3aa8; }
+  .dashboard .app-casestudies caption::before, .dashboard .app-solutions caption::before, .dashboard .app-sites caption::before { background-color: #0b2c3e; }
+  .dashboard .module table { border-collapse: collapse; }
+  .dashboard .module tr { border-top: 0; }
+  .dashboard .module tbody tr + tr th, .dashboard .module tbody tr + tr td { border-top: 1px solid #eef2f6; }
+  .dashboard .module th, .dashboard .module td { padding: 10px 16px; font-size: .88rem; vertical-align: middle; background: transparent; }
+  .dashboard .module th a { font-weight: 600; color: #0b2c3e; }
+  .dashboard .module tr:hover th, .dashboard .module tr:hover td { background: #f6f9fc; }
+  .dashboard .module th a:hover { color: #0b3aa8; }
+  .dashboard .module td { width: 1%; white-space: nowrap; text-align: right; }
+  .dashboard .module td + td { padding-left: 0; }
+  .dashboard .module td a { display: inline-block; padding: 3px 11px; border-radius: 999px; font-size: .75rem; font-weight: 600; text-decoration: none; background-image: none !important; padding-left: 11px !important; }
+  .dashboard .module td a.addlink { color: #1a6035; background: #e6f4ec; }
+  .dashboard .module td a.addlink::before { content: '+ '; }
+  .dashboard .module td a.changelink, .dashboard .module td a.viewlink { color: #0b3aa8; background: #e8f0ff; }
+  .dashboard .module td a:hover { filter: brightness(.95); }
+  .dashboard .rps-section-title { margin-top: 6px; }
+  .dashboard .module tbody tr:nth-child(even) th, .dashboard .module tbody tr:nth-child(even) td { background: transparent; }
+  .dashboard .module tbody tr:nth-child(even):hover th, .dashboard .module tbody tr:nth-child(even):hover td { background: #f6f9fc; }
   @media (max-width: 767px) {
     #header { padding: 10px 14px; }
     #content { padding: 16px 14px; }
