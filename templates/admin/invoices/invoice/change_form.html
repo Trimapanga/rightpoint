@@ -1,14 +1,9 @@
 {% extends "admin/change_form.html" %}
-{% load i18n %}
 
 {% block object-tools-items %}
-  {% if original %}
-    <li>
-      <a href="{% url 'admin:invoices_invoice_print' original.pk %}" target="_blank"
-         class="historylink" style="background:#1a6035;color:#fff;border-radius:4px;padding:6px 12px;">
-        🖨 Print / PDF
-      </a>
-    </li>
+  {% if original.pk %}
+    <li><a href="{% url 'admin:invoices_invoice_print' original.pk %}" target="_blank" rel="noopener">Preview invoice</a></li>
+    <li><a href="{% url 'admin:invoices_invoice_print' original.pk %}?download=1" target="_blank" rel="noopener">Download PDF</a></li>
   {% endif %}
   {{ block.super }}
 {% endblock %}
