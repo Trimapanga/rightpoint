@@ -23,8 +23,21 @@
 
 {% block submit_buttons_bottom %}
   {{ block.super }}
+  {% if original.pk and original.status == "accepted" %}
+    {% with invoice=original.invoices.first %}
+      <div class="submit-row">
+        {% if invoice %}
+          <a href="{% url 'admin:invoices_invoice_change' invoice.pk %}" class="button">View invoice {{ invoice.number }}</a>
+          <span>This quote is already invoiced.</span>
+        {% else %}
+          <button type="submit" form="invoice-form" class="button">Convert to invoice</button>
+          <span>Copies {{ original.number }} line for line into a draft invoice with the same totals.</span>
+        {% endif %}
+      </div>
+    {% endwith %}
+  {% endif %}
   {% if original.pk and original.status == "accepted" and not original.stock_issued %}
-    <div class="issue-stock-row">
+    <div class="submit-row">
       <button type="submit" form="issue-stock-form" class="button">Issue stock for this quote</button>
       <span>Books every catalogue line out of inventory against {{ original.number }}.</span>
     </div>
@@ -33,6 +46,9 @@
 
 {% block content %}
   {{ block.super }}
+  {% if original.pk and original.status == "accepted" %}
+    <form id="invoice-form" method="post" action="{% url 'admin:quotes_quote_invoice' original.pk %}">{% csrf_token %}</form>
+  {% endif %}
   {% if original.pk and original.status == "accepted" and not original.stock_issued %}
     <form id="issue-stock-form" method="post" action="{% url 'admin:quotes_quote_issue_stock' original.pk %}">{% csrf_token %}</form>
   {% endif %}

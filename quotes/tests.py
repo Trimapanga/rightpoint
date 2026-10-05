@@ -5,6 +5,7 @@ from django.urls import reverse
 
 from contact.models import ContactInquiry
 from core.factories import SiteTestCase, create_catalogue
+from invoices.models import Invoice
 from products.models import StockMovement
 from quotes import services
 from quotes.models import Quote, QuoteLine
@@ -85,3 +86,69 @@ class QuoteWorkflowTests(SiteTestCase):
         for name in ("admin:quotes_quote_changelist", "admin:products_inventoryitem_changelist",
                      "admin:products_stockmovement_changelist", "admin:quotes_quote_add"):
             self.assertEqual(self.client.get(reverse(name)).status_code, 200, name)
+
+
+class QuoteToInvoiceTests(SiteTestCase):
+    """A converted invoice must agree with the accepted quote to the cent."""
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = get_user_model().objects.create_superuser("boss", "boss@example.com", "not-used-pass-123")
+
+    def setUp(self):
+        super().setUp()
+        self.client.force_login(self.user)
+
+    def make_quote(self, **kwargs):
+        defaults = {"customer_name": "Jane", "company": "Acme", "status": Quote.ACCEPTED}
+        defaults.update(kwargs)
+        quote = Quote.objects.create(**defaults)
+        QuoteLine.objects.create(
+            quote=quote, description="Cameras", quantity=Decimal("2"), unit_price=Decimal("1000"), order=1)
+        QuoteLine.objects.create(
+            quote=quote, description="Install", quantity=Decimal("3"), unit_price=Decimal("500"),
+            discount_percent=Decimal("10"), taxed=False, order=2)
+        return quote
+
+    def test_totals_survive_the_conversion(self):
+        quote = self.make_quote(discount_percent=Decimal("5"))
+        invoice, created = services.invoice_from_quote(quote, self.user)
+        self.assertTrue(created)
+        self.assertEqual(invoice.status, Invoice.DRAFT)
+        self.assertEqual(invoice.subtotal, quote.subtotal)
+        self.assertEqual(invoice.vat_amount, quote.vat_amount)
+        self.assertEqual(invoice.grand_total, quote.grand_total)
+        # An invoice line has no discount column, so the discounted line is written net.
+        self.assertEqual(invoice.lines.get(description="Install").unit_price, Decimal("450.00"))
+
+    def test_conversion_is_idempotent(self):
+        quote = self.make_quote()
+        first, created = services.invoice_from_quote(quote, self.user)
+        second, again = services.invoice_from_quote(quote, self.user)
+        self.assertTrue(created)
+        self.assertFalse(again)
+        self.assertEqual(first, second)
+        self.assertEqual(Invoice.objects.count(), 1)
+
+    def test_change_page_offers_the_conversion(self):
+        quote = self.make_quote()
+        change = self.client.get(reverse("admin:quotes_quote_change", args=[quote.pk]))
+        self.assertContains(change, "Convert to invoice")
+        response = self.client.post(reverse("admin:quotes_quote_invoice", args=[quote.pk]))
+        invoice = Invoice.objects.get()
+        self.assertRedirects(response, reverse("admin:invoices_invoice_change", args=[invoice.pk]))
+        after = self.client.get(reverse("admin:quotes_quote_change", args=[quote.pk]))
+        self.assertContains(after, f"View invoice {invoice.number}")
+        self.assertNotContains(after, "Convert to invoice")
+
+    def test_action_skips_quotes_that_are_not_accepted(self):
+        accepted = self.make_quote()
+        draft = self.make_quote(status=Quote.DRAFT)
+        response = self.client.post(reverse("admin:quotes_quote_changelist"), {
+            "action": "raise_invoices",
+            "_selected_action": [accepted.pk, draft.pk],
+            "execute": "Run the selected action",
+        })
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Invoice.objects.count(), 1)
+        self.assertEqual(Invoice.objects.get().quote, accepted)

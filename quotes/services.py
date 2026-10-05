@@ -3,8 +3,9 @@ from decimal import Decimal
 
 from django.db import transaction
 
+from invoices.models import Invoice, InvoiceLine
 from products.models import Product, StockMovement
-from quotes.models import Quote, QuoteLine
+from quotes.models import Quote, QuoteLine, money
 
 # The shop's quote list lands in the enquiry message as "Evolis Primacy 2 - 2 units".
 BASKET_LINE = re.compile(r"^\s*[-*•]?\s*(?P<title>.+?)\s+-\s+(?P<qty>\d+)\s+units?\s*$", re.I)
@@ -89,3 +90,43 @@ def duplicate(quote, user=None):
         line.quote = copy
         line.save()
     return copy
+
+
+@transaction.atomic
+def invoice_from_quote(quote, user=None):
+    """Raise a draft invoice for a quote, or hand back the one it already has.
+
+    An invoice line carries no per-line discount, so a discounted quote line is
+    written at its net unit price: the document total is the same either way.
+    """
+    existing = quote.invoices.first()
+    if existing:
+        return existing, False
+    invoice = Invoice.objects.create(
+        quote=quote,
+        customer_name=quote.customer_name,
+        company=quote.company,
+        email=quote.email,
+        phone=quote.phone,
+        status=Invoice.DRAFT,
+        discount_amount=quote.discount_amount,
+        apply_vat=quote.apply_vat,
+        vat_rate=quote.vat_rate,
+        notes=quote.notes,
+        internal_note=f"Converted from {quote.number}. Quote line discounts are folded into unit prices.",
+        created_by=user,
+    )
+    for order, line in enumerate(quote.lines.all(), start=1):
+        unit_price = line.unit_price
+        if line.discount_percent and line.quantity:
+            unit_price = money(line.line_total / line.quantity)
+        InvoiceLine.objects.create(
+            invoice=invoice,
+            product_id=line.product_id,
+            description=line.label,
+            quantity=line.quantity,
+            unit_price=unit_price,
+            taxed=line.taxed,
+            order=order,
+        )
+    return invoice, True

@@ -46,7 +46,7 @@ class QuoteAdmin(admin.ModelAdmin):
     date_hierarchy = "issue_date"
     autocomplete_fields = ("inquiry",)
     readonly_fields = ("number", "totals_panel", "stock_issued", "created_by", "created_at", "updated_at")
-    actions = ["mark_sent", "mark_accepted", "mark_declined", "issue_stock", "duplicate_quotes"]
+    actions = ["mark_sent", "mark_accepted", "mark_declined", "issue_stock", "duplicate_quotes", "raise_invoices"]
     fieldsets = (
         ("Customer", {"fields": (("customer_name", "company"), ("email", "phone"), "site_location", "inquiry")}),
         ("Quote", {"fields": (("number", "status"), ("issue_date", "valid_until"), ("discount_percent", "apply_vat", "vat_rate"))}),
@@ -121,6 +121,7 @@ class QuoteAdmin(admin.ModelAdmin):
         custom = [
             path("<int:pk>/print/", self.admin_site.admin_view(self.print_view), name="quotes_quote_print"),
             path("<int:pk>/issue-stock/", self.admin_site.admin_view(self.issue_stock_view), name="quotes_quote_issue_stock"),
+            path("<int:pk>/invoice/", self.admin_site.admin_view(self.invoice_view), name="quotes_quote_invoice"),
             path("product-info/<int:pk>/", self.admin_site.admin_view(self.product_info), name="quotes_product_info"),
         ]
         return custom + super().get_urls()
@@ -142,6 +143,15 @@ class QuoteAdmin(admin.ModelAdmin):
             else:
                 self.message_user(request, "Nothing to issue - stock was already booked out.", messages.WARNING)
         return redirect(reverse("admin:quotes_quote_change", args=[pk]))
+
+    def invoice_view(self, request, pk):
+        quote = get_object_or_404(Quote, pk=pk)
+        invoice, created = services.invoice_from_quote(quote, request.user)
+        if created:
+            self.message_user(request, f"Draft invoice {invoice.number} raised from {quote.number}.")
+        else:
+            self.message_user(request, f"{quote.number} is already invoiced as {invoice.number}.", messages.WARNING)
+        return redirect(reverse("admin:invoices_invoice_change", args=[invoice.pk]))
 
     def product_info(self, request, pk):
         product = get_object_or_404(Product, pk=pk)
@@ -183,3 +193,22 @@ class QuoteAdmin(admin.ModelAdmin):
         for quote in queryset:
             services.duplicate(quote, request.user)
         self.message_user(request, f"{queryset.count()} quote(s) duplicated.")
+
+    @admin.action(description="Raise draft invoices for selected accepted quotes")
+    def raise_invoices(self, request, queryset):
+        accepted = queryset.filter(status=Quote.ACCEPTED)
+        raised = 0
+        already = 0
+        for quote in accepted:
+            _invoice, created = services.invoice_from_quote(quote, request.user)
+            if created:
+                raised += 1
+            else:
+                already += 1
+        notes = [f"{raised} draft invoice(s) raised"]
+        if already:
+            notes.append(f"{already} already invoiced")
+        skipped = queryset.count() - accepted.count()
+        if skipped:
+            notes.append(f"{skipped} not accepted, left alone")
+        self.message_user(request, ", ".join(notes) + ".")
