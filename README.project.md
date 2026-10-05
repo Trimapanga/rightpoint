@@ -15,7 +15,7 @@ database, renders it on the server, and keeps the visual language of the origina
 python -m pip install -r requirements.txt
 python manage.py migrate
 python manage.py seed            # load real solutions, catalogue and references
-python manage.py createsuperuser
+python manage.py ensure_admin    # or createsuperuser, for a private account
 python manage.py runserver
 ```
 
@@ -733,12 +733,21 @@ there because TLS terminates outside the container.
 On a hosted platform, point it at the repository or image and set:
 
 - Build: `pip install -r requirements.txt && python manage.py collectstatic --noinput`
-- Release/migrate: `python manage.py migrate --noinput && python manage.py seed`
+- Release/migrate: `python manage.py migrate --noinput && python manage.py seed && python manage.py ensure_admin`
 - Start: `gunicorn config.wsgi:application --bind :$PORT --workers 3 --threads 2`
   (the `Procfile` already does this; Render/Railway read it)
 - Environment: everything in `.env.example`, at minimum `DJANGO_DEBUG=False`,
   a real `DJANGO_SECRET_KEY`, `DJANGO_ALLOWED_HOSTS`, `DJANGO_CSRF_TRUSTED_ORIGINS`,
   `DJANGO_SECURE_SSL_REDIRECT=True` and SMTP credentials for the enquiry mail.
+
+**`ensure_admin` exists because the hosted database is ephemeral.** Vercel rebuilds
+`/tmp/db.sqlite3` from `migrate` + `seed` at every deploy, and `seed` never touches auth, so an
+account made by hand in `/admin/` is gone within the minute. The command creates the superuser
+once and leaves an existing account's password alone, so changing it in the CMS survives a
+redeploy until someone passes `--reset-password`. Its username and password default to values
+committed in `core/management/commands/ensure_admin.py` - **set `DJANGO_ADMIN_USERNAME`,
+`DJANGO_ADMIN_PASSWORD` and `DJANGO_ADMIN_EMAIL` on the host instead as soon as you can, and
+rotate the committed pair, because anyone who can read this repository can read that password.**
 
 Verified: the WSGI application answers 200 on every route with `DEBUG=False` and
 hashed static storage, `manage.py check --deploy` is clean with the SSL flags set,

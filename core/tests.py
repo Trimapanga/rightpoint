@@ -1,6 +1,12 @@
+from io import StringIO
+
+from django.contrib.auth.models import User
+from django.core.management import call_command
+from django.test import override_settings
 from django.urls import reverse
 from django.utils.html import conditional_escape
 
+from core.management.commands import ensure_admin
 from core.models import SiteSetting
 from core.factories import SiteTestCase, create_case_study, create_catalogue, create_solution
 from core.views import SERVICE_REGIONS
@@ -260,3 +266,32 @@ class PublicPageTests(SiteTestCase):
         self.solution.save()
         response = self.client.get(self.solution.get_absolute_url())
         self.assertEqual(response.status_code, 404)
+
+
+@override_settings(PASSWORD_HASHERS=["django.contrib.auth.hashers.MD5PasswordHasher"])
+class EnsureAdminTests(SiteTestCase):
+    """The hosted database is rebuilt on every deploy, so the CMS account has to come
+    from the build script - a manual createsuperuser would vanish with the next push.
+    MD5 hashing because PBKDF2 costs seconds per hash and this class makes four."""
+
+    def setUp(self):
+        self.out = StringIO()
+
+    def test_command_creates_a_superuser_that_can_reach_the_dashboard(self):
+        call_command("ensure_admin", stdout=self.out)
+        user = User.objects.get(username=ensure_admin.USERNAME)
+        self.assertTrue(user.is_staff and user.is_superuser)
+        self.assertTrue(self.client.login(username=user.username, password=ensure_admin.PASSWORD))
+        self.assertEqual(self.client.get(reverse("admin:index")).status_code, 200)
+
+    def test_rerun_leaves_a_password_changed_in_the_admin_alone(self):
+        call_command("ensure_admin", stdout=self.out)
+        user = User.objects.get(username=ensure_admin.USERNAME)
+        user.set_password("changed-in-the-cms")
+        user.save()
+        call_command("ensure_admin", stdout=self.out)
+        user.refresh_from_db()
+        self.assertTrue(user.check_password("changed-in-the-cms"))
+        call_command("ensure_admin", "--reset-password", stdout=self.out)
+        user.refresh_from_db()
+        self.assertTrue(user.check_password(ensure_admin.PASSWORD))
