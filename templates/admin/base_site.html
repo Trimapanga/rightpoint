@@ -1,0 +1,102 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block extrahead %}{{ block.super }}
+<link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/favicon-32.png' %}">
+<link rel="icon" type="image/png" sizes="192x192" href="{% static 'img/favicon-192.png' %}">
+{% endblock %}
+
+{% block extrastyle %}{{ block.super }}
+<style>
+  /* Brand colours through Django's own theme variables, so every admin page picks
+     them up without fighting the stock stylesheets. */
+  /* The whole light palette is restated here, in every colour scheme: Django's dark
+     mode would otherwise mix with these brand colours and leave some text unreadable. */
+  :root, :root[data-theme="light"], :root[data-theme="dark"], :root[data-theme="auto"] {
+    color-scheme: light;
+    --body-fg: #1b2733;
+    --body-bg: #fff;
+    --body-quiet-color: #5b6b78;
+    --body-medium-color: #3b4a58;
+    --body-loud-color: #0b2c3e;
+    --hairline-color: #e3e9ef;
+    --border-color: #cdd6df;
+    --error-fg: #ba2121;
+    --message-success-bg: #dff5e6;
+    --message-warning-bg: #fff6d6;
+    --message-error-bg: #ffefef;
+    --darkened-bg: #f5f8fb;
+    --close-button-bg: #747474;
+    --close-button-hover-bg: #333;
+    --delete-button-bg: #ba2121;
+    --delete-button-hover-bg: #a41515;
+    --primary: #0b2c3e;
+    --secondary: #0b3aa8;
+    --accent: #1a6035;
+    --primary-fg: #fff;
+    --header-bg: #0b2c3e;
+    --header-color: #fff;
+    --header-branding-color: #fff;
+    --header-link-color: #fff;
+    --breadcrumbs-bg: #0b3aa8;
+    --breadcrumbs-fg: #dbe6ff;
+    --breadcrumbs-link-fg: #fff;
+    --link-fg: #0b3aa8;
+    --link-hover-color: #082d85;
+    --link-selected-fg: #1a6035;
+    --button-bg: #0b3aa8;
+    --button-hover-bg: #082d85;
+    --default-button-bg: #1a6035;
+    --default-button-hover-bg: #134a28;
+    --object-tools-bg: #0b3aa8;
+    --object-tools-hover-bg: #082d85;
+    --selected-bg: #e8f1ff;
+    --selected-row: #fff8d6;
+  }
+  body { background: #f3f6fa; }
+  .theme-toggle { display: none; }
+  #header { padding: 10px 28px; border-bottom: 3px solid #1a6035; }
+  #branding h1 { display: flex; align-items: center; gap: 12px; font-size: 1.05rem; font-weight: 600; margin: 0; }
+  #branding h1 a, #branding h1 a:link, #branding h1 a:visited { color: #fff; }
+  #branding h1 img { height: 40px; width: auto; background: #fff; border-radius: 8px; padding: 3px 6px; }
+  #user-tools { font-size: .78rem; letter-spacing: .04em; }
+  div.breadcrumbs { padding: 10px 28px; }
+  #content { padding: 24px 28px; }
+  #content h1 { font-weight: 700; letter-spacing: -.01em; color: #0b2c3e; }
+  .module, #changelist-filter, .results, .inline-group, fieldset.module {
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .module { box-shadow: 0 1px 3px rgba(11, 44, 62, .06); }
+  .module caption, .module h2, .inline-group h2 {
+    background: var(--primary); color: #fff;
+    font-size: .74rem; letter-spacing: .09em; text-transform: uppercase; font-weight: 600;
+  }
+  .module caption a, .module caption a:link, .module caption a:visited { color: #fff; }
+  #changelist .results table thead th { background: #eef3f9; }
+  #changelist .results table thead th a { color: #0b2c3e; text-transform: uppercase; font-size: .72rem; letter-spacing: .06em; }
+  #changelist-filter { box-shadow: 0 1px 3px rgba(11, 44, 62, .06); }
+  #changelist-filter h2 { background: var(--primary); color: #fff; }
+  a.addlink, a.changelink, a.viewlink { font-weight: 600; }
+  input[type=text], input[type=password], input[type=email], input[type=number], input[type=url],
+  input[type=date], input[type=time], select, textarea { border-radius: 7px; padding: 7px 10px; }
+  input:focus, select:focus, textarea:focus { outline: 0; border-color: #0b3aa8 !important; box-shadow: 0 0 0 3px rgba(11, 58, 168, .15); }
+  .button, input[type=submit], input[type=button], .submit-row input, a.button { border-radius: 7px; font-weight: 600; }
+  .submit-row { border-radius: 10px; }
+  #nav-sidebar { background: #fff; }
+  #nav-sidebar .module caption a { color: #fff; }
+  @media (max-width: 767px) {
+    #header { padding: 10px 14px; }
+    #content { padding: 16px 14px; }
+  }
+</style>
+{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+  <a href="{% url 'admin:index' %}" style="display:flex;align-items:center;gap:12px">
+    <img src="{% static 'img/logo.png' %}" alt="">
+    <span>Right Point Solutions administration</span>
+  </a>
+</h1>
+{% endblock %}

@@ -59,3 +59,7 @@
 <img class="rps-login-logo" src="{% static 'img/logo.png' %}" alt="Right Point Solutions">
 <p class="rps-login-sub">Sign in to manage the site</p>
 {% endblock %}
+
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:"Administration" }}</a></h1>
+{% endblock %}
