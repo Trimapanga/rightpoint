@@ -10,165 +10,120 @@
 :root {
   --green: #1e7a09;
   --green-dark: #155a06;
+  --green-tint: #eef7ea;
   --navy: #0a1f2b;
   --ink: #0a1f2b;
   --muted: #5b7280;
-  --line: #d1dae0;
+  --line: #cfd9cf;
   --bg: #eef1ee;
   --white: #ffffff;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: var(--bg); color: var(--ink); font: 13px/1.55 "Plus Jakarta Sans", "Segoe UI", Arial, sans-serif; }
+body { background: var(--bg); color: var(--ink); font: 12.5px/1.55 "Plus Jakarta Sans", "Segoe UI", Arial, sans-serif; }
 
-/* ── Toolbar ── */
+/* ── Toolbar (screen only) ── */
 .toolbar {
   position: sticky; top: 0; z-index: 10;
   display: flex; align-items: center; gap: .5rem;
-  max-width: 210mm; margin: 0 auto;
-  padding: .7rem 0;
+  max-width: 210mm; margin: 0 auto; padding: .7rem 0;
   background: rgba(238,241,238,.95); backdrop-filter: blur(8px);
 }
 .toolbar-title { margin-right: auto; font-weight: 700; font-size: 13px; color: var(--navy); }
 .toolbar a, .toolbar button {
   padding: .45rem 1rem; border-radius: 999px;
-  font: 600 12px "Plus Jakarta Sans", sans-serif;
-  cursor: pointer; text-decoration: none;
+  font: 600 12px "Plus Jakarta Sans", sans-serif; cursor: pointer; text-decoration: none;
   border: 1px solid var(--line); background: var(--white); color: var(--navy);
-  transition: opacity .15s;
 }
 .toolbar button { background: var(--green); border-color: var(--green); color: #fff; }
 .toolbar button[disabled] { opacity: .6; cursor: progress; }
-.toolbar .ghost { background: var(--white); border-color: var(--line); color: var(--navy); }
 
-/* ── Sheet ── */
+/* ── Sheet and its green page frame ── */
 .sheet {
-  width: 210mm; min-height: 297mm;
-  margin: 0 auto 2.5rem; padding: 0;
-  background: var(--white);
-  box-shadow: 0 12px 48px rgba(0,0,0,.15);
-  overflow: hidden;
+  width: 210mm; min-height: 297mm; margin: 0 auto 2.5rem; padding: 4mm;
+  background: var(--white); box-shadow: 0 12px 48px rgba(0,0,0,.15);
+}
+.frame {
+  border: 1.5px solid var(--green); min-height: 289mm;
+  padding: 7mm 10mm 0; display: flex; flex-direction: column;
 }
 
-/* ── Top accent bar ── */
-.accent-bar { height: 6px; background: linear-gradient(90deg, var(--green) 0%, #2bcc0e 55%, var(--green-dark) 100%); }
+/* ── Letterhead: mark left, document name right, address under the rule ── */
+.letterhead { display: flex; justify-content: space-between; align-items: flex-start; gap: 8mm; }
+.letterhead img { height: 42px; display: block; }
+.lh-company { margin-top: 2.4mm; font-size: 10px; line-height: 1.45; color: var(--muted); }
+.lh-company strong { display: block; font-size: 11.5px; color: var(--navy); letter-spacing: .01em; }
+.doc-title { font-size: 28px; font-weight: 800; letter-spacing: -.03em; color: var(--green); line-height: 1; }
+.doc-sub { text-align: right; font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin-top: 1.8mm; }
+.letterhead-rule { height: 2px; background: var(--green); margin: 3.5mm 0 0; }
 
-/* ── Header ── */
-.doc-header {
-  display: flex; justify-content: space-between; align-items: flex-start;
-  padding: 10mm 14mm 8mm;
-  border-bottom: 2px solid var(--green);
-}
-.doc-header img { height: 52px; }
-.doc-title-block { text-align: right; }
-.doc-title {
-  font-size: 34px; font-weight: 800; letter-spacing: -.04em;
-  color: var(--green); line-height: 1;
-}
-.doc-company-name { font-size: 11px; font-weight: 700; color: var(--navy); margin-top: 5px; }
-.doc-company-info { font-size: 10.5px; color: var(--muted); margin-top: 2px; line-height: 1.5; }
+/* ── Customer on the left, document meta on the right, as one line of the grid ── */
+.head-grid { display: grid; grid-template-columns: 1fr 76mm; gap: 5mm; align-items: start; margin-top: 5mm; }
+.head-grid > .block { margin-top: 0; }
+.meta-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.meta-table th, .meta-table td { border: 1px solid var(--line); padding: 1.5mm 2.6mm; text-align: left; }
+.meta-table th { background: var(--green-tint); color: var(--green-dark); font-weight: 600; font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; width: 30mm; }
+.meta-table td { font-weight: 700; color: var(--navy); white-space: nowrap; }
 
-/* ── Meta row ── */
-.meta-row {
-  display: flex; justify-content: flex-end;
-  padding: 0 14mm 6mm;
-}
-.meta-table { border-collapse: collapse; font-size: 11.5px; }
-.meta-table td { padding: 2px 8px 2px 0; }
-.meta-table td:first-child { color: var(--muted); white-space: nowrap; }
-.meta-table td:last-child { font-weight: 700; color: var(--navy); text-align: right; padding-left: 12px; padding-right: 0; }
-.meta-table tr:last-child td { padding-bottom: 0; }
-
-/* ── Section header (colored band) ── */
-.sec-head {
-  background: var(--navy);
-  color: var(--white);
+/* ── Green section bands ── */
+.band {
+  background: var(--green); color: var(--white);
   font-size: 10px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
-  padding: 4px 14mm;
+  padding: 2mm 3.5mm;
 }
+/* a band belongs to the block under it, and a block should not split mid-body */
+.block { margin-top: 4mm; page-break-inside: avoid; }
+.block.avoid-break { page-break-inside: auto; }
+.band { page-break-after: avoid; }
+.lines thead { display: table-header-group; }
 
-/* ── Customer block ── */
-.customer-block {
-  padding: 6mm 14mm;
-  background: #f8fafc;
-  border-bottom: 1px solid var(--line);
-  display: grid; grid-template-columns: 1fr 1fr; gap: 6mm;
-}
-.customer-block dt { font-size: 9.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
-.customer-block dd { font-size: 12.5px; color: var(--navy); }
-.customer-block dd strong { font-weight: 700; font-size: 13.5px; }
-.cust-detail { font-size: 11.5px; color: #334155; margin-top: 1px; }
+/* ── Customer block: plain address lines, as on a letter ── */
+.customer { border: 1px solid var(--line); border-top: none; padding: 3mm 3.5mm; }
+.customer .who { font-size: 14px; font-weight: 800; color: var(--navy); }
+.customer .attn { font-size: 12px; color: var(--ink); margin-top: .6mm; }
+.customer .lines { font-size: 11.5px; color: var(--muted); margin-top: 1.2mm; line-height: 1.55; }
 
-/* ── Lines table ── */
-.lines-wrap { padding: 0 14mm; margin-top: 7mm; }
-table.lines { width: 100%; border-collapse: collapse; }
-.lines thead tr { background: var(--navy); }
-.lines th {
-  padding: 4mm 3mm; color: var(--white);
+/* ── Line items ── */
+table.lines { width: 100%; border-collapse: collapse; border: 1px solid var(--line); border-top: none; }
+.lines thead th {
+  background: var(--green); color: var(--white);
   font-size: 9.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
-  text-align: left;
+  text-align: left; padding: 2mm 2.6mm;
 }
-.lines th:first-child { border-radius: 6px 0 0 6px; padding-left: 4mm; }
-.lines th:last-child { border-radius: 0 6px 6px 0; padding-right: 4mm; }
-.lines td { padding: 3.5mm 3mm; font-size: 12px; vertical-align: top; border-bottom: 1px solid var(--line); }
-.lines td:first-child { padding-left: 4mm; color: var(--muted); font-size: 11px; }
-.lines td:last-child { padding-right: 4mm; }
-.lines tr:nth-child(even) td { background: #f8fafc; }
-.lines tr:last-child td { border-bottom: none; }
-.lines .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.lines td small { display: block; color: var(--muted); font-size: 10px; margin-top: 1px; }
-.disc-tag { display: inline-block; background: #fef3c7; color: #92400e; border-radius: 4px; font-size: 9.5px; font-weight: 700; padding: 1px 5px; margin-left: 4px; vertical-align: middle; }
-.tax-yes { color: var(--green); font-weight: 700; font-size: 13px; }
-.tax-no  { color: var(--muted); }
+.lines th.num, .lines td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.lines td { padding: 1.9mm 2.6mm; font-size: 11.5px; vertical-align: top; border-top: 1px solid var(--line); }
+.lines td small { display: block; color: var(--muted); font-size: 9.5px; margin-top: .4mm; }
+.lines .desc { width: auto; }
+.lines .vat-mark { color: var(--green); font-weight: 800; }
+.lines .vat-none { color: var(--line); }
+.disc-tag { color: var(--green-dark); font-weight: 700; }
+.lines tr { page-break-inside: avoid; }
 
-/* ── Totals ── */
-.totals-wrap { padding: 5mm 14mm 0; display: flex; justify-content: flex-end; }
-.totals-table { width: 80mm; border-collapse: collapse; font-size: 12px; }
-.totals-table td { padding: 2.5mm 3mm; border-bottom: 1px solid var(--line); }
-.totals-table td:last-child { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
-.totals-table .total-grand {
-  background: var(--navy);
-  color: var(--white);
-  border-radius: 6px;
-  font-size: 14px; font-weight: 800;
-  border-bottom: none;
-}
-.totals-table .total-grand td { border-bottom: none; padding: 3.5mm 4mm; }
-.totals-table .total-grand td:first-child { border-radius: 6px 0 0 6px; }
-.totals-table .total-grand td:last-child { border-radius: 0 6px 6px 0; color: #6fd44a; font-size: 16px; }
-.totals-table .vat-note td { border-bottom: none; font-size: 9.5px; color: var(--muted); font-weight: 400; text-align: right; padding: 1.5mm 3mm 0; }
+/* ── Totals: bordered box on the right, total row as a solid plate ── */
+.totals-row { display: flex; justify-content: flex-end; }
+.totals { border-collapse: collapse; width: 82mm; font-size: 11.5px; border: 1px solid var(--line); }
+.totals td { padding: 1.6mm 2.6mm; border-top: 1px solid var(--line); }
+.totals tr:first-child td { border-top: none; }
+.totals td:first-child { color: var(--muted); }
+.totals td:last-child { text-align: right; font-weight: 600; color: var(--navy); font-variant-numeric: tabular-nums; }
+.totals tr.taxed td { color: var(--muted); font-size: 10.5px; }
+.totals tr.grand { background: var(--green); }
+.totals tr.grand td { color: var(--white); font-weight: 800; font-size: 14px; border-top: none; padding: 2.6mm; }
+.vat-note { margin: 1.2mm 0 0 auto; text-align: right; font-size: 9.5px; color: var(--muted); width: 82mm; }
 
-/* ── Notes + Terms ── */
-.bottom-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 0;
-  margin: 8mm 14mm 0;
-  border: 1px solid var(--line); border-radius: 8px; overflow: hidden;
-}
-.bottom-cell { padding: 5mm; }
-.bottom-cell + .bottom-cell { border-left: 1px solid var(--line); }
-.bottom-cell h3 {
-  font-size: 9px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
-  color: var(--white); background: var(--navy);
-  margin: -5mm -5mm 4mm; padding: 3px 5mm;
-}
-.bottom-cell p { font-size: 11px; color: #334155; white-space: pre-line; line-height: 1.6; }
-.bottom-cell ol { padding-left: 1.1em; font-size: 11px; color: #334155; line-height: 1.7; }
+/* ── Notes and terms ── */
+.panel { border: 1px solid var(--line); border-top: none; padding: 3mm 3.5mm; font-size: 11px; color: var(--ink); }
+.panel ol { padding-left: 1.4em; line-height: 1.5; }
+.panel p { white-space: pre-line; line-height: 1.6; }
 
-/* ── Signature ── */
-.sig-block { margin: 7mm 14mm 0; }
-.sig-block p { font-size: 11px; color: var(--muted); margin-bottom: 4mm; }
-.sig-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10mm; margin-top: 2mm; }
-.sig-line { border-top: 1px solid var(--navy); padding-top: 2mm; font-size: 10px; color: var(--muted); }
+/* ── Acceptance ── */
+.sig-block { margin-top: 4mm; }
+.sig-block .ask { font-size: 10.5px; color: var(--muted); margin-bottom: 4mm; }
+.sig-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12mm; }
+.sig-line { border-top: 1px solid var(--navy); padding-top: 1.4mm; font-size: 10px; color: var(--muted); }
 
-/* ── Footer ── */
-.doc-footer {
-  margin: 8mm 14mm 0;
-  padding: 4mm 0 0;
-  border-top: 1px solid var(--line);
-  font-size: 10.5px; color: var(--muted);
-  text-align: center; line-height: 1.8;
-}
-.doc-footer strong { color: var(--green); }
-.sheet-end { padding-bottom: 14mm; }
+/* ── Closing ── */
+.doc-footer { margin-top: auto; padding: 4mm 0 3mm; text-align: center; font-size: 10.5px; color: var(--muted); line-height: 1.65; }
+.doc-footer .thanks { font-style: italic; font-weight: 700; color: var(--green); }
 
 /* ── Print ── */
 @page { size: A4; margin: 0; }
@@ -176,7 +131,9 @@ table.lines { width: 100%; border-collapse: collapse; }
   body { background: #fff; }
   .toolbar { display: none; }
   .sheet { margin: 0; box-shadow: none; width: 100%; }
-  .accent-bar, .lines thead tr, .sec-head, .totals-table .total-grand, .bottom-cell h3 {
+  /* 4mm sheet padding either side leaves exactly 297mm of page */
+  .frame { min-height: 289mm; }
+  .band, .lines thead th, .totals tr.grand, .meta-table th, .letterhead-rule {
     -webkit-print-color-adjust: exact; print-color-adjust: exact;
   }
 }
@@ -187,171 +144,145 @@ table.lines { width: 100%; border-collapse: collapse; }
 <div class="toolbar">
   <span class="toolbar-title">{{ quote.number }}</span>
   <button type="button" data-download>⬇ Download PDF</button>
-  <button type="button" class="ghost" onclick="window.print()">Print</button>
-  <a class="ghost" href="{% url 'admin:quotes_quote_change' quote.pk %}">← Back to edit</a>
+  <button type="button" onclick="window.print()">Print</button>
+  <a href="{% url 'admin:quotes_quote_change' quote.pk %}">← Back to edit</a>
 </div>
 
 <div class="sheet" id="quote-sheet">
-  <div class="accent-bar"></div>
+ <div class="frame">
 
-  <!-- Header: logo + title -->
-  <div class="doc-header">
-    <img src="{% static 'img/logo.png' %}" alt="{{ site.company_name }}">
-    <div class="doc-title-block">
-      <div class="doc-title">QUOTATION</div>
-      <div class="doc-company-name">{{ site.company_name }}</div>
-      <div class="doc-company-info">
-        {{ site.street_address }}<br>
-        {% if site.city %}{{ site.city }}{% if site.country %}, {{ site.country }}{% endif %}{% endif %}<br>
-        {{ site.phone_e164 }}<br>
-        {{ site.email }}
+  <div class="letterhead">
+    <div>
+      <img src="{% static 'img/logo.png' %}" alt="{{ site.company_name }}">
+      <div class="lh-company">
+        <strong>{{ site.company_name }}</strong>
+        {{ site.street_address }} · {{ site.city }}{% if site.country %}, {{ site.country }}{% endif %}<br>
+        {{ site.postal_address }}<br>
+        {{ site.phone_e164 }} · {{ site.email }}
       </div>
     </div>
+    <div>
+      <div class="doc-title">QUOTATION</div>
+      <div class="doc-sub">{{ quote.get_status_display }}</div>
+    </div>
   </div>
+  <div class="letterhead-rule"></div>
 
-  <!-- Meta: quote details top-right -->
-  <div class="meta-row">
+  <div class="head-grid">
+    <section class="block">
+      <div class="band">Customer</div>
+      <div class="customer">
+        <div class="who">{{ quote.company|default:quote.customer_name }}</div>
+        {% if quote.company %}<div class="attn">Attention: {{ quote.customer_name }}</div>{% endif %}
+        <div class="lines">
+          {% if quote.site_location %}Site: {{ quote.site_location }}<br>{% endif %}
+          {% if quote.phone %}{{ quote.phone }}{% if quote.email %} · {% endif %}{% endif %}{{ quote.email }}
+        </div>
+      </div>
+    </section>
+
     <table class="meta-table">
-      <tr><td>Date</td><td>{{ quote.issue_date|date:"d/m/Y" }}</td></tr>
-      <tr><td>Quote&nbsp;No.</td><td>{{ quote.number }}</td></tr>
-      <tr><td>Valid&nbsp;Until</td><td>{{ quote.valid_until|date:"d/m/Y" }}</td></tr>
-      <tr><td>Currency</td><td>KES</td></tr>
-      <tr><td>Status</td><td>{{ quote.get_status_display }}</td></tr>
+      <tr><th>Date</th><td>{{ quote.issue_date|date:"d/m/Y" }}</td></tr>
+      <tr><th>Quote&nbsp;no.</th><td>{{ quote.number }}</td></tr>
+      <tr><th>Valid&nbsp;until</th><td>{{ quote.valid_until|date:"d/m/Y" }}</td></tr>
+      <tr><th>Prepared&nbsp;by</th><td>{% firstof quote.created_by.get_full_name quote.created_by.username "Right Point Solutions" %}</td></tr>
     </table>
   </div>
 
-  <!-- Customer -->
-  <div class="sec-head">Customer</div>
-  <div class="customer-block">
-    <dl>
-      <dt>Prepared for</dt>
-      <dd><strong>{{ quote.company|default:quote.customer_name }}</strong></dd>
-      {% if quote.company %}<dd class="cust-detail">Attn: {{ quote.customer_name }}</dd>{% endif %}
-      {% if quote.email %}<dd class="cust-detail">{{ quote.email }}</dd>{% endif %}
-      {% if quote.phone %}<dd class="cust-detail">{{ quote.phone }}</dd>{% endif %}
-    </dl>
-    {% if quote.site_location %}
-    <dl>
-      <dt>Site / Delivery location</dt>
-      <dd>{{ quote.site_location }}</dd>
-    </dl>
-    {% endif %}
-  </div>
-
-  <!-- Line items -->
-  <div class="sec-head" style="margin-top:6mm">Description of goods &amp; services</div>
-  <div class="lines-wrap">
+  <section class="block avoid-break">
+    <div class="band">Description</div>
     <table class="lines">
-      <thead>
-        <tr>
-          <th style="width:4%">#</th>
-          <th>Description</th>
-          <th class="num" style="width:8%">Qty</th>
-          <th class="num" style="width:15%">Unit Price (KES)</th>
-          <th class="num" style="width:7%">Disc.</th>
-          <th class="num" style="width:7%">VAT</th>
-          <th class="num" style="width:15%">Amount (KES)</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for line in lines %}
-        <tr>
-          <td>{{ forloop.counter }}</td>
-          <td>
-            {{ line.label }}
-            {% if line.product and line.product.sku %}<small>SKU: {{ line.product.sku }}</small>{% endif %}
-          </td>
-          <td class="num">{{ line.quantity|floatformat:"-2" }}</td>
-          <td class="num">{{ line.unit_price|floatformat:2|intcomma }}</td>
-          <td class="num">
-            {% if line.discount_percent %}<span class="disc-tag">{{ line.discount_percent|floatformat:"-2" }}%</span>{% else %}—{% endif %}
-          </td>
-          <td class="num">
-            {% if line.taxed %}
-              <span class="tax-yes">✓</span>
-            {% else %}
-              <span class="tax-no">—</span>
-            {% endif %}
-          </td>
-          <td class="num"><strong>{{ line.line_total|floatformat:2|intcomma }}</strong></td>
-        </tr>
-        {% empty %}
-        <tr><td colspan="7" style="text-align:center;color:var(--muted);padding:8mm">No line items added yet.</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Totals -->
-  <div class="totals-wrap">
-    <table class="totals-table">
-      <tr><td>Subtotal</td><td>{{ quote.subtotal|floatformat:2|intcomma }}</td></tr>
-      {% if quote.discount_percent %}
-      <tr><td>Discount ({{ quote.discount_percent|floatformat:"-2" }}%)</td><td>− {{ quote.discount_amount|floatformat:2|intcomma }}</td></tr>
-      {% endif %}
-      <tr><td>Net</td><td>{{ quote.net_total|floatformat:2|intcomma }}</td></tr>
-      {% if quote.apply_vat %}
-      <tr><td style="color:var(--muted);font-size:11px">Taxable amount</td><td style="color:var(--muted);font-size:11px">{{ quote.taxable_subtotal|floatformat:2|intcomma }}</td></tr>
-      <tr><td>VAT @ {{ quote.vat_rate|floatformat:"-2" }}%</td><td>{{ quote.vat_amount|floatformat:2|intcomma }}</td></tr>
-      {% else %}
-      <tr><td style="color:var(--muted)">VAT</td><td style="color:var(--muted)">Not charged</td></tr>
-      {% endif %}
-      <tr class="total-grand">
-        <td>TOTAL  —  KES</td>
-        <td>{{ quote.grand_total|floatformat:2|intcomma }}</td>
+    <thead>
+      <tr>
+        <th class="desc">Item</th>
+        <th class="num" style="width:10%">Qty</th>
+        <th class="num" style="width:17%">Unit price</th>
+        <th class="num" style="width:11%">Disc.</th>
+        <th class="num" style="width:9%">VAT</th>
+        <th class="num" style="width:17%">Amount</th>
       </tr>
-      <tr class="vat-note">
-        <td colspan="2">
-          {% if quote.apply_vat %}
-            All amounts in Kenya Shillings. VAT at {{ quote.vat_rate|floatformat:"-2" }}% applied to VAT-marked lines only.
-          {% else %}
-            All amounts in Kenya Shillings. VAT not applicable to this quotation.
-          {% endif %}
+    </thead>
+    <tbody>
+      {% for line in lines %}
+      <tr>
+        <td class="desc">
+          {{ line.label }}
+          {% if line.product and line.product.sku %}<small>SKU {{ line.product.sku }}</small>{% endif %}
         </td>
+        <td class="num">{{ line.quantity|floatformat:"-2" }}</td>
+        <td class="num">{{ line.unit_price|floatformat:2|intcomma }}</td>
+        <td class="num">
+          {% if line.discount_percent %}<span class="disc-tag">{{ line.discount_percent|floatformat:"-2" }}%</span>{% else %}&ndash;{% endif %}
+        </td>
+        <td class="num">
+          {% if line.taxed %}<span class="vat-mark">&#10003;</span>{% else %}<span class="vat-none">&ndash;</span>{% endif %}
+        </td>
+        <td class="num"><strong>{{ line.line_total|floatformat:2|intcomma }}</strong></td>
       </tr>
-    </table>
-  </div>
+      {% empty %}
+      <tr><td colspan="6" style="text-align:center;color:var(--muted);padding:8mm">No line items added yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </section>
 
-  <!-- Notes + Terms side by side -->
-  {% if quote.notes or quote.terms %}
-  <div class="bottom-grid">
-    {% if quote.notes %}
-    <div class="bottom-cell">
-      <h3>Notes</h3>
-      <p>{{ quote.notes }}</p>
+  <section class="block">
+    <div class="totals-row">
+      <table class="totals">
+        <tr><td>Subtotal</td><td>{{ quote.subtotal|floatformat:2|intcomma }}</td></tr>
+        {% if quote.discount_percent %}
+        <tr><td>Discount ({{ quote.discount_percent|floatformat:"-2" }}%)</td><td>&minus; {{ quote.discount_amount|floatformat:2|intcomma }}</td></tr>
+        {% endif %}
+        <tr><td>Net</td><td>{{ quote.net_total|floatformat:2|intcomma }}</td></tr>
+        {% if quote.apply_vat %}
+        <tr class="taxed"><td>Taxable</td><td>{{ quote.taxable_subtotal|floatformat:2|intcomma }}</td></tr>
+        <tr><td>VAT @ {{ quote.vat_rate|floatformat:"-2" }}%</td><td>{{ quote.vat_amount|floatformat:2|intcomma }}</td></tr>
+        {% endif %}
+        <tr class="grand"><td>Total KES</td><td>{{ quote.grand_total|floatformat:2|intcomma }}</td></tr>
+      </table>
     </div>
-    {% endif %}
-    {% if quote.terms %}
-    <div class="bottom-cell">
-      <h3>Terms &amp; Conditions</h3>
-      <p>{{ quote.terms }}</p>
-    </div>
-    {% endif %}
-  </div>
+    <p class="vat-note">
+      {% if quote.apply_vat %}
+        VAT at {{ quote.vat_rate|floatformat:"-2" }}% applies to the lines marked in the VAT column only.
+      {% else %}
+        VAT not charged on this quotation.
+      {% endif %}
+    </p>
+  </section>
+
+  {% if quote.notes %}
+  <section class="block">
+    <div class="band">Notes</div>
+    <div class="panel"><p>{{ quote.notes }}</p></div>
+  </section>
   {% endif %}
 
-  <!-- Acceptance -->
+  {% if quote.terms %}
+  <section class="block">
+    <div class="band">Terms and conditions</div>
+    <div class="panel">
+      <ol>
+        {% for term in quote.terms.splitlines %}<li>{{ term }}</li>{% endfor %}
+      </ol>
+    </div>
+  </section>
+  {% endif %}
+
   <div class="sig-block">
-    <p>By signing below, the customer indicates acceptance of the prices and terms stated in this quotation.</p>
+    <p class="ask">Signing below confirms acceptance of the prices and terms stated in this quotation.</p>
     <div class="sig-row">
-      <div>
-        <div style="height:12mm"></div>
-        <div class="sig-line">Authorised signature</div>
-      </div>
-      <div>
-        <div style="height:12mm"></div>
-        <div class="sig-line">Print name &amp; date</div>
-      </div>
+      <div><div class="sig-line">Authorised signature</div></div>
+      <div><div class="sig-line">Print name and date</div></div>
     </div>
   </div>
 
-  <!-- Footer -->
   <div class="doc-footer">
-    If you have any questions about this quotation, please contact us at<br>
-    {{ site.phone_e164 }} &nbsp;·&nbsp; {{ site.email }}<br>
-    <strong>Thank you for your business!</strong>
+    If you have any questions about this quotation, please contact
+    {{ site.phone_e164 }} or {{ site.email }}<br>
+    <span class="thanks">Thank you for your business!</span>
   </div>
-  <div class="sheet-end"></div>
+
+ </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
