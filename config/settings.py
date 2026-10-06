@@ -130,8 +130,11 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticroot"
 STATICFILES_DIRS = [BASE_DIR / "static"]
-MEDIA_URL = "media/"
-MEDIA_ROOT = BASE_DIR / "media"
+# Vercel ships a read-only application directory, so uploads go to the same
+# writable, ephemeral volume the database uses (see DATABASES above).
+_default_media_root = "/tmp/media" if _on_vercel else str(BASE_DIR / "media")
+MEDIA_URL = "/media/"
+MEDIA_ROOT = Path(os.environ.get("DJANGO_MEDIA_ROOT", _default_media_root))
 
 # Manifest hashing breaks `{% static %}` until collectstatic has run, so it is
 # only switched on outside DEBUG. WhiteNoise then serves the hashed files.

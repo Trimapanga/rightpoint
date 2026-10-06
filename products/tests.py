@@ -1,8 +1,13 @@
+import shutil
+import tempfile
+from io import BytesIO
 from pathlib import Path
 
 from django.contrib.sessions.backends.db import SessionStore
-from django.test import RequestFactory
+from django.core.files.base import ContentFile
+from django.test import override_settings, RequestFactory
 from django.urls import reverse
+from PIL import Image
 
 from core.factories import SiteTestCase, create_catalogue, create_solution
 from products import basket
@@ -415,3 +420,51 @@ class BrandStripTests(SiteTestCase):
         Brand.objects.create(name="Ubiquitous", slug="ubiquitous", speciality="Screening")
         response = self.client.get(reverse("home"))
         self.assertContains(response, '<span class="brand-mono" aria-hidden="true">UB</span>', html=True)
+
+
+
+_MEDIA_SCRATCH = tempfile.mkdtemp(prefix="rightpoint-media-")
+
+
+def _png_bytes():
+    buffer = BytesIO()
+    Image.new("RGB", (8, 8), "green").save(buffer, "PNG")
+    return buffer.getvalue()
+
+
+@override_settings(MEDIA_ROOT=_MEDIA_SCRATCH)
+class ProductImageUploadTests(SiteTestCase):
+    """An upload that saves but never renders is indistinguishable from one that
+    failed, so the media URL has to resolve in every environment."""
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.product = create_catalogue()["printer"]
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(_MEDIA_SCRATCH, ignore_errors=True)
+        super().tearDownClass()
+
+    def upload(self):
+        self.product.image.save("printer.png", ContentFile(_png_bytes()), save=True)
+        self.product.refresh_from_db()
+        return self.product.image.url
+
+    def test_an_uploaded_file_lands_under_the_media_url(self):
+        url = self.upload()
+        self.assertEqual(url, "/media/products/printer.png")
+        self.assertEqual(self.product.image_src, url)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Type"], "image/png")
+
+    def test_the_public_page_prefers_the_upload_over_the_bundled_tile(self):
+        url = self.upload()
+        body = self.client.get(self.product.get_absolute_url()).content.decode()
+        self.assertIn(url, body)
+
+    def test_media_directories_are_not_listed(self):
+        self.upload()
+        for path in ("/media/", "/media/products/", "/media/products/absent.png"):
+            self.assertEqual(self.client.get(path).status_code, 404, path)

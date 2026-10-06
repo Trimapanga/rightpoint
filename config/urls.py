@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
 from django.contrib.staticfiles.storage import staticfiles_storage
@@ -42,8 +41,12 @@ urlpatterns = [
     path("robots.txt", core_views.robots_txt, name="robots"),
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+if settings.MEDIA_URL:
+    # Uploads are served by the app in every environment: Vercel has no web
+    # server layer in front of Django that could do it instead.
+    urlpatterns += [
+        path(f"{settings.MEDIA_URL.lstrip('/')}<path:subpath>", core_views.serve_media)
+    ]
 
 handler400 = "core.views.bad_request"
 handler404 = "core.views.page_not_found"

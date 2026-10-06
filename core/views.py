@@ -1,9 +1,11 @@
+from django.conf import settings
 from django.db.models import Count, Q
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.templatetags.static import static
 from django.views.decorators.http import require_GET
 from django.views.generic import TemplateView
+from django.views.static import serve
 
 from casestudies.models import CaseStudy
 from core.mixins import PageMetaMixin
@@ -88,3 +90,13 @@ def robots_txt(request):
         f"Sitemap: {request.build_absolute_uri('/sitemap.xml')}",
     ]
     return HttpResponse("\n".join(lines), content_type="text/plain")
+
+
+def serve_media(request, subpath):
+    """Serve a file the admin uploaded.
+
+    Vercel has no web server in front of Django, so the app serves its own media
+    everywhere. document_root is read here, not bound into the URLconf at import,
+    so that tests can redirect MEDIA_ROOT.
+    """
+    return serve(request, subpath, document_root=settings.MEDIA_ROOT)

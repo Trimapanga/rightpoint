@@ -248,7 +248,8 @@ light falls on a client's uploaded photograph as on the painted panel - and the 
 renders today, because `{% if study.image %}` is false for every profile so far.
 
 **A photograph drops straight into the shape.** `CaseStudy.image` (admin "Media" fieldset,
-`upload_to="case-studies/"`, served by `static(MEDIA_URL, ...)` in `config/urls.py`) renders as
+`upload_to="case-studies/"`, served by `core_views.serve_media`, which `config/urls.py` mounts in
+every environment) renders as
 `.reference-img`: `position: absolute; inset: 0`, `width/height: 100%`, `object-fit: cover`. A
 1600x400 test card was measured filling the 294x310 panel to 0.0px on every side with the mark
 chip still floating over it and the caption's bottom edge sitting exactly on the art's, so no
@@ -771,25 +772,33 @@ Docker is unavailable in this environment and gunicorn does not start on Windows
 capable machine before the first production deploy.
 
 Media uploads (`/media/`, product and solution photos) live on the container's
-filesystem. Attach a persistent volume, or switch `STORAGES["default"]` to
-S3/DigitalOcean Spaces before relying on admin uploads in production.
+filesystem and are served by `core_views.serve_media` - there is no `DEBUG` gate on
+that route, because a deployment with no web server layer in front of Django would
+otherwise 404 every upload. Attach a persistent volume, or switch
+`STORAGES["default"]` to S3/DigitalOcean Spaces before relying on admin uploads in
+production.
 
 ### Vercel, where the database is not a database
 
 `vercel.json` + `build_files.sh` deploy the site to Vercel, and `config/settings.py`
-points SQLite at `/tmp/db.sqlite3` when `VERCEL` is set (`BASE_DIR/db.sqlite3`
-everywhere else) because the project directory is read-only there. The consequence
+points SQLite at `/tmp/db.sqlite3`, and uploaded media at `/tmp/media`, when `VERCEL`
+is set (`BASE_DIR/db.sqlite3` and `BASE_DIR/media` everywhere else) because the
+project directory is read-only there. The consequence
 is bigger than a path: `/tmp` is not durable storage, so the catalogue only exists
 because the build recreates it. `build_files.sh` therefore runs `migrate` **and**
 `seed` - drop either one and `/products/` renders its empty state, which looks
 exactly like "the product images are missing" while every `.webp` and `.svg` is
-serving fine from the CDN. Two things follow, and neither is fixable by editing
-templates:
+serving fine from the CDN. Three things follow, and none of them is fixable by
+editing templates:
 
 - Content an editor adds in `/admin/` on Vercel lasts until the next deploy, then
   is gone. Treat the deployed site as read-only until it has a real database
   (`psycopg2-binary` is already installed, so `DJANGO_DB_ENGINE`/`DJANGO_DB_NAME`
   pointing at Postgres is the smallest honest upgrade).
-- Enquiry mail is the only thing that writes at request time, and on Vercel it
+- An image uploaded in `/admin/` saves and renders for that instance, then goes with
+  the same deploy, because `/tmp/media` has the same lifespan as `/tmp/db.sqlite3`.
+  Bundled artwork under `static/img/` is the durable route; object storage
+  (`STORAGES["default"]`) is the one that keeps uploads of either kind.
+- Enquiry mail is the only other thing that writes at request time, and on Vercel it
   cannot survive anywhere but an external inbox.
 
