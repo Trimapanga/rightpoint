@@ -1,11 +1,12 @@
-from django.contrib import admin
-from django.shortcuts import get_object_or_404
+from django.contrib import admin, messages
+from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
 from django.urls import path, reverse
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 
 from core.models import SiteSetting
+from invoices import services
 from invoices.models import Invoice, InvoiceLine
 
 STATUS_COLOURS = {
@@ -117,8 +118,19 @@ class InvoiceAdmin(admin.ModelAdmin):
     def get_urls(self):
         custom = [
             path("<int:pk>/print/", self.admin_site.admin_view(self.print_view), name="invoices_invoice_print"),
+            path("<int:pk>/revert/", self.admin_site.admin_view(self.revert_view), name="invoices_invoice_revert"),
         ]
         return custom + super().get_urls()
+
+    def revert_view(self, request, pk):
+        invoice = get_object_or_404(Invoice.objects.select_related("quote"), pk=pk)
+        number = invoice.number
+        quote = services.revert_to_quote(invoice)
+        if quote:
+            self.message_user(request, f"{number} discarded - {quote.number} can be converted again.")
+            return redirect(reverse("admin:quotes_quote_change", args=[quote.pk]))
+        self.message_user(request, "Only a draft invoice raised from a quote can be reverted.", messages.ERROR)
+        return redirect(reverse("admin:invoices_invoice_change", args=[pk]))
 
     def print_view(self, request, pk):
         invoice = get_object_or_404(Invoice.objects.prefetch_related("lines__product"), pk=pk)

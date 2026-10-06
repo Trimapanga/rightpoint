@@ -89,7 +89,7 @@ class QuoteWorkflowTests(SiteTestCase):
 
 
 class QuoteToInvoiceTests(SiteTestCase):
-    """A converted invoice must agree with the accepted quote to the cent."""
+    """A converted invoice must agree with the quote it came from to the cent."""
 
     @classmethod
     def setUpTestData(cls):
@@ -131,17 +131,18 @@ class QuoteToInvoiceTests(SiteTestCase):
         self.assertEqual(Invoice.objects.count(), 1)
 
     def test_change_page_offers_the_conversion(self):
-        quote = self.make_quote()
+        quote = self.make_quote(status=Quote.DRAFT)
         change = self.client.get(reverse("admin:quotes_quote_change", args=[quote.pk]))
         self.assertContains(change, "Convert to invoice")
         response = self.client.post(reverse("admin:quotes_quote_invoice", args=[quote.pk]))
         invoice = Invoice.objects.get()
         self.assertRedirects(response, reverse("admin:invoices_invoice_change", args=[invoice.pk]))
         after = self.client.get(reverse("admin:quotes_quote_change", args=[quote.pk]))
-        self.assertContains(after, f"View invoice {invoice.number}")
+        self.assertContains(after, f"Edit invoice {invoice.number}")
+        self.assertContains(after, "Preview invoice")
         self.assertNotContains(after, "Convert to invoice")
 
-    def test_action_skips_quotes_that_are_not_accepted(self):
+    def test_action_converts_whatever_is_selected(self):
         accepted = self.make_quote()
         draft = self.make_quote(status=Quote.DRAFT)
         response = self.client.post(reverse("admin:quotes_quote_changelist"), {
@@ -150,5 +151,6 @@ class QuoteToInvoiceTests(SiteTestCase):
             "execute": "Run the selected action",
         })
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(Invoice.objects.count(), 1)
-        self.assertEqual(Invoice.objects.get().quote, accepted)
+        self.assertEqual(Invoice.objects.count(), 2)
+        self.assertCountEqual(
+            [invoice.quote_id for invoice in Invoice.objects.all()], [accepted.pk, draft.pk])

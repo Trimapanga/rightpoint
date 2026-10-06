@@ -609,6 +609,20 @@ the light strip. Confirm the right to publish each logo with the client before g
   closes on proof, `/case-studies/` opts out with an empty `{% block reference_band %}` rather
   than repeat itself, and `clients` comes from `context_processors.site()` instead of `HomeView`.
 - **Contact inquiries** - every submission with status workflow and bulk actions.
+- **Quotes and invoices** - `quotes.services.invoice_from_quote` turns a quote into a **draft**
+  invoice from the change page ("Convert to invoice", offered whenever the quote has no invoice
+  yet) or the list action, and `invoices.services.revert_to_quote` undoes it: the draft is deleted
+  and the quote is convertible again. Conversion is idempotent rather than duplicating, because a
+  second invoice against the same quote is a billing error, not a second attempt. Customer, lines,
+  VAT flags and wording cross over, while the invoice keeps *its own* payment terms - quoting terms
+  and payment terms are different promises. An invoice line has no discount column, so a discounted
+  quote line is written at its net unit price; that keeps `subtotal`, `vat_amount` and
+  `grand_total` equal to the quote to the cent, which copying the gross price plus an
+  invoice-level discount would not (the proportional discount would tax the wrong base). Reverting
+  is limited to drafts raised from a quote: anything sent has already reached the customer, so it
+  is voided with the `mark_void` action instead. Both documents print from one A4 sheet grammar
+  (`admin/quotes/quote/print.html`, `admin/invoices/invoice/print.html`) - a green frame, section
+  bands, totals as a solid plate, blocks that break between sections rather than mid-table.
 
 `python manage.py seed` upserts the current real content, so it is safe to re-run
 after editing `core/management/commands/seed.py`. It currently loads 5 brands, 8 product

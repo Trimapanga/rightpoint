@@ -23,11 +23,12 @@
 
 {% block submit_buttons_bottom %}
   {{ block.super }}
-  {% if original.pk and original.status == "accepted" %}
+  {% if original.pk %}
     {% with invoice=original.invoices.first %}
       <div class="submit-row">
         {% if invoice %}
-          <a href="{% url 'admin:invoices_invoice_change' invoice.pk %}" class="button">View invoice {{ invoice.number }}</a>
+          <a href="{% url 'admin:invoices_invoice_change' invoice.pk %}" class="button">Edit invoice {{ invoice.number }}</a>
+          <a href="{% url 'admin:invoices_invoice_print' invoice.pk %}" target="_blank" rel="noopener" class="button">Preview invoice</a>
           <span>This quote is already invoiced.</span>
         {% else %}
           <button type="submit" form="invoice-form" class="button">Convert to invoice</button>
@@ -46,7 +47,7 @@
 
 {% block content %}
   {{ block.super }}
-  {% if original.pk and original.status == "accepted" %}
+  {% if original.pk and not original.invoices.first %}
     <form id="invoice-form" method="post" action="{% url 'admin:quotes_quote_invoice' original.pk %}">{% csrf_token %}</form>
   {% endif %}
   {% if original.pk and original.status == "accepted" and not original.stock_issued %}

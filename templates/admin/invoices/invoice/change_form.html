@@ -5,5 +5,25 @@
     <li><a href="{% url 'admin:invoices_invoice_print' original.pk %}" target="_blank" rel="noopener">Preview invoice</a></li>
     <li><a href="{% url 'admin:invoices_invoice_print' original.pk %}?download=1" target="_blank" rel="noopener">Download PDF</a></li>
   {% endif %}
+  {% if original.quote_id %}
+    <li><a href="{% url 'admin:quotes_quote_change' original.quote_id %}" class="historylink">Back to {{ original.quote.number }}</a></li>
+  {% endif %}
   {{ block.super }}
+{% endblock %}
+
+{% block submit_buttons_bottom %}
+  {{ block.super }}
+  {% if original.pk and original.quote_id and original.status == "draft" %}
+    <div class="submit-row">
+      <button type="submit" form="revert-form" class="button">Revert to quote</button>
+      <span>Discards this draft invoice and returns {{ original.quote.number }} to the un-invoiced state.</span>
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {{ block.super }}
+  {% if original.pk and original.quote_id and original.status == "draft" %}
+    <form id="revert-form" method="post" action="{% url 'admin:invoices_invoice_revert' original.pk %}">{% csrf_token %}</form>
+  {% endif %}
 {% endblock %}

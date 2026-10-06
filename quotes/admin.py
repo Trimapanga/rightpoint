@@ -194,12 +194,11 @@ class QuoteAdmin(admin.ModelAdmin):
             services.duplicate(quote, request.user)
         self.message_user(request, f"{queryset.count()} quote(s) duplicated.")
 
-    @admin.action(description="Raise draft invoices for selected accepted quotes")
+    @admin.action(description="Raise draft invoices for the selected quotes")
     def raise_invoices(self, request, queryset):
-        accepted = queryset.filter(status=Quote.ACCEPTED)
         raised = 0
         already = 0
-        for quote in accepted:
+        for quote in queryset:
             _invoice, created = services.invoice_from_quote(quote, request.user)
             if created:
                 raised += 1
@@ -208,7 +207,4 @@ class QuoteAdmin(admin.ModelAdmin):
         notes = [f"{raised} draft invoice(s) raised"]
         if already:
             notes.append(f"{already} already invoiced")
-        skipped = queryset.count() - accepted.count()
-        if skipped:
-            notes.append(f"{skipped} not accepted, left alone")
         self.message_user(request, ", ".join(notes) + ".")
