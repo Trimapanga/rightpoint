@@ -153,10 +153,9 @@ SITE_NAME = os.environ.get("SITE_NAME", "Right Point Solutions")
 SITE_URL = os.environ.get("SITE_URL", "https://rightpoint.co.ke").rstrip("/")
 SITE_ID = 1
 
-# The home page currently stands down in favour of templates/core/maintenance.html.
-# This is ON by default while that is true; set DJANGO_MAINTENANCE=False - locally, or
-# as a Vercel environment variable - to serve home.html again without a code change.
-MAINTENANCE_MODE = env_flag("DJANGO_MAINTENANCE", "True")
+# Switches the home route to templates/core/maintenance.html without touching the
+# home page itself. Set DJANGO_MAINTENANCE=true to raise it, unset it to drop back.
+MAINTENANCE_MODE = env_flag("DJANGO_MAINTENANCE")
 
 LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "/"

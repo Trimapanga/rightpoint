@@ -710,18 +710,14 @@ DJANGO_EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
 Then `python manage.py collectstatic` and run `config.wsgi:application` under
 gunicorn (or any WSGI server) behind TLS.
 
-**Standing the home page down** is one flag, and it is currently raised:
-`MAINTENANCE_MODE` defaults to **on**, so `core.views.root` serves
-`templates/core/maintenance.html` at `/` instead of the home view. Nothing else moves -
-`home.html`, `HomeView` and every other route keep answering, so the solution, product,
-reference and enquiry pages stay open around the stand-in, and the page carries
-`noindex,nofollow` so a maintenance screen is never left in a search index. To bring the
-real home page back, set `DJANGO_MAINTENANCE=False` (locally, or as a Vercel environment
-variable) - no code change. The flag is read per request rather than in the URLconf, which
-is what lets `core.tests.MaintenanceModeTests` flip it with `override_settings`; because
-that shipped default would otherwise hide the home page from every suite,
-`core.factories.SiteTestCase` opts the tests back in to `MAINTENANCE_MODE=False` and the
-maintenance tests opt out again per method.
+**Standing the home page down temporarily** is one flag: with `DJANGO_MAINTENANCE=True`,
+`core.views.root` serves `templates/core/maintenance.html` at `/` instead of the home
+view. Nothing else moves - `home.html`, `HomeView` and every other route keep answering,
+so the solution, product, reference and enquiry pages stay open around the stand-in, and
+the page carries `noindex,nofollow` so a maintenance screen is never left in a search
+index. The flag is read per request rather than in the URLconf, which is what lets
+`core.tests.MaintenanceModeTests` flip it with `override_settings`. Unset it and the real
+home page returns on the next request.
 
 ## Tests
 
