@@ -100,25 +100,3 @@ def serve_media(request, subpath):
     so that tests can redirect MEDIA_ROOT.
     """
     return serve(request, subpath, document_root=settings.MEDIA_ROOT)
-
-
-_home_view = HomeView.as_view()
-
-
-def maintenance(request):
-    return render(request, "core/maintenance.html", {
-        "page_title": "Under maintenance",
-        "page_description": settings.SITE_DESCRIPTION,
-        "noindex": True,
-    })
-
-
-def root(request):
-    """Serve the home page, or the maintenance stand-in when asked to.
-
-    The flag is read per request rather than in the URLconf so it can be flipped
-    without rebuilding the resolver - and so home.html itself stays untouched.
-    """
-    if settings.MAINTENANCE_MODE:
-        return maintenance(request)
-    return _home_view(request)

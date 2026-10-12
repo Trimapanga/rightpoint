@@ -295,31 +295,3 @@ class EnsureAdminTests(SiteTestCase):
         call_command("ensure_admin", "--reset-password", stdout=self.out)
         user.refresh_from_db()
         self.assertTrue(user.check_password(ensure_admin.PASSWORD))
-
-
-class MaintenanceModeTests(SiteTestCase):
-    """The stand-in replaces one route only, so every other page has to keep
-    answering while it is up."""
-
-    marker = "This page is being rebuilt."
-
-    @override_settings(MAINTENANCE_MODE=True)
-    def test_the_home_route_serves_the_maintenance_page(self):
-        response = self.client.get(reverse("home"))
-        self.assertContains(response, self.marker)
-        self.assertContains(response, "Under maintenance")
-        self.assertContains(response, 'content="noindex,nofollow"')
-        self.assertNotContains(response, "Make your next move with confidence.")
-
-    @override_settings(MAINTENANCE_MODE=True)
-    def test_every_other_route_stays_open(self):
-        for name in ("products:list", "solutions:list", "casestudies:list", "about", "contact:form"):
-            url = reverse(name)
-            response = self.client.get(url)
-            self.assertEqual(response.status_code, 200, url)
-            self.assertNotContains(response, self.marker, msg_prefix=url)
-
-    def test_the_real_home_page_returns_when_the_flag_is_off(self):
-        response = self.client.get(reverse("home"))
-        self.assertContains(response, "Make your next move with confidence.")
-        self.assertNotContains(response, self.marker)

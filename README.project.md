@@ -710,15 +710,6 @@ DJANGO_EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
 Then `python manage.py collectstatic` and run `config.wsgi:application` under
 gunicorn (or any WSGI server) behind TLS.
 
-**Standing the home page down temporarily** is one flag: with `DJANGO_MAINTENANCE=True`,
-`core.views.root` serves `templates/core/maintenance.html` at `/` instead of the home
-view. Nothing else moves - `home.html`, `HomeView` and every other route keep answering,
-so the solution, product, reference and enquiry pages stay open around the stand-in, and
-the page carries `noindex,nofollow` so a maintenance screen is never left in a search
-index. The flag is read per request rather than in the URLconf, which is what lets
-`core.tests.MaintenanceModeTests` flip it with `override_settings`. Unset it and the real
-home page returns on the next request.
-
 ## Tests
 
 ```bash
