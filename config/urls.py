@@ -25,7 +25,7 @@ urlpatterns = [
     # Browsers (and new-tab/bookmark UIs) request /favicon.ico directly.
     path("favicon.ico", RedirectView.as_view(url=staticfiles_storage.url("img/favicon-32.png"), permanent=True)),
     path("admin/", admin.site.urls),
-    path("", core_views.HomeView.as_view(), name="home"),
+    path("", core_views.root, name="home"),
     path("about/", core_views.AboutView.as_view(), name="about"),
     path("solutions/", include("solutions.urls", namespace="solutions")),
     path("products/", include("products.urls", namespace="products")),

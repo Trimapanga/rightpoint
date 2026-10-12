@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="banner page-hero">
+  <div class="shell">
+    <div class="page-hero-copy">
+      <p class="kicker kicker-plain">Under maintenance</p>
+      <h1>This page is being rebuilt.</h1>
+      <p class="lede">Our home page is temporarily standing down while we rebuild it. Everything else on the
+        site is open and working - the solution pages, the product catalogue, the reference profiles and the
+        enquiry form are all reachable from the menu above.</p>
+      <div class="row-actions page-hero-actions">
+        <a class="btn btn-solid btn-lg" href="{% url 'solutions:list' %}">Browse our solutions
+          <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="btn btn-lg" href="{% url 'contact:form' %}">Send an enquiry</a>
+        <a class="btn btn-lg" href="{{ site.telephone_url }}">Call {{ site.company_name }}
+          <svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="shell split">
+    <div class="pane stack">
+      <p class="kicker kicker-plain">Where to go now</p>
+      <ul class="tick-list">
+        <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>
+          <a href="{% url 'solutions:list' %}">Capabilities</a> - CCTV and video intelligence, access control,
+          electric fencing, data centres, risk consultancy and security assessments.</li>
+        <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>
+          <a href="{% url 'products:list' %}">Equipment</a> - the cameras, readers, printers and perimeters we
+          specify, with a request-for-quote basket.</li>
+        <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>
+          <a href="{% url 'casestudies:list' %}">References</a> - profiles of work we have delivered.</li>
+        <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>
+          <a href="{% url 'about' %}">About</a> - who we are and how we work.</li>
+      </ul>
+    </div>
+    <div class="pane stack">
+      <p class="kicker kicker-plain">Reach us directly</p>
+      <ul class="tick-list">
+        <li><svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg>
+          <span><a href="{{ site.telephone_url }}">{{ site.phone_e164 }}</a></span></li>
+        {% if site.whatsapp_url %}
+        <li><svg class="icon" aria-hidden="true"><use href="#i-whatsapp"/></svg>
+          <span><a href="{{ site.whatsapp_url }}" target="_blank" rel="noopener">Chat on WhatsApp</a></span></li>
+        {% endif %}
+        <li><svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg>
+          <span><a href="{{ site.email_url }}">{{ site.email }}</a></span></li>
+        <li><svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg>
+          <span>{{ site.working_hours }}</span></li>
+        <li><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg>
+          <span>{{ site.street_address }}, {{ site.city }}, {{ site.country }}</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+{% endblock %}
