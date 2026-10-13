@@ -710,18 +710,6 @@ DJANGO_EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
 Then `python manage.py collectstatic` and run `config.wsgi:application` under
 gunicorn (or any WSGI server) behind TLS.
 
-**Standing the site down with a 404 (current state).** `core.middleware.Site404Middleware`
-answers every request whose path is not `admin/`, `accounts/`, `media/` or `static/` with
-`templates/core/404.html` and a real 404 status, when `SITE_404` is on - and it is on by default
-right now, so a deploy puts the whole site behind that page. Set `DJANGO_SITE_404=False` (env, or a
-Vercel environment variable) to serve the site again without touching a view, URL or template, since
-the flag is read per request. The gate is deliberately last in `MIDDLEWARE`: the 404 template's
-context processors read the basket from the session, so it must run after `SessionMiddleware`.
-`core.factories.SiteTestCase` carries `@override_settings(SITE_404=False)` so the suites can assert
-normal content - without it every page test would see the 404; `Site404GateTests` opts back in. Note
-that the page's own "Back to home" button also 404s while the gate is up; that is the point of it.
-`/robots.txt` and `/sitemap.xml` 404 too, which is what you want while the site is stood down.
-
 ## Tests
 
 ```bash
