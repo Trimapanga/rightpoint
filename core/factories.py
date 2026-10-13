@@ -4,7 +4,7 @@ test runner does not collect it."""
 from datetime import date
 
 from django.core.cache import cache
-from django.test import TestCase
+from django.test import TestCase, override_settings
 
 from casestudies.models import CaseStudy
 from core.models import SiteSetting
@@ -12,9 +12,13 @@ from products.models import Brand, Product, ProductCategory
 from solutions.models import ProcessStep, Solution, WhyPoint
 
 
+@override_settings(SITE_404=False)
 class SiteTestCase(TestCase):
     """LocMem cache survives between tests, which would leak a cached
-    SiteSetting row from a rolled-back transaction into the next test."""
+    SiteSetting row from a rolled-back transaction into the next test.
+
+    Also opts out of the shipped 404 default so every suite can assert normal page
+    content; Site404GateTests opts back in."""
 
     def setUp(self):
         super().setUp()

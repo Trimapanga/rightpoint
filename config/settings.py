@@ -67,6 +67,10 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # Last, so the request already carries a session when the 404 page renders: its
+    # context processors read the basket. Whitenoise sits near the top, so /static/
+    # is answered before this gate is ever consulted.
+    "core.middleware.Site404Middleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -152,6 +156,13 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 SITE_NAME = os.environ.get("SITE_NAME", "Right Point Solutions")
 SITE_URL = os.environ.get("SITE_URL", "https://rightpoint.co.ke").rstrip("/")
 SITE_ID = 1
+
+# Temporary: the whole public site answers with the themed 404 page (templates/
+# core/404.html) while this is on. It is ON by default for now; set
+# DJANGO_SITE_404=False - locally, or as a Vercel environment variable - to serve
+# the site again without a code change. /admin/, /accounts/, /media/ and /static/
+# stay open either way.
+SITE_404 = env_flag("DJANGO_SITE_404", "True")
 
 LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "/"

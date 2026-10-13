@@ -295,3 +295,36 @@ class EnsureAdminTests(SiteTestCase):
         call_command("ensure_admin", "--reset-password", stdout=self.out)
         user.refresh_from_db()
         self.assertTrue(user.check_password(ensure_admin.PASSWORD))
+
+
+class Site404GateTests(SiteTestCase):
+    """The shipped default stands the public site down behind the themed 404 page."""
+
+    marker = "This page is not on the route."
+
+    closed_routes = ["/", "/products/", "/solutions/", "/casestudies/", "/about/", "/contact/"]
+
+    @override_settings(SITE_404=True)
+    def test_every_public_page_answers_with_the_full_404_page(self):
+        for url in self.closed_routes:
+            with self.subTest(url=url):
+                response = self.client.get(url)
+                self.assertEqual(response.status_code, 404)
+                self.assertContains(response, self.marker, status_code=404)
+
+    @override_settings(SITE_404=True)
+    def test_the_gate_is_not_indexed_as_the_site(self):
+        response = self.client.get("/")
+        self.assertContains(response, 'content="noindex,nofollow"', status_code=404)
+
+    @override_settings(SITE_404=True)
+    def test_the_cms_and_its_sign_in_stay_reachable(self):
+        self.assertEqual(self.client.get(reverse("admin:index")).status_code, 302)
+        self.assertEqual(self.client.get(reverse("admin:login")).status_code, 200)
+        self.assertEqual(self.client.get("/accounts/login/").status_code, 200)
+
+    @override_settings(SITE_404=False)
+    def test_the_site_returns_when_the_flag_is_off(self):
+        response = self.client.get("/")
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, self.marker)
