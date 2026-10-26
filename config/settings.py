@@ -149,6 +149,9 @@ STORAGES = {
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# Reads uploaded quotations so they can be re-issued on our letterhead (quotes.extraction).
+ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
+
 SITE_NAME = os.environ.get("SITE_NAME", "Right Point Solutions")
 SITE_URL = os.environ.get("SITE_URL", "https://rightpoint.co.ke").rstrip("/")
 SITE_ID = 1

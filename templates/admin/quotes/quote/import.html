@@ -1,0 +1,88 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/admin-quote.css' %}">{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+  <a href="{% url 'admin:index' %}">Home</a>
+  &rsaquo; <a href="{% url 'admin:app_list' opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
+  &rsaquo; <a href="{% url 'admin:quotes_quote_changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+  &rsaquo; Generate from upload
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="quote-import">
+  <form method="post" enctype="multipart/form-data" class="quote-import-card" data-quote-import>
+    {% csrf_token %}
+    <p class="quote-import-lede">
+      Upload a quotation from a supplier, a competitor or an old template. Its customer, line items,
+      quantities, prices and terms are read and re-issued as a <strong>new draft quote on our letterhead</strong>.
+      Nothing is sent to the customer.
+    </p>
+
+    {% if form.non_field_errors %}<ul class="errorlist">{% for e in form.non_field_errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+
+    <label class="quote-drop" for="{{ form.document.id_for_label }}" data-drop>
+      <span class="quote-drop-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6v18h12V7z"/><path d="M14 3v4h4M12 17v-6M9.5 13.5 12 11l2.5 2.5"/></svg>
+      </span>
+      <span class="quote-drop-title" data-drop-name>Drop the quote here, or click to choose a file</span>
+      <span class="quote-drop-help">{{ form.document.help_text }}</span>
+      {{ form.document }}
+    </label>
+    {% if form.document.errors %}<ul class="errorlist">{% for e in form.document.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+
+    <label class="quote-import-option">
+      {{ form.use_catalogue_prices }}
+      <span>
+        {{ form.use_catalogue_prices.label }}
+        <small>{{ form.use_catalogue_prices.help_text }}</small>
+      </span>
+    </label>
+
+    <div class="quote-import-actions">
+      <button type="submit" class="default" data-import-submit>Generate quote</button>
+      <a href="{% url 'admin:quotes_quote_changelist' %}">Cancel</a>
+      <span class="quote-import-wait" data-import-wait hidden>Reading the document - this can take up to a minute…</span>
+    </div>
+  </form>
+
+  <aside class="quote-import-steps">
+    <h2>What happens</h2>
+    <ol>
+      <li><strong>Read.</strong> The document is read page by page, including scans and photos.</li>
+      <li><strong>Match.</strong> Items whose SKU or name matches our catalogue are linked, so stock and SKUs follow.</li>
+      <li><strong>Draft.</strong> A new draft quote opens for you to check before you preview, download or send it.</li>
+    </ol>
+    <p>The upload is kept on the quote under <em>Internal</em> for reference and is never printed.</p>
+  </aside>
+</div>
+
+<script>
+(function () {
+  var form = document.querySelector("[data-quote-import]");
+  var input = form.querySelector('input[type="file"]');
+  var drop = form.querySelector("[data-drop]");
+  var name = form.querySelector("[data-drop-name]");
+  function show() { if (input.files.length) { name.textContent = input.files[0].name; drop.classList.add("has-file"); } }
+  input.addEventListener("change", show);
+  ["dragenter", "dragover"].forEach(function (t) {
+    drop.addEventListener(t, function (e) { e.preventDefault(); drop.classList.add("is-over"); });
+  });
+  ["dragleave", "drop"].forEach(function (t) {
+    drop.addEventListener(t, function (e) { e.preventDefault(); drop.classList.remove("is-over"); });
+  });
+  drop.addEventListener("drop", function (e) {
+    if (e.dataTransfer.files.length) { input.files = e.dataTransfer.files; show(); }
+  });
+  form.addEventListener("submit", function () {
+    var btn = form.querySelector("[data-import-submit]");
+    btn.disabled = true;
+    btn.textContent = "Generating…";
+    form.querySelector("[data-import-wait]").hidden = false;
+  });
+})();
+</script>
+{% endblock %}

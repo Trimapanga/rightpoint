@@ -1,11 +1,14 @@
 import re
+from datetime import timedelta
 from decimal import Decimal
 
+from django.core.files.base import ContentFile
 from django.db import transaction
+from django.db.models import Q
 
 from invoices.models import Invoice, InvoiceLine
 from products.models import Product, StockMovement
-from quotes.models import Quote, QuoteLine, money
+from quotes.models import DEFAULT_TERMS, Quote, QuoteLine, money
 
 # The shop's quote list lands in the enquiry message as "Evolis Primacy 2 - 2 units".
 BASKET_LINE = re.compile(r"^\s*[-*•]?\s*(?P<title>.+?)\s+-\s+(?P<qty>\d+)\s+units?\s*$", re.I)
@@ -130,3 +133,77 @@ def invoice_from_quote(quote, user=None):
             order=order,
         )
     return invoice, True
+
+
+def match_product(sku, description):
+    """Find the catalogue item an imported line names: SKU first, then exact title."""
+    query = Q()
+    if sku.strip():
+        query |= Q(sku__iexact=sku.strip())
+    if description.strip():
+        query |= Q(title__iexact=description.strip())
+    return Product.objects.filter(query).first() if query else None
+
+
+def _decimal(value, places="0.01"):
+    return Decimal(str(value or 0)).quantize(Decimal(places))
+
+
+@transaction.atomic
+def quote_from_extraction(extracted, upload_name="", upload_data=b"", use_catalogue_prices=False, user=None):
+    """Re-issue an extracted quotation as a draft quote of ours.
+
+    Prices and quantities are copied from the source; matching catalogue items are
+    linked so stock and SKUs follow, and can optionally take our own selling price.
+    """
+    summary = [f"Generated from uploaded quote{f' {extracted.reference}' if extracted.reference else ''}."]
+    currency = (extracted.currency or "KES").upper()
+    if currency != "KES":
+        summary.append(f"Source prices were in {currency} and were copied unconverted - check them.")
+
+    quote = Quote(
+        customer_name=extracted.customer_name or extracted.company or "Customer",
+        company=extracted.company if extracted.customer_name else "",
+        email=extracted.email[:254],
+        phone=extracted.phone[:40],
+        site_location=extracted.site_location[:200],
+        discount_percent=_decimal(extracted.discount_percent),
+        apply_vat=extracted.vat_rate > 0,
+        notes=extracted.notes,
+        terms="\n".join(t.strip() for t in extracted.terms if t.strip()) or DEFAULT_TERMS,
+        created_by=user,
+    )
+    if extracted.vat_rate > 0:
+        quote.vat_rate = _decimal(extracted.vat_rate)
+    if extracted.validity_days > 0:
+        quote.valid_until = quote.issue_date + timedelta(days=extracted.validity_days)
+    if upload_data:
+        quote.source_document.save(upload_name or "quote", ContentFile(upload_data), save=False)
+    quote.save()
+
+    matched = 0
+    for order, line in enumerate(extracted.lines, start=1):
+        product = match_product(line.sku, line.description)
+        unit_price = _decimal(line.unit_price)
+        if product:
+            matched += 1
+            if use_catalogue_prices and product.unit_price:
+                unit_price = product.unit_price
+        details = line.details.strip()
+        if line.sku.strip() and not product and line.sku.strip() not in details:
+            details = f"Part no. {line.sku.strip()}\n{details}".strip()
+        QuoteLine.objects.create(
+            quote=quote,
+            product=product,
+            description=(line.description or (product.title if product else "Item"))[:240],
+            details=details,
+            quantity=_decimal(line.quantity or 1),
+            unit_price=unit_price,
+            discount_percent=_decimal(line.discount_percent),
+            taxed=line.taxed,
+            order=order,
+        )
+    summary.append(f"{len(extracted.lines)} line(s), {matched} matched to the catalogue.")
+    quote.internal_note = " ".join(summary)
+    Quote.objects.filter(pk=quote.pk).update(internal_note=quote.internal_note)
+    return quote

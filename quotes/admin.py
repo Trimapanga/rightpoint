@@ -9,6 +9,8 @@ from django.utils.safestring import mark_safe
 from core.models import SiteSetting
 from products.models import Product
 from quotes import services
+from quotes.extraction import ExtractionError, extract_quote
+from quotes.forms import QuoteImportForm
 from quotes.models import Quote, QuoteLine
 
 STATUS_COLOURS = {
@@ -28,8 +30,14 @@ class QuoteLineInline(admin.TabularInline):
     model = QuoteLine
     extra = 1
     autocomplete_fields = ("product",)
-    fields = ("order", "product", "description", "quantity", "unit_price", "discount_percent", "taxed", "total")
+    fields = ("order", "product", "description", "details", "quantity", "unit_price", "discount_percent", "taxed", "total")
     readonly_fields = ("total",)
+
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        field = super().formfield_for_dbfield(db_field, request, **kwargs)
+        if db_field.name == "details":
+            field.widget.attrs.update(rows=2, placeholder="Specs, one per line (optional)")
+        return field
 
     @admin.display(description="Line total")
     def total(self, obj):
@@ -39,24 +47,26 @@ class QuoteLineInline(admin.TabularInline):
 @admin.register(Quote)
 class QuoteAdmin(admin.ModelAdmin):
     change_form_template = "admin/quotes/quote/change_form.html"
+    change_list_template = "admin/quotes/quote/change_list.html"
     inlines = [QuoteLineInline]
     list_display = ("number", "customer", "status_badge", "total_display", "issue_date", "valid_until_display")
     list_filter = ("status", "apply_vat", "issue_date", "stock_issued")
     search_fields = ("number", "customer_name", "company", "email", "phone")
     date_hierarchy = "issue_date"
     autocomplete_fields = ("inquiry",)
-    readonly_fields = ("number", "totals_panel", "stock_issued", "created_by", "created_at", "updated_at")
+    readonly_fields = ("number", "totals_panel", "stock_issued", "source_document", "created_by", "created_at", "updated_at")
     actions = ["mark_sent", "mark_accepted", "mark_declined", "issue_stock", "duplicate_quotes", "raise_invoices"]
     fieldsets = (
         ("Customer", {"fields": (("customer_name", "company"), ("email", "phone"), "site_location", "inquiry")}),
         ("Quote", {"fields": (("number", "status"), ("issue_date", "valid_until"), ("discount_percent", "apply_vat", "vat_rate"))}),
         ("Totals", {"fields": ("totals_panel",)}),
         ("Wording", {"fields": ("notes", "terms"), "classes": ("collapse",)}),
-        ("Internal", {"fields": ("internal_note", "stock_issued", "created_by", "created_at", "updated_at"), "classes": ("collapse",)}),
+        ("Internal", {"fields": ("internal_note", "source_document", "stock_issued", "created_by", "created_at", "updated_at"), "classes": ("collapse",)}),
     )
 
     class Media:
         js = ("js/admin-quote.js",)
+        css = {"all": ("css/admin-quote.css",)}
 
     # ----- list columns -----
 
@@ -122,16 +132,58 @@ class QuoteAdmin(admin.ModelAdmin):
             path("<int:pk>/print/", self.admin_site.admin_view(self.print_view), name="quotes_quote_print"),
             path("<int:pk>/issue-stock/", self.admin_site.admin_view(self.issue_stock_view), name="quotes_quote_issue_stock"),
             path("<int:pk>/invoice/", self.admin_site.admin_view(self.invoice_view), name="quotes_quote_invoice"),
+            path("import/", self.admin_site.admin_view(self.import_view), name="quotes_quote_import"),
             path("product-info/<int:pk>/", self.admin_site.admin_view(self.product_info), name="quotes_product_info"),
         ]
         return custom + super().get_urls()
 
     def print_view(self, request, pk):
-        quote = get_object_or_404(Quote.objects.prefetch_related("lines__product"), pk=pk)
+        quote = get_object_or_404(Quote.objects.prefetch_related("lines__product__brand"), pk=pk)
+        lines = list(quote.lines.all())
+        has_discount = any(line.discount_percent for line in lines)
         return TemplateResponse(request, "admin/quotes/quote/print.html", {
             "quote": quote,
             "site": SiteSetting.load(),
-            "lines": quote.lines.all(),
+            "lines": lines,
+            "has_discount": has_discount,
+            # Thumbnails only earn their space when the quote lists catalogue items.
+            "show_thumbs": any(line.product_id for line in lines),
+            "column_count": 5 + has_discount + quote.apply_vat,
+            "total_units": sum((line.quantity for line in lines), 0),
+        })
+
+    def import_view(self, request):
+        if not self.has_add_permission(request):
+            return redirect(reverse("admin:quotes_quote_changelist"))
+        form = QuoteImportForm(request.POST or None, request.FILES or None)
+        if request.method == "POST" and form.is_valid():
+            upload = form.cleaned_data["document"]
+            data = upload.read()
+            try:
+                extracted = extract_quote(data, upload.content_type)
+            except ExtractionError as error:
+                form.add_error("document", str(error))
+            else:
+                if not extracted.lines:
+                    form.add_error("document", "No priced lines were found on that document.")
+                else:
+                    quote = services.quote_from_extraction(
+                        extracted, upload.name, data,
+                        use_catalogue_prices=form.cleaned_data["use_catalogue_prices"],
+                        user=request.user,
+                    )
+                    self.message_user(
+                        request,
+                        f"{quote.number} generated from {upload.name}: {quote.internal_note} "
+                        "Review it, then use Preview quote to see it on our letterhead.",
+                    )
+                    return redirect(reverse("admin:quotes_quote_change", args=[quote.pk]))
+        return TemplateResponse(request, "admin/quotes/quote/import.html", {
+            **self.admin_site.each_context(request),
+            "title": "Generate a quote from an upload",
+            "form": form,
+            "opts": self.model._meta,
+            "media": self.media + form.media,
         })
 
     def issue_stock_view(self, request, pk):

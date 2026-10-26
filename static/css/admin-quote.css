@@ -1,0 +1,101 @@
+/* Quote builder in the Django admin: the line-item listing, the live estimate,
+   the saved totals and the "generate from upload" screen. */
+
+/* ── Line items ── */
+#lines-group .tabular table { border-collapse: separate; border-spacing: 0; }
+#lines-group thead th {
+  background: #eef3f9; color: #0b2c3e;
+  font-size: .68rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
+  padding: 10px 8px; border-bottom: 1px solid #cdd6df;
+}
+#lines-group tbody tr.form-row td { padding: 10px 8px; vertical-align: top; border-bottom: 1px solid #e3e9ef; }
+#lines-group tbody tr.form-row:nth-child(even) td { background: #fafcfe; }
+#lines-group tbody tr.form-row:hover td { background: #f3f8ff; }
+#lines-group td.original p { display: none; } /* the row's own name repeats the description */
+#lines-group td.field-order input { width: 3.2em; text-align: center; }
+#lines-group td.field-product { min-width: 220px; }
+#lines-group td.field-product .select2-container { width: 100% !important; }
+#lines-group td.field-description input { width: 100%; min-width: 200px; font-weight: 600; box-sizing: border-box; }
+#lines-group td.field-details textarea {
+  width: 100%; min-width: 200px; box-sizing: border-box; resize: vertical;
+  font-size: .78rem; line-height: 1.4; color: #3b4a58; min-height: 2.8em;
+}
+#lines-group td.field-quantity input { width: 5em; text-align: right; }
+#lines-group td.field-unit_price input { width: 8.5em; text-align: right; }
+#lines-group td.field-discount_percent input { width: 4.5em; text-align: right; }
+#lines-group td.field-taxed { text-align: center; }
+#lines-group td.field-total {
+  text-align: right; white-space: nowrap; font-weight: 700; color: #0b2c3e;
+  font-variant-numeric: tabular-nums;
+}
+#lines-group td.field-total p { margin: 0; padding-top: 6px; }
+#lines-group .stock-hint {
+  display: inline-block; margin-top: 6px; padding: 2px 9px; border-radius: 999px;
+  font-size: .7rem; font-weight: 600; color: #1a6035; background: #e6f4e1;
+}
+#lines-group .stock-hint.is-low { color: #b3261e; background: #fdecea; }
+#lines-group .add-row td { padding: 12px 8px; background: #fff; }
+#lines-group .add-row a { font-weight: 700; }
+
+/* ── Live estimate under the lines ── */
+.quote-live {
+  margin: 0 0 20px auto; max-width: 360px; padding: 14px 18px;
+  background: #fff; border: 1px solid #cdd6df; border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(11, 44, 62, .06);
+}
+.quote-live-title {
+  display: block; margin-bottom: 8px;
+  font-size: .68rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: #5b6b78;
+}
+.quote-live dl { margin: 0; }
+.quote-live dl > div { display: flex; justify-content: space-between; gap: 16px; padding: 5px 0; border-top: 1px solid #e3e9ef; }
+.quote-live dl > div:first-child { border-top: none; }
+.quote-live dt { color: #5b6b78; font-weight: 400; margin: 0; }
+.quote-live dd { margin: 0; font-weight: 600; color: #0b2c3e; font-variant-numeric: tabular-nums; }
+.quote-live .grand { margin-top: 4px; padding: 9px 12px; border-radius: 8px; background: #1a6035; border-top: none; }
+.quote-live .grand dt, .quote-live .grand dd { color: #fff; font-weight: 800; font-size: 1rem; }
+
+/* ── Saved totals panel ── */
+table.quote-totals { min-width: 320px; border-collapse: collapse; }
+table.quote-totals td { padding: 6px 10px; border-bottom: 1px solid #e3e9ef; font-variant-numeric: tabular-nums; }
+table.quote-totals tr.grand td { background: #1a6035; color: #fff; font-weight: 800; border-bottom: none; }
+
+/* ── Generate from upload ── */
+.quote-import { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 24px; max-width: 1040px; align-items: start; }
+.quote-import-card, .quote-import-steps {
+  background: #fff; border: 1px solid #cdd6df; border-radius: 12px; padding: 24px;
+  box-shadow: 0 1px 3px rgba(11, 44, 62, .06);
+}
+.quote-import-lede { margin: 0 0 18px; font-size: .9rem; line-height: 1.6; color: #3b4a58; }
+.quote-drop {
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 36px 20px; border: 2px dashed #b9c6d3; border-radius: 12px; background: #f7fafd;
+  text-align: center; cursor: pointer; transition: border-color .15s, background .15s;
+}
+.quote-drop:hover, .quote-drop.is-over { border-color: #0b3aa8; background: #eef4ff; }
+.quote-drop.has-file { border-style: solid; border-color: #1a6035; background: #f1f9ee; }
+.quote-drop-icon { color: #0b3aa8; }
+.quote-drop.has-file .quote-drop-icon { color: #1a6035; }
+.quote-drop-title { font-weight: 700; font-size: .95rem; color: #0b2c3e; overflow-wrap: anywhere; }
+.quote-drop-help { font-size: .78rem; color: #5b6b78; }
+.quote-drop input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.quote-import-option { display: flex; gap: 10px; align-items: flex-start; margin: 18px 0 0; font-weight: 600; color: #1b2733; cursor: pointer; }
+.quote-import-option input { margin-top: 3px; }
+.quote-import-option small { display: block; font-weight: 400; color: #5b6b78; margin-top: 2px; }
+.quote-import-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 22px; }
+.quote-import-actions button {
+  padding: 10px 22px; border: 0; border-radius: 999px; cursor: pointer;
+  background: #1a6035; color: #fff; font-weight: 700; font-size: .85rem;
+}
+.quote-import-actions button:hover { background: #134a28; }
+.quote-import-actions button[disabled] { opacity: .65; cursor: progress; }
+.quote-import-wait { font-size: .8rem; color: #5b6b78; }
+.quote-import .errorlist { margin: 10px 0 0; }
+.quote-import-steps h2 {
+  margin: 0 0 12px; font-size: .7rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: #5b6b78;
+  background: none; padding: 0;
+}
+.quote-import-steps ol { margin: 0 0 14px; padding-left: 1.2em; }
+.quote-import-steps li { margin-bottom: 10px; line-height: 1.5; color: #3b4a58; list-style: decimal; }
+.quote-import-steps p { margin: 0; font-size: .8rem; color: #5b6b78; line-height: 1.5; }
+@media (max-width: 900px) { .quote-import { grid-template-columns: 1fr; } }

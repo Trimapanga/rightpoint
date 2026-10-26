@@ -62,6 +62,10 @@ class Quote(models.Model):
     notes = models.TextField(blank=True, help_text="Shown to the customer under the lines.")
     terms = models.TextField(default=DEFAULT_TERMS)
     internal_note = models.TextField(blank=True, help_text="Never printed.")
+    source_document = models.FileField(
+        upload_to="quotes/sources/", blank=True,
+        help_text="Quote this one was generated from, when it was imported from an upload. Never printed.",
+    )
     stock_issued = models.BooleanField(default=False, editable=False)
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL, editable=False
@@ -139,6 +143,9 @@ class QuoteLine(models.Model):
         help_text="Pick a catalogue item, or leave empty for labour and services.",
     )
     description = models.CharField(max_length=240, blank=True)
+    details = models.TextField(
+        blank=True, help_text="Optional specification lines printed under the item name, one per line.",
+    )
     quantity = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("1"))
     unit_price = models.DecimalField("Unit price (KES)", max_digits=12, decimal_places=2, default=Decimal("0"))
     discount_percent = models.DecimalField("Disc. %", max_digits=5, decimal_places=2, default=Decimal("0"))
@@ -154,6 +161,10 @@ class QuoteLine(models.Model):
     @property
     def label(self):
         return self.description or (self.product.title if self.product_id else "Item")
+
+    @property
+    def detail_lines(self):
+        return [line.strip() for line in self.details.splitlines() if line.strip()]
 
     @property
     def line_total(self):

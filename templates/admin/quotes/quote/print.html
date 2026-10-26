@@ -82,21 +82,39 @@ body { background: var(--bg); color: var(--ink); font: 12.5px/1.55 "Plus Jakarta
 .customer .attn { font-size: 12px; color: var(--ink); margin-top: .6mm; }
 .customer .lines { font-size: 11.5px; color: var(--muted); margin-top: 1.2mm; line-height: 1.55; }
 
-/* ── Line items ── */
+/* ── Line items: numbered rows, product thumbnail, name with specs underneath ── */
 table.lines { width: 100%; border-collapse: collapse; border: 1px solid var(--line); border-top: none; }
 .lines thead th {
-  background: var(--green); color: var(--white);
-  font-size: 9.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
-  text-align: left; padding: 2mm 2.6mm;
+  background: var(--green-tint); color: var(--green-dark);
+  font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+  text-align: left; padding: 2mm 2.6mm; border-bottom: 1.5px solid var(--green);
 }
 .lines th.num, .lines td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.lines td { padding: 1.9mm 2.6mm; font-size: 11.5px; vertical-align: top; border-top: 1px solid var(--line); }
-.lines td small { display: block; color: var(--muted); font-size: 9.5px; margin-top: .4mm; }
-.lines .desc { width: auto; }
+.lines td { padding: 2.6mm 2.6mm; font-size: 11.5px; vertical-align: top; border-top: 1px solid var(--line); }
+.lines tbody tr:first-child td { border-top: none; }
+.lines tbody tr:nth-child(even) td { background: #f8fbf7; }
+.lines .idx { width: 8mm; color: var(--muted); font-size: 10px; font-weight: 700; text-align: center; padding-left: 1.5mm; padding-right: 1.5mm; }
+.item { display: flex; gap: 3mm; align-items: flex-start; }
+.item-thumb {
+  flex: none; width: 12mm; height: 12mm; border: 1px solid var(--line); border-radius: 1.5mm;
+  background: var(--white) center / contain no-repeat; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+.item-thumb img { max-width: 100%; max-height: 100%; display: block; }
+.item-thumb.mono { background: var(--green-tint); color: var(--green-dark); font-size: 10px; font-weight: 800; letter-spacing: .02em; }
+.item-name { font-weight: 700; color: var(--navy); font-size: 12px; line-height: 1.35; }
+.item-meta { margin-top: .5mm; font-size: 9.5px; color: var(--muted); letter-spacing: .02em; }
+.item-meta b { font-weight: 600; color: var(--green-dark); }
+.item-specs { list-style: none; margin-top: 1.2mm; font-size: 10px; color: var(--ink); line-height: 1.5; }
+.item-specs li { position: relative; padding-left: 3mm; }
+.item-specs li::before { content: ""; position: absolute; left: .6mm; top: .62em; width: 1.1mm; height: 1.1mm; border-radius: 50%; background: var(--green); }
 .lines .vat-mark { color: var(--green); font-weight: 800; }
 .lines .vat-none { color: var(--line); }
-.disc-tag { color: var(--green-dark); font-weight: 700; }
+.lines .amount { font-weight: 800; color: var(--navy); }
+.disc-tag { display: inline-block; padding: .2mm 1.6mm; border-radius: 999px; background: var(--green-tint); color: var(--green-dark); font-weight: 700; font-size: 10px; }
 .lines tr { page-break-inside: avoid; }
+.lines tfoot td { background: var(--white); border-top: 1.5px solid var(--green); font-size: 10px; color: var(--muted); padding: 1.8mm 2.6mm; }
+.lines tfoot strong { color: var(--navy); }
 
 /* ── Totals: bordered box on the right, total row as a solid plate ── */
 .totals-row { display: flex; justify-content: flex-end; }
@@ -133,7 +151,7 @@ table.lines { width: 100%; border-collapse: collapse; border: 1px solid var(--li
   .sheet { margin: 0; box-shadow: none; width: 100%; }
   /* 4mm sheet padding either side leaves exactly 297mm of page */
   .frame { min-height: 289mm; }
-  .band, .lines thead th, .totals tr.grand, .meta-table th, .letterhead-rule {
+  .band, .lines thead th, .lines tbody td, .item-thumb, .item-specs li::before, .disc-tag, .totals tr.grand, .meta-table th, .letterhead-rule {
     -webkit-print-color-adjust: exact; print-color-adjust: exact;
   }
 }
@@ -194,35 +212,68 @@ table.lines { width: 100%; border-collapse: collapse; border: 1px solid var(--li
     <table class="lines">
     <thead>
       <tr>
+        <th class="idx">#</th>
         <th class="desc">Item</th>
-        <th class="num" style="width:10%">Qty</th>
-        <th class="num" style="width:17%">Unit price</th>
-        <th class="num" style="width:11%">Disc.</th>
-        <th class="num" style="width:9%">VAT</th>
+        <th class="num" style="width:9%">Qty</th>
+        <th class="num" style="width:16%">Unit price</th>
+        {% if has_discount %}<th class="num" style="width:9%">Disc.</th>{% endif %}
+        {% if quote.apply_vat %}<th class="num" style="width:7%">VAT</th>{% endif %}
         <th class="num" style="width:17%">Amount</th>
       </tr>
     </thead>
     <tbody>
       {% for line in lines %}
       <tr>
+        <td class="idx">{{ forloop.counter }}</td>
         <td class="desc">
-          {{ line.label }}
-          {% if line.product and line.product.sku %}<small>SKU {{ line.product.sku }}</small>{% endif %}
+          <div class="item">
+            {% if show_thumbs %}
+              {% if line.product and line.product.image %}
+                <span class="item-thumb"><img src="{{ line.product.image.url }}" alt=""></span>
+              {% else %}
+                <span class="item-thumb mono">{% if line.product %}{{ line.product.brand.monogram }}{% else %}{{ line.label|slice:":2"|upper }}{% endif %}</span>
+              {% endif %}
+            {% endif %}
+            <div>
+              <div class="item-name">{{ line.label }}</div>
+              {% if line.product %}
+                <div class="item-meta"><b>{{ line.product.brand.name }}</b>{% if line.product.sku %} &middot; SKU {{ line.product.sku }}{% endif %}</div>
+              {% endif %}
+              {% if line.detail_lines %}
+                <ul class="item-specs">{% for spec in line.detail_lines %}<li>{{ spec }}</li>{% endfor %}</ul>
+              {% endif %}
+            </div>
+          </div>
         </td>
         <td class="num">{{ line.quantity|floatformat:"-2" }}</td>
-        <td class="num">{{ line.unit_price|floatformat:2|intcomma }}</td>
+        <td class="num unit">{{ line.unit_price|floatformat:2|intcomma }}</td>
+        {% if has_discount %}
         <td class="num">
-          {% if line.discount_percent %}<span class="disc-tag">{{ line.discount_percent|floatformat:"-2" }}%</span>{% else %}&ndash;{% endif %}
+          {% if line.discount_percent %}<span class="disc-tag">&minus;{{ line.discount_percent|floatformat:"-2" }}%</span>{% else %}<span class="vat-none">&ndash;</span>{% endif %}
         </td>
+        {% endif %}
+        {% if quote.apply_vat %}
         <td class="num">
           {% if line.taxed %}<span class="vat-mark">&#10003;</span>{% else %}<span class="vat-none">&ndash;</span>{% endif %}
         </td>
-        <td class="num"><strong>{{ line.line_total|floatformat:2|intcomma }}</strong></td>
+        {% endif %}
+        <td class="num amount">{{ line.line_total|floatformat:2|intcomma }}</td>
       </tr>
       {% empty %}
-      <tr><td colspan="6" style="text-align:center;color:var(--muted);padding:8mm">No line items added yet.</td></tr>
+      <tr><td colspan="{{ column_count }}" style="text-align:center;color:var(--muted);padding:8mm">No line items added yet.</td></tr>
       {% endfor %}
     </tbody>
+    {% if lines %}
+    <tfoot>
+      <tr>
+        <td colspan="{{ column_count }}">
+          <strong>{{ lines|length }}</strong> item{{ lines|length|pluralize }} &middot;
+          <strong>{{ total_units|floatformat:"-2" }}</strong> unit{{ total_units|pluralize }}
+          &middot; Prices in KES{% if quote.apply_vat %}, excluding VAT{% endif %}
+        </td>
+      </tr>
+    </tfoot>
+    {% endif %}
   </table>
   </section>
 
