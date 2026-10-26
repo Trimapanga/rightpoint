@@ -3216,6 +3216,48 @@ input[type="password"]:focus {
   box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.05);
 }
 
+/* Home shelf cards are showcase tiles, so they carry larger type than the shop grid. */
+.shelf-rack { gap: clamp(1.1rem, 2.2vw, 1.75rem); }
+/* Grid items default to min-width:auto, so a long one-line spec would stretch its card. */
+.shelf-rack > li, .shelf-rack .product-card { min-width: 0; }
+.shelf-rack .product-card { padding: 16px 16px 20px; }
+.shelf-rack .product-card img.card-media { padding: 14px; }
+.shelf-rack .product-card .pc-body { gap: 8px; padding: 18px 6px 0; }
+.shelf-rack .product-card .pc-title { font-size: 1.2rem; line-height: 1.32; }
+.shelf-rack .pc-price strong { font-size: 1.4rem; }
+.shelf-rack .pc-size, .shelf-rack .pc-note { font-size: 0.92rem; }
+.shelf-rack .pc-note .icon { width: 16px; height: 16px; }
+.shelf-rack .product-card .flag { top: 12px; left: 12px; padding: 5px 11px; font-size: 0.8rem; }
+.shelf-rack .product-card .flag-list { left: auto; right: 12px; }
+.shelf-rack .product-card .pc-add { right: 12px; bottom: 12px; }
+.shelf-rack .product-card .pc-add .pc-plus { width: 48px; height: 48px; border-radius: 8px; }
+.shelf-rack .pc-plus .icon { width: 22px; height: 22px; }
+
+/* Phones: one large card at a time in a swipeable row, the next one peeking in. */
+@media (max-width: 720px) {
+  .shelf-rack {
+    display: grid;
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 78%;
+    gap: 12px;
+    margin-inline: calc(var(--shell-pad, 1rem) * -1);
+    padding: 4px var(--shell-pad, 1rem) 10px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--shell-pad, 1rem);
+    scrollbar-width: none;
+  }
+  .shelf-rack::-webkit-scrollbar { display: none; }
+  .shelf-rack > li { scroll-snap-align: start; }
+  .shelf-rack .product-card { padding: 0; }
+  .shelf-rack .product-card .pc-body { padding: 0.8rem 0.9rem 1rem; }
+  .shelf-rack .product-card .pc-title { font-size: 1.05rem; }
+  .shelf-rack .pc-price strong { font-size: 1.2rem; }
+  .shelf-rack .product-card .pc-size { display: block; font-size: 0.85rem; }
+}
+
 /* Region Band: Apple Global Operations */
 .region-band {
   background: #ffffff;
@@ -3315,7 +3357,6 @@ input[type="password"]:focus {
 
   /* two-up listing grid for product catalogue, single column for solutions and case studies */
   .shop-grid,
-  .shelf-rack,
   .grid-3:has(.product-card) {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 10px !important;
