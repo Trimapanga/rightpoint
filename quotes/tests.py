@@ -247,4 +247,4 @@ class QuoteImportTests(SiteTestCase):
     def test_sidebar_links_to_the_upload_screen(self):
         page = self.client.get(reverse("admin:index"))
         self.assertContains(page, f'href="{reverse("admin:quotes_quote_import")}"')
-        self.assertContains(page, "Upload quote")
+        self.assertContains(page, "Upload quotes")

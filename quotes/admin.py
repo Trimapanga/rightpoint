@@ -283,7 +283,7 @@ def get_app_list(request, app_label=None):
             continue
         position = next((i + 1 for i, m in enumerate(app["models"]) if m["object_name"] == "Quote"), 0)
         app["models"].insert(position, {
-            "name": "Upload quote",
+            "name": "Upload quotes",
             "object_name": "QuoteUpload",
             "perms": {"add": True, "change": False, "delete": False, "view": True},
             "admin_url": reverse("admin:quotes_quote_import"),
