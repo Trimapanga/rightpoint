@@ -132,7 +132,6 @@ class QuoteAdmin(admin.ModelAdmin):
             path("<int:pk>/print/", self.admin_site.admin_view(self.print_view), name="quotes_quote_print"),
             path("<int:pk>/issue-stock/", self.admin_site.admin_view(self.issue_stock_view), name="quotes_quote_issue_stock"),
             path("<int:pk>/invoice/", self.admin_site.admin_view(self.invoice_view), name="quotes_quote_invoice"),
-            path("import/", self.admin_site.admin_view(self.import_view), name="quotes_quote_import"),
             path("product-info/<int:pk>/", self.admin_site.admin_view(self.product_info), name="quotes_product_info"),
         ]
         return custom + super().get_urls()
@@ -260,3 +259,39 @@ class QuoteAdmin(admin.ModelAdmin):
         if already:
             notes.append(f"{already} already invoiced")
         self.message_user(request, ", ".join(notes) + ".")
+
+
+# The sidebar and the dashboard both list models from get_app_list, so the upload
+# screen is slotted in there under Quotes for anyone allowed to add a quote. Its URL
+# sits beside /quote/ rather than under it, or the sidebar would mark both current.
+_get_app_list = admin.site.get_app_list
+_get_urls = admin.site.get_urls
+
+
+def get_urls():
+    quote_admin = admin.site._registry[Quote]
+    upload = path("quotes/upload/", admin.site.admin_view(quote_admin.import_view), name="quotes_quote_import")
+    return [upload] + _get_urls()
+
+
+def get_app_list(request, app_label=None):
+    app_list = _get_app_list(request, app_label)
+    if not request.user.has_perm("quotes.add_quote"):
+        return app_list
+    for app in app_list:
+        if app["app_label"] != "quotes":
+            continue
+        position = next((i + 1 for i, m in enumerate(app["models"]) if m["object_name"] == "Quote"), 0)
+        app["models"].insert(position, {
+            "name": "Upload quote",
+            "object_name": "QuoteUpload",
+            "perms": {"add": True, "change": False, "delete": False, "view": True},
+            "admin_url": reverse("admin:quotes_quote_import"),
+            "add_url": None,
+            "view_only": False,
+        })
+    return app_list
+
+
+admin.site.get_app_list = get_app_list
+admin.site.get_urls = get_urls
