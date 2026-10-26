@@ -3,6 +3,7 @@ from django.db.models import Count, Q
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.templatetags.static import static
+from django.utils.http import http_date
 from django.views.decorators.http import require_GET
 from django.views.generic import TemplateView
 from django.views.static import serve
@@ -95,8 +96,16 @@ def robots_txt(request):
 def serve_media(request, subpath):
     """Serve a file the admin uploaded.
 
-    Vercel has no web server in front of Django, so the app serves its own media
-    everywhere. document_root is read here, not bound into the URLconf at import,
-    so that tests can redirect MEDIA_ROOT.
+    Uploads are stored in the database (core.storage.DatabaseStorage) because
+    Vercel's disk does not survive between requests. Files that predate that and
+    still sit in MEDIA_ROOT on a local machine are served from disk as before.
     """
-    return serve(request, subpath, document_root=settings.MEDIA_ROOT)
+    from core.models import StoredFile
+
+    row = StoredFile.objects.filter(name=subpath).only("content", "content_type", "updated_at").first()
+    if row is None:
+        return serve(request, subpath, document_root=settings.MEDIA_ROOT)
+    response = HttpResponse(bytes(row.content), content_type=row.content_type or "application/octet-stream")
+    response["Cache-Control"] = "public, max-age=86400"
+    response["Last-Modified"] = http_date(row.updated_at.timestamp())
+    return response

@@ -136,3 +136,23 @@ class SiteSetting(models.Model):
     def address_one_line(self):
         parts = [self.street_address, self.city, self.country]
         return ", ".join(p for p in parts if p)
+
+
+class StoredFile(models.Model):
+    """An admin upload kept in the database (see core.storage.DatabaseStorage).
+
+    Vercel's filesystem is per-instance and wiped on every cold start, so a file
+    written there vanishes; the database is the one place every instance shares.
+    """
+
+    name = models.CharField(max_length=255, unique=True)
+    content = models.BinaryField()
+    content_type = models.CharField(max_length=100, blank=True)
+    size = models.PositiveIntegerField(default=0)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ("name",)
+
+    def __str__(self):
+        return self.name

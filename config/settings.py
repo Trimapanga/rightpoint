@@ -139,7 +139,9 @@ MEDIA_ROOT = Path(os.environ.get("DJANGO_MEDIA_ROOT", _default_media_root))
 # Manifest hashing breaks `{% static %}` until collectstatic has run, so it is
 # only switched on outside DEBUG. WhiteNoise then serves the hashed files.
 STORAGES = {
-    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    # Uploads live in the database: Vercel's disk is per-instance and wiped on cold
+    # starts, so files written to MEDIA_ROOT there disappear (see core.storage).
+    "default": {"BACKEND": "core.storage.DatabaseStorage", "OPTIONS": {"base_url": MEDIA_URL}},
     "staticfiles": {
         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"
         if DEBUG

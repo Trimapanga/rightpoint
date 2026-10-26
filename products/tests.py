@@ -1,3 +1,4 @@
+import os
 import shutil
 import tempfile
 from io import BytesIO
@@ -463,6 +464,22 @@ class ProductImageUploadTests(SiteTestCase):
         url = self.upload()
         body = self.client.get(self.product.get_absolute_url()).content.decode()
         self.assertIn(url, body)
+
+    def test_uploads_are_kept_in_the_database_not_on_disk(self):
+        from core.models import StoredFile
+
+        url = self.upload()
+        self.assertFalse(os.listdir(_MEDIA_SCRATCH))  # nothing written to the per-instance disk
+        self.assertTrue(StoredFile.objects.filter(name="products/printer.png").exists())
+        self.assertEqual(self.client.get(url).content, _png_bytes())
+
+    def test_large_photos_are_scaled_down_to_fit_a_response(self):
+        buffer = BytesIO()
+        Image.effect_noise((3000, 2400), 90).convert("RGB").save(buffer, "JPEG", quality=95)
+        self.product.image.save("huge.jpg", ContentFile(buffer.getvalue()), save=True)
+        stored = Image.open(self.product.image.open())
+        self.assertLessEqual(max(stored.size), 2000)
+        self.assertLess(self.product.image.size, len(buffer.getvalue()))
 
     def test_media_directories_are_not_listed(self):
         self.upload()
